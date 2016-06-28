@@ -27,7 +27,8 @@ Mat ImageProcessorImpl::CvtColor(const Mat &src, const Rect &roi) {
   return srcCopy;
 }
 
-Mat ImageProcessorImpl::Filter(const Mat &src, const Rect &roi, int kSize) {
+Mat ImageProcessorImpl::Filter(const Mat &src, const Rect &roi, 
+    const int kSize) {
   Mat srcCopy;
   src.copyTo(srcCopy);
 
@@ -37,8 +38,9 @@ Mat ImageProcessorImpl::Filter(const Mat &src, const Rect &roi, int kSize) {
   return srcCopy;
 }
 
-Mat ImageProcessorImpl::DetectEdges(const Mat &src, const Rect &roi, int kSize,
-  int lowThreshold, int ratio, int kernelSize) {
+Mat ImageProcessorImpl::DetectEdges(const Mat &src, const Rect &roi, 
+    const int kSize, const int lowThreshold, const int ratio, 
+    const int kernelSize) {
   Mat srcRoi = src(roi), srcGrayRoi;
   cvtColor(srcRoi, srcGrayRoi, CV_BGR2GRAY);
 
@@ -59,6 +61,19 @@ Mat ImageProcessorImpl::DetectEdges(const Mat &src, const Rect &roi, int kSize,
   return dst;
 }
 
-cv::Mat ImageProcessorImpl::Pixelize(const cv::Mat &src, const cv::Rect &roi) {
-  throw std::exception("Pixelize method is not implemented");
+Mat ImageProcessorImpl::Pixelize(const Mat &src, const Rect &roi, 
+    const int kDivs) {
+  Mat srcCopy;
+  src.copyTo(srcCopy);
+  Mat srcCopyRoi = srcCopy(roi);
+
+  int blockSizeX = roi.width / kDivs, blockSizeY = roi.height / kDivs;
+  for (int x = 0; x < roi.width - blockSizeX; x += blockSizeX) {
+    for (int y = 0; y < roi.height - blockSizeY; y += blockSizeY) {
+      Mat srcRoiBlock = srcCopyRoi(Rect(x, y, blockSizeX, blockSizeY));
+      blur(srcRoiBlock, srcRoiBlock, Size(blockSizeX, blockSizeY));
+    }
+  }
+
+  return srcCopy;
 }

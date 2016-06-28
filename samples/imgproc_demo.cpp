@@ -60,14 +60,14 @@ int main(int argc, const char** argv) {
     return 0;
   }
 
-  // read image
+  // Read image
   Mat src = imread(parser.get<String>(0));
   if (!src.data) {
     cout << "Failed to open image file '" + parser.get<String>(0) + "'." << endl;
     return 0;
   }
 
-  // show source image and get ROI
+  // Show source image and get ROI
   const string srcWindowName = "Source image";
   const int kWaitKeyDelay = 100;
   namedWindow(srcWindowName);
@@ -87,7 +87,7 @@ int main(int argc, const char** argv) {
   imshow(srcWindowName, srcCopy);
   waitKey(kWaitKeyDelay);
 
-  // apply filter
+  // Apply filter
   ImageProcessorImpl proc;
   Mat dst;
   try {
@@ -106,7 +106,8 @@ int main(int argc, const char** argv) {
       dst = proc.DetectEdges(src, roi, filterSize, lowThreshold, ratio, kernelSize);
     }
     else if (parser.get<bool>("pix")) {
-      dst = proc.Pixelize(src, roi);
+      const int kDivs = 10;
+      dst = proc.Pixelize(src, roi, kDivs);
     }
     else
     {
@@ -119,7 +120,7 @@ int main(int argc, const char** argv) {
     return 0;
   }
 
-  // show destination image
+  // Show destination image
   const string dstWindowName = "Destination image";
   namedWindow(dstWindowName);
   imshow(dstWindowName, dst);
