@@ -228,6 +228,10 @@ int main(int argc, const char** argv) {
   setMouseCallback(kWindowName, OnMouse, &data);
 
   Mat frame = imread(parser.get<String>(0));
+  if (!frame.data) {
+    cout << "Failed to open image file '" + parser.get<String>(0) + "'." << endl;
+    return 0;
+  }
   int mode = 0;
   vector<size_t> convex_hull;
 
