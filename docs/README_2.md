@@ -98,7 +98,7 @@ class ImageProcessor {
   1. Разработать объявление наследника `ImageProcessorImpl` класса
      `ImageProcessor` и поместить его в файл `include\image_processing.hpp`.
 
-  ```
+  ```cpp
   class ImageProcessorImpl : public ImageProcessor {
   public:
     virtual cv::Mat CvtColor(const cv::Mat &src, const cv::Rect &roi);
