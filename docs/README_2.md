@@ -175,16 +175,16 @@ class ImageProcessor {
      с требованиями, перечисленными в основных задачах.
      
      1. Создать массив опций приложения.
-
-```cpp
-const char* kOptions =
-  "{ @image         | <none> | image to process            }"
-  "{ gray           |        | convert ROI to gray scale   }"
-  "{ median         |        | apply median filter for ROI }"
-  "{ edges          |        | detect edges in ROI         }"
-  "{ pix            |        | pixelize ROI                }"
-  "{ h ? help usage |        | print help message          }";
-```
+     
+     ```cpp
+     const char* kOptions =
+       "{ @image         | <none> | image to process            }"
+       "{ gray           |        | convert ROI to gray scale   }"
+       "{ median         |        | apply median filter for ROI }"
+       "{ edges          |        | detect edges in ROI         }"
+       "{ pix            |        | pixelize ROI                }"
+       "{ h ? help usage |        | print help message          }";
+     ```
     
      1. Создать структуру для хранения состояния мыши `MouseCallbackState`:
         `point_first` - левый верхний угол выделенной прямоугольной области; 
@@ -193,14 +193,14 @@ const char* kOptions =
         левую кнопку мыши; `is_selection_finished` - флаг, определяющий, 
         что пользователь отпустил левую кнопку мыши. 
 
-```cpp
-struct MouseCallbackState {
-  bool is_selection_started;
-  bool is_selection_finished;
-  Point point_first;
-  Point point_second;
-};
-```
+     ```cpp
+     struct MouseCallbackState {
+       bool is_selection_started;
+       bool is_selection_finished;
+       Point point_first;
+       Point point_second;
+     };
+     ```
 
      1. Реализовать обработчик `OnMouse` события нажатия на кнопку мыши.
         
