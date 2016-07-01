@@ -17,7 +17,7 @@ class ImageProcessor {
      const int kDivs) = 0;
 };
 
-class ImageProcessorImpl {
+class ImageProcessorImpl : public ImageProcessor {
  public:
    virtual cv::Mat CvtColor(const cv::Mat &src, const cv::Rect &roi);
    virtual cv::Mat Filter(const cv::Mat &src, const cv::Rect &roi,
