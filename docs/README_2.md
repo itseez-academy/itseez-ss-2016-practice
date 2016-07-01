@@ -178,12 +178,12 @@ class ImageProcessor {
 
      ```cpp
      const char* kOptions =
-       "{ @image         | <none> | image to process            }"
-       "{ gray           |        | convert ROI to gray scale   }"
-       "{ median         |        | apply median filter for ROI }"
-       "{ edges          |        | detect edges in ROI         }"
-       "{ pix            |        | pixelize ROI                }"
-       "{ h ? help usage |        | print help message          }";
+        "{ @image         | <none> | image to process            }"
+        "{ gray           |        | convert ROI to gray scale   }"
+        "{ median         |        | apply median filter for ROI }"
+        "{ edges          |        | detect edges in ROI         }"
+        "{ pix            |        | pixelize ROI                }"
+        "{ h ? help usage |        | print help message          }";
      ```
 
      1. —оздать структуру дл€ хранени€ состо€ни€ мыши `MouseCallbackState`:
