@@ -26,8 +26,7 @@ __Основные задачи__
      1. Отрисовка исходного изображения.
      1. Выделение области для преобразования на исходном изображении
         с использованием курсора мыши.
-     1. Отрисовка результата выделения преобразования.
-     
+     1. Отрисовка результата выделения преобразования.   
 
 __Дополнительные задачи__
 
@@ -47,21 +46,23 @@ __Дополнительные задачи__
   
 ## Общая структура программного модуля
 
-В лабораторной работе поставленные задачи решаются на базе программного
-модуля `image_processing` библиотеки `summer_school_2016_lib`. Указанный
-модуль содержит абстрактный класс `ImageProcessor`.
+В лабораторной работе задачи решаются на базе программного
+модуля `image_processing` библиотеки `summer_school_2016_lib`. Модуль
+включает заголовочный файл `include\image_processing.hpp`
+и `src\image_processing.cpp`. Модуль содержит объявление абстрактного класса
+`ImageProcessor`.
 
 ```cpp
 class ImageProcessor {
  public:
    virtual cv::Mat CvtColor(const cv::Mat &src, const cv::Rect &roi) = 0;
    virtual cv::Mat Filter(const cv::Mat &src, const cv::Rect &roi, 
-     const int kSize) = 0;
+                          const int kSize) = 0;
    virtual cv::Mat DetectEdges(const cv::Mat &src, const cv::Rect &roi, 
-     const int filterSize, const int lowThreshold, const int ratio, 
-     const int kernelSize) = 0;
+                               const int filterSize, const int lowThreshold,
+                               const int ratio, const int kernelSize) = 0;
    virtual cv::Mat Pixelize(const cv::Mat &src, const cv::Rect &roi, 
-     const int kDivs) = 0;
+                            const int kDivs) = 0;
 };
 ```
 
@@ -79,14 +80,154 @@ class ImageProcessor {
      `kernelSize` - размер ядра фильтра Собеля.
   1. `Pixelize` - метод пикселизации прямоугольной области `roi`
      исходного изображения `src` (телевизионный эффект, используемый
-     для того, чтобы скрыть лица людей).
+     для того, чтобы скрыть лица людей) с размером количеством делений
+     `divs` по каждому направлению.
   
 ## Общая последовательность действий
 
-  1. 
+  1. Разработать объявление наследника `ImageProcessorImpl` класса `ImageProcessor`.
+  1. Последовательно реализовать методы класса `ImageProcessorImpl`.
+  1. Скопировать `samples\template_demo.cpp` в директорию `samples`.
+  1. Переименовать копию примера в `samples\imgproc_demo.cpp`.
+  1. Разработать приложение `samples\imgproc_demo.cpp` в соответствии
+     с перечнем основных задач.
+  1. Разработать приложения, решающие дополнительные задачи.
 
 ## Детальная инструкция по выполнению работы
 
-  1.     
+  1. Разработать объявление наследника `ImageProcessorImpl` класса
+     `ImageProcessor` и поместить его в файл `include\image_processing.hpp`.
+
+```
+class ImageProcessorImpl : public ImageProcessor {
+ public:
+   virtual cv::Mat CvtColor(const cv::Mat &src, const cv::Rect &roi);
+   virtual cv::Mat Filter(const cv::Mat &src, const cv::Rect &roi,
+                          const int kSize);
+   virtual cv::Mat DetectEdges(const cv::Mat &src, const cv::Rect &roi,
+                               const int filterSize, const int lowThreshold,
+                               const int ratio, const int kernelSize);
+   virtual cv::Mat Pixelize(const cv::Mat &src, const cv::Rect &roi,
+                            const int kDivs);
+};
+```
+
+  1. Реализовать метод `ImageProcessorImpl::CvtColor`. Метод предполагает
+     выполнение следующей последовательности действий:
+  
+     1. Создать копию `src_copy` исходного изображения `src`.
+     1. Выделить подматрицу `src_roi` из копии `src_copy`.
+     1. Сконвертировать подматрицу `src_roi` в оттенки серого, результат записать
+        в матрицу `dst_gray_roi`. Примечание: необходимо использовать функцию `cvtColor`.
+     1. Создать вектор матриц `vector<Mat> channels`, соответствующих
+        каналам результирующей области преобразованного изображения `dst_roi`.
+     1. Сформировать `dst_roi` посредством склеивания трех каналов, каждый канал
+        соответствует `dst_gray_roi`. Примечание: необходимо использовать
+        функцию `merge`.
+     1. Скопировать `dst_roi` в подматрицу `src_roi`.
+     1. Вернуть `src_copy`.
+  
+  1. Реализовать метод `ImageProcessorImpl::Filter`. Метод предполагает
+     выполнение следующей последовательности действий:
+     
+     1. Создать копию `src_copy` исходного изображения `src`.
+     1. Выделить подматрицу `src_roi` из копии `src_copy`.
+     1. Вызвать функцию медианной фильтрации `medianBlur` для выделенной
+        области `src_roi`.
+     1. Вернуть `src_copy`.
+     
+  1. Реализовать метод `ImageProcessorImpl::DetectEdges`.
+  
+     1. Выделить подматрицу `src_roi` из копии `src`.
+     1. Сконвертировать матрицу `src_roi` в оттенки серого, результат записать
+        в матрицу `src_gray_roi`.
+     1. Отфильтровать `src_gray_roi` с использованием линейного фильтра, результат
+        записать в матрицу `gray_blurred`. Примечание: необходимо использовать
+        функцию `blur`.
+     1. Построить ребра `detected_edges` на изображении `gray_blurred`.
+     1. Создать матрицу `dst`.
+     1. Скопировать изображение `src` в `dst`.
+     1. Выделить подматрицу `dst_roi` из `dst` в соответствии с областью `roi`.
+     1. Обнулить все значения в подматрице `dst_roi`.
+     1. Скопировать `src_roi` в `dst_roi` в соответствии с маской `detected_edges`.
+     1. Вернуть `dst`.
+  
+  1. Реализовать метод `ImageProcessorImpl::Pixelize`.
+  
+     1. Создать копию `src_copy` исходного изображения `src`.
+     1. Выделить подматрицу `src_сopy_roi` из копии `src_copy`.
+     1. Определить размеры блока для пикселизации `block_size_x = roi.width / divs`,
+        `block_size_y = roi.height / divs`.
+     1. Реализовать обход пикселей выделенной области `roi` по всем `x` и `y`
+        с шагами `block_size_x` и `block_size_y` соответственно.
+          
+          1. Для каждого положения с координатами (`x`, `y`) в выделенной области
+             взять вложенную область `src_roi_block` размера 
+             (`block_size_x`, `block_size_y`).
+          1. Выполнить размытие области `src_roi_block` с помощью фильтра с ядром
+             размера (`block_size_x`, `block_size_y`).
+          
+     1. Вернуть `src_copy`.
+  
+  1. Скопировать `samples\template_demo.cpp` в директорию `samples`.
+  1. Переименовать копию примера в `samples\imgproc_demo.cpp`.
+  1. Разработать приложение `samples\imgproc_demo.cpp` в соответствии
+     с требованиями, перечисленными в основных задачах.
+     
+     1. Создать массив опций приложения.
+
+```cpp
+const char* kOptions =
+  "{ @image         | <none> | image to process            }"
+  "{ gray           |        | convert ROI to gray scale   }"
+  "{ median         |        | apply median filter for ROI }"
+  "{ edges          |        | detect edges in ROI         }"
+  "{ pix            |        | pixelize ROI                }"
+  "{ h ? help usage |        | print help message          }";
+```
+    
+     1. Создать структуру для хранения состояния мыши `MouseCallbackState`:
+        `point_first` - левый верхний угол выделенной прямоугольной области; 
+        `point_second` - правый нижний угол выделенной прямоугольной области;
+        `is_selection_started` - флаг, определяющий, что пользователь зажал
+        левую кнопку мыши; `is_selection_finished` - флаг, определяющий, 
+        что пользователь отпустил левую кнопку мыши. 
+
+```cpp
+struct MouseCallbackState {
+  bool is_selection_started;
+  bool is_selection_finished;
+  Point point_first;
+  Point point_second;
+};
+```
+
+     1. Реализовать обработчик `OnMouse` события нажатия на кнопку мыши.
+        
+        1. Если зажата левая кнопка мыши (событие `cv::EVENT_LBUTTONDOWN`),
+           то необходимо выставить правильные значения флагов 
+           `is_selection_started = true`, `is_selection_finished = false`
+           и сохранить координаты курсора в `point_first`.
+        1. Если левая кнопка мыши освобождена (событие `cv::EVENT_LBUTTONUP`),
+           то необходимо выставить правильные значения флагов 
+           `is_selection_started = false`, `is_selection_finished = true`
+           и сохранить координаты курсора в `point_second`.
+        1. Если курсор мыши изменил положения (событие `cv::EVENT_MOUSEMOVE`)
+           и при этом `is_selection_finished = false`, то необходимо изменить
+           положение точки `point_second`.
+        
+     1. Реализовать основную функцию. Логика выполнения основной функции следующая:
+     
+        1. Разобрать аргументы командной строки. Примечание: необходимо
+           использовать класс `CommandLineParser` библиотеки OpenCV.
+        1. Создать окно для отображения исходного изображения и назначить
+           на это окно событие `OnMouse`. Примечание: использовать функции
+           `namedWindow`, `resizeWindow`, `setMouseCallback`, `imshow` и `waitKey`.
+        1. Реализовать цикл ожидания выбора области интереса для обработки.
+        1. В зависимости от того, какая опция передана на вход программе,
+           вызвать фильтр, соответствующей указанной области.
+        1. Создать окно для отображения преобразованного изображения.
+        
+  1. Разработать приложения, решающие дополнительные задачи.
 
 <!-- LINKS -->
