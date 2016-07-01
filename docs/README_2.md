@@ -195,10 +195,10 @@ class ImageProcessor {
 
      ```cpp
      struct MouseCallbackState {
-      bool is_selection_started;
-      bool is_selection_finished;
-      Point point_first;
-      Point point_second;
+        bool is_selection_started;
+        bool is_selection_finished;
+        Point point_first;
+        Point point_second;
      };
      ```
 
