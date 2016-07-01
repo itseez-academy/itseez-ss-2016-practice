@@ -175,7 +175,7 @@ class ImageProcessor {
      с требованиями, перечисленными в основных задачах.
      
      1. Создать массив опций приложения.
-     
+
      ```cpp
      const char* kOptions =
        "{ @image         | <none> | image to process            }"
@@ -185,7 +185,7 @@ class ImageProcessor {
        "{ pix            |        | pixelize ROI                }"
        "{ h ? help usage |        | print help message          }";
      ```
-    
+
      1. Создать структуру для хранения состояния мыши `MouseCallbackState`:
         `point_first` - левый верхний угол выделенной прямоугольной области; 
         `point_second` - правый нижний угол выделенной прямоугольной области;
@@ -195,10 +195,10 @@ class ImageProcessor {
 
      ```cpp
      struct MouseCallbackState {
-       bool is_selection_started;
-       bool is_selection_finished;
-       Point point_first;
-       Point point_second;
+      bool is_selection_started;
+      bool is_selection_finished;
+      Point point_first;
+      Point point_second;
      };
      ```
 
