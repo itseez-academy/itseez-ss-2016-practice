@@ -7,6 +7,6 @@
 
 class MatrixProcessor {
  public:
-   virtual void Threshold(uchar* const data, const int width, 
+   void Threshold(uchar* const data, const int width, 
                           const int height, const int threshold);
 };
