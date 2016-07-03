@@ -4,8 +4,8 @@
 
 __Цель данной работы__ - изучить базовые примитивы модуля 
 opencv_core и простейшие операции обработки изображений, входящие в состав
-модуля opencv_imgproc, научиться разрабатывать интерфейс средствами 
-модуля opencv_highgui.
+модуля opencv_imgproc, научиться разрабатывать приложения с графическим 
+интерфейсом средствами модуля opencv_highgui.
 
 ## Задачи
 
@@ -62,12 +62,12 @@ class ImageProcessor {
  public:
    virtual cv::Mat CvtColor(const cv::Mat &src, const cv::Rect &roi) = 0;
    virtual cv::Mat Filter(const cv::Mat &src, const cv::Rect &roi, 
-                          const int kSize) = 0;
+                          const int size) = 0;
    virtual cv::Mat DetectEdges(const cv::Mat &src, const cv::Rect &roi, 
-                               const int filterSize, const int lowThreshold,
-                               const int ratio, const int kernelSize) = 0;
+                               const int filter_size, const int low_threshold,
+                               const int ratio, const int kernel_size) = 0;
    virtual cv::Mat Pixelize(const cv::Mat &src, const cv::Rect &roi, 
-                            const int kDivs) = 0;
+                            const int divs) = 0;
 };
 ```
 
@@ -77,12 +77,12 @@ class ImageProcessor {
      изображения `src` в оттенки серого.
   1. `Filter` - метод медианной фильтрации прямоугольной области `roi` 
      исходного изображения `src` с помощью фильтра с ядром 
-     размера `kSize x kSize`.
+     размера `size x size`.
   1. `DetectEdges` - метод для выделения ребер в прямоугольной области `roi`
      исходного изображения `src` с использованием детектора ребер Канни.
-     Входные параметры: `filterSize` - размер ядра линейного фильтра, 
-     `lowThreshold` и `lowThreshold * ratio` пороги метода Канни,
-     `kernelSize` - размер ядра фильтра Собеля.
+     Входные параметры: `filter_size` - размер ядра линейного фильтра, 
+     `low_threshold` и `low_threshold * ratio` пороги метода Канни,
+     `kernel_size` - размер ядра фильтра Собеля.
   1. `Pixelize` - метод пикселизации прямоугольной области `roi`
      исходного изображения `src` (телевизионный эффект, используемый
      для того, чтобы скрыть лица людей) с количеством делений
@@ -109,12 +109,12 @@ class ImageProcessor {
   public:
     virtual cv::Mat CvtColor(const cv::Mat &src, const cv::Rect &roi);
     virtual cv::Mat Filter(const cv::Mat &src, const cv::Rect &roi,
-                           const int kSize);
+                           const int size);
     virtual cv::Mat DetectEdges(const cv::Mat &src, const cv::Rect &roi,
-                                const int filterSize, const int lowThreshold,
-                                const int ratio, const int kernelSize);
+                                const int filter_size, const int low_threshold,
+                                const int ratio, const int kernel_size);
     virtual cv::Mat Pixelize(const cv::Mat &src, const cv::Rect &roi,
-                             const int kDivs);
+                             const int divs);
   };
   ```
 
