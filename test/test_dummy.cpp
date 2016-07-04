@@ -14,23 +14,46 @@ TEST(dummy, dummy_test)
     EXPECT_FALSE(submat.isContinuous());
 }
 
-TEST(threshold, threshold_test)
+void testWithT(int t)
 {
 	int width = 3, height = 3;
 
 	unsigned char * data = new unsigned char[9];
+	unsigned char * expected = new unsigned char[9];
+
 	MatrixProcessor mp;
 
-	for (int t = 1; t < 10; t++)
+	for (int i = 0; i < 9; i++)
 	{
-		for (int i = 0; i < 9; i++)
-			data[i] = i + 1; //we have to reinitialize
-
-		mp.Threshold(data, width, height, t);
-
-		for (int i = 0; i < 9; i++)
-			ASSERT_TRUE((data[i] == 0 && i + 1 < t) || (data[i] != 0 && i + 1 >= t));
+		data[i] = i;
+		expected[i] = (i < t) ? 0 : i;
 	}
 
+	mp.Threshold(data, width, height, t);
+
+	bool correct = true;
+
+	for (int i = 0; i < 9; i++)
+		if (data[i] != expected[i])
+			correct = false;
+	
+	EXPECT_TRUE(correct);
+
 	delete[] data;
+	delete[] expected;
+}
+
+TEST(threshold, threshold_test_right)
+{
+	testWithT(9);
+}
+
+TEST(threshold, threshold_test_left)
+{
+	testWithT(0);
+}
+
+TEST(threshold, threshold_test_middle)
+{
+	testWithT(4);
 }
