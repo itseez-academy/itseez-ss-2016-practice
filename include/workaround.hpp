@@ -1,5 +1,9 @@
 #pragma once
 
+typedef unsigned char T;
+
+void quickSortR(T* a, long N);
+
 class MatrixProcessor {
  public:
   void Threshold(unsigned char* const data, const int width, const int height,
