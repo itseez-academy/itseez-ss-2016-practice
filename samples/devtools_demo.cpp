@@ -13,7 +13,8 @@ const char* kAbout = "Application for practice #1.";
 
 const char* kOptions =
     "{ @image         |        | image to process         }"
-    "{ t              |  128   | threshold                }"
+	"{ t              | <none> | threshold                }"
+	"{ okr            | <none> | neighbourhood            }"
     "{ h ? help usage |        | print help message       }";
 
 int main(int argc, const char** argv) {
@@ -45,12 +46,26 @@ int main(int argc, const char** argv) {
 
   // Threshold data.
   MatrixProcessor processor;
-  const int threshold = parser.get<int>("t");
-  try {
-    processor.Threshold(src.data, src.cols, src.rows, threshold);
-  } catch (const std::exception& ex) {
-    cout << ex.what() << endl;
-    return 0;
+  if (parser.has("t")) {
+	  const int threshold = parser.get<int>("t");
+	  try {
+ 		  processor.Threshold(src.data, src.cols, src.rows, threshold);
+	  }
+	  catch (const std::exception& ex) {
+		  cout << ex.what() << endl;
+		  return 0;
+	  }
+  }
+ 
+  if (parser.has("okr")) {
+	  const int okr = parser.get<int>("okr");
+	  try {
+		  processor.Extra_1(src.data, src.cols, src.rows, okr);
+	  }
+	  catch (const std::exception& ex) {
+		  cout << ex.what() << endl;
+		  return 0;
+	  }
   }
 
   // Show destination image.
