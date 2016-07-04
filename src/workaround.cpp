@@ -16,6 +16,7 @@ void MatrixProcessor::Threshold(unsigned char* const data, const int width,
 void MatrixProcessor::Averaging(unsigned char* const data, const int width,
 								const int height, const int surroundings) {
 	int maxSize = width * height;
+	unsigned char* dst = new unsigned char[maxSize];
 	for (int i = 0; i < width * height; i++) {
 		int sum = 0;
 		int count = 0;
@@ -27,13 +28,16 @@ void MatrixProcessor::Averaging(unsigned char* const data, const int width,
 				sum += data[idx];
 				count++;
 			}
-		data[i] = sum / count;
+		dst[i] = sum / count;
 	}
+	for (int i = 0; i < width * height; i++)
+		data[i] = dst[i];
 }
 
 void MatrixProcessor::Median(unsigned char* const data, const int width, const int height,
 								const int surroundings) {
 	int maxSize = width * height;
+	unsigned char* dst = new unsigned char[maxSize];
 	for (int i = 0; i < width * height; i++) {
 		int count = 0;
 		std::vector<unsigned char> around;
@@ -48,6 +52,8 @@ void MatrixProcessor::Median(unsigned char* const data, const int width, const i
 				around.push_back(data[idx]);
 			}
 		std::sort(around.begin(), around.end());
-		data[i] = around[around.size()/2 + count/2];
+		dst[i] = around[around.size()/2 + count/2];
 	}
+	for (int i = 0; i < width * height; i++)
+		data[i] = dst[i];
 }
