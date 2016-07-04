@@ -25,7 +25,7 @@ void expectSameArrayContent(uchar * arr1, uchar * arr2, int size)
 	EXPECT_TRUE(correct);
 }
 
-void testWithT(int t)
+void testThreshold(int t)
 {
 	int width = 3, height = 3;
 
@@ -50,17 +50,17 @@ void testWithT(int t)
 
 TEST(threshold, threshold_test_right)
 {
-	testWithT(9);
+	testThreshold(9);
 }
 
 TEST(threshold, threshold_test_left)
 {
-	testWithT(0);
+	testThreshold(0);
 }
 
 TEST(threshold, threshold_test_middle)
 {
-	testWithT(4);
+	testThreshold(4);
 }
 
 TEST(median, median_small_test)
