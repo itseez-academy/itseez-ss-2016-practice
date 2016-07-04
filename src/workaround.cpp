@@ -1,8 +1,7 @@
 #include "workaround.hpp"
-
+#include <algorithm>
 #include <cstddef>
 #include<vector>
-#include<numeric>
 using namespace std;
 
 void MatrixProcessor::Threshold(unsigned char* const data, const int width,
@@ -34,4 +33,28 @@ void MatrixProcessor::MeanFilter(unsigned char* const data, const int width, con
 		}
 	}
 	
+}
+
+void MatrixProcessor::MedianFilter(unsigned char* const data, const int width, const int height)
+{
+	vector<unsigned char> data_copy(data, data + (width*height));
+	for (int i = 1; i < width - 1; i++)
+	{
+
+		for (int j = 1; j < height - 1; j++)
+		{
+			unsigned char roi[9];
+			roi[0]=(data_copy[(i - 1)*width + (j - 1)]);
+			roi[1]=(data_copy[(i)*width + (j - 1)]);
+			roi[2]=(data_copy[(i + 1)*width + (j - 1)] );
+			roi[3]=(data_copy[(i - 1)*width + (j)] );
+			roi[4]=(data_copy[(i)*width + (j)] );
+			roi[5]=(data_copy[(i + 1)*width + (j)] );
+			roi[6]=(data_copy[(i - 1)*width + (j + 1)] );
+			roi[7]=(data_copy[(i)*width + (j + 1)] );
+			roi[8]=(data_copy[(i + 1)*width + (j + 1)]);
+			sort(roi, roi+9);
+			data[i*width+j]=roi[4];
+		}
+	}
 }
