@@ -22,9 +22,9 @@ void MatrixProcessor::Averaging(unsigned char* const data, const int width,
 		for (int j = -surroundings; j < surroundings + 1; j++)
 			for (int k = -surroundings; k < surroundings + 1; k++) {
 				int idx = i + j*width + k;
-				if ((idx < 0) || (idx > maxSize))
+				if ((idx < 0) || (idx >= maxSize))
 					continue;
-				sum += data[i + j*width + k];
+				sum += data[idx];
 				count++;
 			}
 		data[i] = sum / count;
@@ -40,7 +40,7 @@ void MatrixProcessor::Median(unsigned char* const data, const int width, const i
 		for (int j = -surroundings; j < surroundings + 1; j++)
 			for (int k = -surroundings; k < surroundings + 1; k++) {
 				int idx = i + j*width + k;
-				if ((idx < 0) || (idx > maxSize)) {
+				if ((idx < 0) || (idx >= maxSize)) {
 					around.push_back(0);
 					count++;
 					continue;
