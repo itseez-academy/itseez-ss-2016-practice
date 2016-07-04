@@ -11,5 +11,13 @@ void MatrixProcessor::Threshold(unsigned char* const data, const int width,
 		if (data[i] < threshold) data[i] = 0;
 		else data[i] = 255;
 
-  // TODO: Add thresholding logic here.
+
+		
+		// TODO: Add thresholding logic here.
 }
+
+
+	
+	
+
+	
