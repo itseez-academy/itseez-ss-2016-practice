@@ -52,6 +52,9 @@ int main(int argc, const char** argv) {
     cout << ex.what() << endl;
     return 0;
   }
+  /////
+  //imshow(kSrcWindowName, src);
+  /////
 
   // Show destination image.
   const string kDstWindowName = "Destination image";
