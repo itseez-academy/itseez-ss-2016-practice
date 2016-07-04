@@ -15,35 +15,38 @@ TEST(dummy, dummy_test)
 
 TEST(Threshold, can_threshold_1_elem_when_it_needs)
 {
+	const int treshold = 128;
 	unsigned char* data = new unsigned char[1];
-	data[0] = 126;
+	data[0] = treshold - 1;
 	MatrixProcessor processor;
-	processor.Threshold(data, 1, 1, 128);
+	processor.Threshold(data, 1, 1, treshold);
 	EXPECT_EQ(data[0], 0);
 }
 
 TEST(Threshold, dont_threshold_1_elem_when_it_dont_need)
 {
+	const int treshold = 128;
 	unsigned char* data = new unsigned char[1];
-	data[0] = 129;
+	data[0] = treshold + 1;
 	MatrixProcessor processor;
-	processor.Threshold(data, 1, 1, 128);
-	EXPECT_EQ(data[0], 129);
+	processor.Threshold(data, 1, 1, treshold);
+	EXPECT_EQ(data[0], treshold + 1);
 }
 
 TEST(Threshold, work_correctly_with_many_elements)
 {
+	const int treshold = 128;
 	unsigned char* data = new unsigned char[255];
 	for ( int i = 0; i < 255; i++ )
 		data[i] = i;
 	MatrixProcessor processor;
-	processor.Threshold(data, 16, 16, 128);
+	processor.Threshold(data, 16, 16, treshold);
 
 	int flag = 0;
 	for (int i = 0; i < 255; i++)
-		if ((data[i] < 128) && (data[i]))
+		if ((data[i] < treshold) && (data[i]))
 			flag = 1;
-		else if ((data[i] >= 128) && (data[i]) != i)
+		else if ((data[i] >= treshold) && (data[i]) != i)
 			flag = 1;
 	EXPECT_FALSE(flag);
 }
