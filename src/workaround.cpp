@@ -45,5 +45,7 @@ void MatrixProcessor::Median(unsigned char * const data, const int width, const 
 			{
 				data[i + j * width] = newData[i - minX + (j - minY) * changedSubmatrixWidth];
 			}
+
+		delete[] newData;
 	}
 }
