@@ -20,7 +20,7 @@ void MatrixProcessor::Median(unsigned char * const data, const int width, const 
 	int maskSize = maskWidth * maskWidth;
 
 	int minX = range, minY = range;
-	int maxX = width - range, maxY = height - range;
+	int maxX = width - range, maxY = height - range; //it's more than max, actually
 
 	if (height >= maskWidth && width >= maskWidth)
 	{
