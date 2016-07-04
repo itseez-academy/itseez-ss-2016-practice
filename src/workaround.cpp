@@ -15,10 +15,10 @@ void MatrixProcessor::Threshold(unsigned char* const data, const int width,
 void MatrixProcessor::MeanFilter(unsigned char* const data, const int width, const int height) 
 {
 	vector<unsigned char> data_copy(data, data + (width*height));
-	for (int i = 1; i <width-1; i++)
+	for (int i = 1; i < height-1; i++)
 	{
 		
-		for (int j = 1; j < height-1; j++)
+		for (int j = 1; j < width-1; j++)
 		{
 			data[i*width+j] =(
 				data_copy[(i - 1)*width + (j - 1)] +
@@ -38,10 +38,10 @@ void MatrixProcessor::MeanFilter(unsigned char* const data, const int width, con
 void MatrixProcessor::MedianFilter(unsigned char* const data, const int width, const int height)
 {
 	vector<unsigned char> data_copy(data, data + (width*height));
-	for (int i = 1; i < width - 1; i++)
+	for (int i = 1; i < height - 1; i++)
 	{
 
-		for (int j = 1; j < height - 1; j++)
+		for (int j = 1; j < width - 1; j++)
 		{
 			unsigned char roi[9];
 			roi[0]=(data_copy[(i - 1)*width + (j - 1)]);
