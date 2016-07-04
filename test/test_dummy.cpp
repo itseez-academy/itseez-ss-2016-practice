@@ -14,6 +14,17 @@ TEST(dummy, dummy_test)
     EXPECT_FALSE(submat.isContinuous());
 }
 
+void expectSameArrayContent(uchar * arr1, uchar * arr2, int size)
+{
+	bool correct = true;
+
+	for (int i = 0; i < size; i++)
+		if (arr1[i] != arr2[i])
+			correct = false;
+
+	EXPECT_TRUE(correct);
+}
+
 void testWithT(int t)
 {
 	int width = 3, height = 3;
@@ -31,13 +42,7 @@ void testWithT(int t)
 
 	mp.Threshold(data, width, height, t);
 
-	bool correct = true;
-
-	for (int i = 0; i < 9; i++)
-		if (data[i] != expected[i])
-			correct = false;
-	
-	EXPECT_TRUE(correct);
+	expectSameArrayContent(data, expected, width * height);
 
 	delete[] data;
 	delete[] expected;
