@@ -18,24 +18,35 @@ TEST(dummy, dummy_test)
 
 TEST(dummy, all_less_than_thrash)
 {
+  const int size = 6;
+  const int thresh = 10;
+  const int width = 3, height = 2;
   MatrixProcessor processor;
-  unsigned char* data = new unsigned char[6];
-  for (int i = 0; i < 6; i++)
-    data[i] = 6;
-  processor.Threshold(data, 3, 2, 10);
+  unsigned char* data = new unsigned char[size];
+  for (int i = 0; i < size; i++)
+    data[i] = size;
+
+  processor.Threshold(data, width, height, thresh);
+
   int FLAG = 1;
-  for (int i = 0; i < 6; i++)
+  for (int i = 0; i < size; i++)
     if (data[i] != 0)
       FLAG = 0;
+
   ASSERT_TRUE(FLAG == 1);
 }
 
 TEST(dummy, one_less_than_thrash)
 {
+  const int size = 2;
+  const int thresh = 10;
+  const int width = 2, height = 1;
   MatrixProcessor processor;
-  unsigned char* data = new unsigned char[2];
+  unsigned char* data = new unsigned char[size];
   data[0] = 5;
   data[1] = 10;
-  processor.Threshold(data, 1, 2, 10);
+
+  processor.Threshold(data, width, height, thresh);
+
   ASSERT_TRUE(data[0] == 0 && data[1] == 10);
 }
