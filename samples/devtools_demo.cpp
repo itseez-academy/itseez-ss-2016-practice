@@ -14,7 +14,7 @@ const char* kAbout = "Application for practice #1.";
 const char* kOptions =
     "{ @image         |        | image to process         }"
     "{ t              |  128   | threshold                }"
-	"{ s              |  10    | surroundings             }"
+	"{ s              |  2    | surroundings             }"
     "{ h ? help usage |        | print help message       }";
 
 int main(int argc, const char** argv) {
@@ -76,6 +76,22 @@ int main(int argc, const char** argv) {
   namedWindow(kDstWindowName2, WINDOW_NORMAL);
   resizeWindow(kDstWindowName2, 640, 480);
   imshow(kDstWindowName2, src2);
+
+  // Median data.
+  Mat src3 = imread(parser.get<string>(0), CV_LOAD_IMAGE_GRAYSCALE);
+  try {
+	  processor.Median(src3.data, src3.cols, src3.rows, surroundings);
+  }
+  catch (const std::exception& ex) {
+	  cout << ex.what() << endl;
+	  return 0;
+  }
+
+  // Show Median image.
+  const string kDstWindowName3 = "Median image";
+  namedWindow(kDstWindowName3, WINDOW_NORMAL);
+  resizeWindow(kDstWindowName3, 640, 480);
+  imshow(kDstWindowName3, src3);
   waitKey();
 
   return 0;
