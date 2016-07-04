@@ -17,15 +17,15 @@ const char* kOptions =
     "{ h ? help usage |        | print help message       }";
 
 void addF(unsigned char* const data, const int width,
-	const int height, const int threshold) {
+	const int height, const int threshold, int g) {
 
-	for (int k = width; k < height*(width - 1); k++)
+	for (int k = g*height; k < height*(width - g); k++)
 	{
 		int j = k % width;
-		int i = k / height;
-		data[i, j] = (data[(i - 1)*height + j - 1] + 2 * data[(i - 1)*height + j] + data[i - 1, j] +
-			data[(i)*height + j - 1] + 2 * data[k] + data[k] +
-			data[(i + 1)*height + j - 1] + data[(i + 1)*height + j - 1]) / 9;
+		int i = k / width;
+		data[k] = (data[(i - g)*width + j - g] + 2 * data[(i - g)*width + j] +
+			data[(i)*width + j - g] + 2 * data[k] + 
+			data[(i + g)*width + j - g] + data[(i + g)*width + j - g]) / 9;
 	}
 }
 
@@ -60,7 +60,7 @@ int main(int argc, const char** argv) {
   MatrixProcessor processor;
   const int threshold = parser.get<int>("t");
   try {
-	  addF(src.data, src.cols, src.rows, threshold);
+	  addF(src.data, src.cols, src.rows, threshold,40);
     //processor.Threshold(src.data, src.cols, src.rows, threshold);
   } catch (const std::exception& ex) {
     cout << ex.what() << endl;
