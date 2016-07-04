@@ -13,3 +13,15 @@ void MatrixProcessor::Threshold(unsigned char* const data, const int width,
 			data[i] = 0;
 	}
 }
+void MatrixProcessor::Mean(unsigned char* const data, const int width,
+	const int height) {
+	// TODO: Add logic here.
+	for (int i = width + 1; i < width*height - width - 2; i++)
+	{
+		if ((i%width!= 0) || ( (i + 1)%width != 0))
+			data[i] = (data[i - width - 1] + data[i - width] + data[i - width + 1] +
+				data[i - 1] + data[i] + data[i + 1] +
+				data[i + width - 1] + data[i + width] + data[i + width + 1]) / 9;
+	}
+	
+}
