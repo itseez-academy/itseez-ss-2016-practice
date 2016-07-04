@@ -46,8 +46,6 @@ int main(int argc, const char** argv) {
   // Threshold data.
   MatrixProcessor processor;
   const int threshold = parser.get<int>("t");
-
-  cout << 0x23;
   try {
     processor.Threshold(src.data, src.cols, src.rows, threshold);
   } catch (const std::exception& ex) {
