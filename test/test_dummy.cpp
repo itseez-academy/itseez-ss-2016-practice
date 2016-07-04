@@ -63,7 +63,7 @@ TEST(threshold, threshold_test_middle)
 	testThreshold(4);
 }
 
-TEST(median, median_small_test)
+TEST(average, average_small_test)
 {
 	/*
 	mask size = 3x3
@@ -97,7 +97,7 @@ TEST(median, median_small_test)
 		expected[height * width - (i + 1)] = 0;
 	}
 
-	mp.Median(data, width, height, range);
+	mp.Average(data, width, height, range);
 
 	expectSameArrayContent(data, expected, width * height);
 
@@ -105,7 +105,7 @@ TEST(median, median_small_test)
 	delete[] expected;
 }
 
-TEST(median, median_big_test)
+TEST(average, average_big_test)
 {
 	/*
 	mask size = 3x3
@@ -158,7 +158,7 @@ TEST(median, median_big_test)
 	expected[14] = 0;
 	expected[15] = 0;
 
-	mp.Median(data, width, height, range);
+	mp.Average(data, width, height, range);
 
 	expectSameArrayContent(data, expected, width * height);
 

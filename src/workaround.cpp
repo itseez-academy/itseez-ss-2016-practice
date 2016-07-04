@@ -14,7 +14,7 @@ void MatrixProcessor::Threshold(unsigned char* const data, const int width,
 }
 
 
-void MatrixProcessor::Median(unsigned char * const data, const int width, const int height, const int range)
+void MatrixProcessor::Average(unsigned char * const data, const int width, const int height, const int range)
 {
 	int maskWidth = range * 2 + 1;
 	int maskSize = maskWidth * maskWidth;
