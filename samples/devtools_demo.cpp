@@ -43,6 +43,10 @@ int main(int argc, const char** argv) {
   imshow(kSrcWindowName, src);
   waitKey(kWaitKeyDelay);
 
+  //MeanFilter
+  Mat mean_img = src.clone();
+
+
   // Threshold data.
   MatrixProcessor processor;
   const int threshold = parser.get<int>("t");
@@ -52,6 +56,9 @@ int main(int argc, const char** argv) {
     cout << ex.what() << endl;
     return 0;
   }
+ 
+  processor.MeanFilter(mean_img.data, mean_img.cols, mean_img.rows);
+  imshow("MeanFilter Window", mean_img);
 
   // Show destination image.
   const string kDstWindowName = "Destination image";
