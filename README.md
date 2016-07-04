@@ -1,4 +1,4 @@
-# Летняя межвузовская школа, 2016 год
+# Летняя [] межвузовская школа, 2016 год
 
 [![Join the chat at https://gitter.im/itseez-academy/itseez-ss-2016-practice](https://badges.gitter.im/itseez-academy/itseez-ss-2016-practice.svg)](https://gitter.im/itseez-academy/itseez-ss-2016-practice?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
