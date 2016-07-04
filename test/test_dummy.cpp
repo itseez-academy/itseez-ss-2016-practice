@@ -18,13 +18,14 @@ TEST(Threshold, throws_when_arguments_are_incorrect){
 	MatrixProcessor proc;
 	ASSERT_ANY_THROW(proc.Threshold(incorrectData, 1, 1, 1));
 
-	unsigned char* correctData = new unsigned char [3];
+	unsigned char* correctData = new unsigned char [4];
 	correctData[0] = 37;
 	correctData[1] = 158;
 	correctData[2] = 0;
+	correctData[3] = 41;
 	ASSERT_ANY_THROW(proc.Threshold(correctData, 1, 1, -1));
-	ASSERT_ANY_THROW(proc.Threshold(correctData, -1, 1, 1));
-	ASSERT_ANY_THROW(proc.Threshold(correctData, 1, -1, 1));
+	ASSERT_ANY_THROW(proc.Threshold(correctData, -1, 1, 40));
+	ASSERT_ANY_THROW(proc.Threshold(correctData, 1, -1, 40));
 }
 
 TEST(Threshold, Threshold_works_properly){
