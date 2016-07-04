@@ -165,3 +165,64 @@ TEST(average, average_big_test)
 	delete[] data;
 	delete[] expected;
 }
+
+TEST(median, median_test)
+{
+	/*
+	mask size = 3x3
+
+	1000    1000
+	0120 -> 0100
+	0340    0120
+	0302    0302
+
+	*/
+
+	int width = 4, height = 4, range = 1;
+
+	unsigned char * data = new unsigned char[16];
+	unsigned char * expected = new unsigned char[16];
+
+	MatrixProcessor mp;
+
+	data[0] = 1;
+	data[1] = 0;
+	data[2] = 0;
+	data[3] = 0;
+	data[4] = 0;
+	data[5] = 1;
+	data[6] = 2;
+	data[7] = 0;
+	data[8] = 0;
+	data[9] = 3;
+	data[10] = 4;
+	data[11] = 0;
+	data[12] = 0;
+	data[13] = 3;
+	data[14] = 0;
+	data[15] = 2;
+
+	expected[0] = 1;
+	expected[1] = 0;
+	expected[2] = 0;
+	expected[3] = 0;
+	expected[4] = 0;
+	expected[5] = 1;
+	expected[6] = 0;
+	expected[7] = 0;
+	expected[8] = 0;
+	expected[9] = 1;
+	expected[10] = 2;
+	expected[11] = 0;
+	expected[12] = 0;
+	expected[13] = 3;
+	expected[14] = 0;
+	expected[15] = 2;
+
+	mp.Median(data, width, height, range);
+
+	expectSameArrayContent(data, expected, width * height);
+
+	delete[] data;
+	delete[] expected;
+}
