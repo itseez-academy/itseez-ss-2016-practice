@@ -6,5 +6,10 @@ using namespace std;
 
 void MatrixProcessor::Threshold(unsigned char* const data, const int width,
                                 const int height, const int threshold) {
-  // TODO: Add thresholding logic here.
+	int length = width*height;
+	for (size_t i = 0; i < length; i++)
+	{
+		if (data[i] < threshold)
+			data[i] = 0;
+	}
 }
