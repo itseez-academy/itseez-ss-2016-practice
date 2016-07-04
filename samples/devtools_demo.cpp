@@ -14,6 +14,7 @@ const char* kAbout = "Application for practice #1.";
 const char* kOptions =
     "{ @image         |        | image to process         }"
     "{ t              |  128   | threshold                }"
+	"{ s              |  10    | surroundings             }"
     "{ h ? help usage |        | print help message       }";
 
 int main(int argc, const char** argv) {
@@ -58,6 +59,23 @@ int main(int argc, const char** argv) {
   namedWindow(kDstWindowName, WINDOW_NORMAL);
   resizeWindow(kDstWindowName, 640, 480);
   imshow(kDstWindowName, src);
+
+  // Averaging data.
+  const int surroundings = parser.get<int>("s");
+  Mat src2 = imread(parser.get<string>(0), CV_LOAD_IMAGE_GRAYSCALE);
+  try {
+	  processor.Averaging(src2.data, src2.cols, src2.rows, surroundings);
+  }
+  catch (const std::exception& ex) {
+	  cout << ex.what() << endl;
+	  return 0;
+  }
+
+  // Show Averaging image.
+  const string kDstWindowName2 = "Averaged image";
+  namedWindow(kDstWindowName2, WINDOW_NORMAL);
+  resizeWindow(kDstWindowName2, 640, 480);
+  imshow(kDstWindowName2, src2);
   waitKey();
 
   return 0;
