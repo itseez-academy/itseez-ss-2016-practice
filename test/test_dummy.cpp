@@ -23,14 +23,31 @@ TEST(threshold,test1)
 TEST(threshold, test2)
 {
 	MatrixProcessor mp;
-	unsigned char  data[4] = {50,22,23,50};
+	unsigned char  data[4] = {50,62,63,50};
 	mp.Threshold(data, 2, 2, 51);
-	unsigned char actual[4] = {0,22,23,50};
+	unsigned char actual[4] = {0,62,63,0};
+	
 	bool f = 0;
 	for (size_t  i = 0; i < 4; i++)
 	{
 		if (data[i] != actual[i])
 			f = 1;
 	}
-	EXPECT_EQ(f,1);
+	EXPECT_EQ(f,0);
+}
+TEST(averaging,test1)
+{
+
+	MatrixProcessor mp;
+	unsigned char  data[16] = { 5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5 };
+	mp.Averaging(data, 4, 4, 1);
+	unsigned char actual[16] = { 2,3,3,2,3,15,15,3,3,15,15,3,2,3,3,2 };
+
+	bool f = 0;
+	for (size_t i = 0; i < 16; i++)
+	{
+		if (data[i] != actual[i])
+			f = 1;
+	}
+	EXPECT_EQ(f, 0);
 }
