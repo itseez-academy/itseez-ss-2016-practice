@@ -1,0 +1,7 @@
+/home/chibisaincrada/itseez-ss-2016-practice/samples/CMakeFiles/devtools_demo.dir
+/home/chibisaincrada/itseez-ss-2016-practice/3rdparty/gtest/CMakeFiles/gtest.dir
+/home/chibisaincrada/itseez-ss-2016-practice/src/CMakeFiles/summer_school_2016_lib.dir
+/home/chibisaincrada/itseez-ss-2016-practice/samples/CMakeFiles/template_demo.dir
+/home/chibisaincrada/itseez-ss-2016-practice/samples/CMakeFiles/template_demo_max_Monday.dir
+/home/chibisaincrada/itseez-ss-2016-practice/samples/CMakeFiles/template_demo_max_Thursday.dir
+/home/chibisaincrada/itseez-ss-2016-practice/test/CMakeFiles/test_summer_school_2016.dir

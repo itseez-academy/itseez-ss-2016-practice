@@ -1,0 +1,2 @@
+/usr/bin/ar cr ../lib/libsummer_school_2016_lib.a  CMakeFiles/summer_school_2016_lib.dir/image_processing.cpp.o CMakeFiles/summer_school_2016_lib.dir/detection.cpp.o CMakeFiles/summer_school_2016_lib.dir/tracking.cpp.o CMakeFiles/summer_school_2016_lib.dir/workaround.cpp.o
+/usr/bin/ranlib ../lib/libsummer_school_2016_lib.a
