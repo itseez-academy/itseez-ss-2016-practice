@@ -59,6 +59,7 @@ int main(int argc, const char** argv) {
   resizeWindow(kDstWindowName, 640, 480);
   imshow(kDstWindowName, src);
   waitKey();
+  
 
   return 0;
 }
