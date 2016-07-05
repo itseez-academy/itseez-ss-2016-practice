@@ -43,19 +43,19 @@ int main(int argc, const char** argv) {
   imshow(kSrcWindowName, src);
   waitKey(kWaitKeyDelay);
 
-  Rect rec(5,5,50,50);
-
+  Rect rec(50,50,200,200);
+  int size = 3;
 
   // CvtColor data.
   ImageProcessorImpl processor;
-    processor.CvtColor(src, rec);
+    processor.Filter(src, rec,size);
 
 
   // Show destination image.
   const string kDstWindowName = "Destination image";
   namedWindow(kDstWindowName, WINDOW_NORMAL);
   resizeWindow(kDstWindowName, 640, 480);
-  imshow(kDstWindowName, processor.CvtColor(src, rec));
+  imshow(kDstWindowName, processor.Filter(src, rec,size));
   waitKey();
 
   return 0;

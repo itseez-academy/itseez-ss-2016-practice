@@ -25,7 +25,11 @@ cv::Mat ImageProcessorImpl::CvtColor(const cv::Mat & src, const cv::Rect & roi)
 
 cv::Mat ImageProcessorImpl::Filter(const cv::Mat & src, const cv::Rect & roi, const int size)
 {
-	return cv::Mat();
+	Mat src_copy(src);
+	Mat src_copy_roi(src_copy, roi);
+	medianBlur(src_copy_roi,src_copy_roi,size);
+	return src_copy;
+
 }
 
 cv::Mat ImageProcessorImpl::DetectEdges(const cv::Mat & src, const cv::Rect & roi, const int filter_size, const int low_threshold, const int ratio, const int kernel_size)
