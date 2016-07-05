@@ -34,7 +34,20 @@ cv::Mat ImageProcessorImpl::Filter(const cv::Mat & src, const cv::Rect & roi, co
 
 cv::Mat ImageProcessorImpl::DetectEdges(const cv::Mat & src, const cv::Rect & roi, const int filter_size, const int low_threshold, const int ratio, const int kernel_size)
 {
-	return cv::Mat();
+	Mat dst_gray_roi, gray_blurred;
+	Mat detected_edges;		
+	Mat src_copy(src,roi);
+	cvtColor(src_copy, dst_gray_roi, CV_BGR2GRAY);
+	blur(dst_gray_roi, gray_blurred, Size(filter_size, filter_size));
+	Canny(gray_blurred, detected_edges, low_threshold, low_threshold * ratio, kernel_size);
+	Mat dst;
+	src.copyTo(dst);
+	Mat dst_roi(dst, roi);
+	
+	dst_roi = Scalar::all(0);
+
+	src_copy.copyTo(dst_roi, detected_edges);
+	return dst;
 }
 
 cv::Mat ImageProcessorImpl::Pixelize(const cv::Mat & src, const cv::Rect & roi, const int divs)

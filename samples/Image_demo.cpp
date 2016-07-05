@@ -44,18 +44,18 @@ int main(int argc, const char** argv) {
   waitKey(kWaitKeyDelay);
 
   Rect rec(50,50,200,200);
-  int size = 3;
+  int size = 5;
 
   // CvtColor data.
   ImageProcessorImpl processor;
-    processor.Filter(src, rec,size);
+    processor.DetectEdges(src, rec,size,10,10,5);
 
 
   // Show destination image.
   const string kDstWindowName = "Destination image";
   namedWindow(kDstWindowName, WINDOW_NORMAL);
   resizeWindow(kDstWindowName, 640, 480);
-  imshow(kDstWindowName, processor.Filter(src, rec,size));
+  imshow(kDstWindowName, processor.DetectEdges(src, rec, size, 10, 10, 5));
   waitKey();
 
   return 0;
