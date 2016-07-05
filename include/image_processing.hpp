@@ -19,6 +19,7 @@ class ImageProcessor {
 
 class ImageProcessorImpl : public ImageProcessor
 {
+public:
 	virtual cv::Mat CvtColor(const cv::Mat &src, const cv::Rect &roi);
 	virtual cv::Mat Filter(const cv::Mat &src, const cv::Rect &roi, const int size);
 	virtual cv::Mat DetectEdges(const cv::Mat &src, const cv::Rect &roi,
