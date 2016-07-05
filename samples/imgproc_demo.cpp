@@ -29,22 +29,22 @@ int main(int argc, const char** argv) {
   }
 
   // Read image.
-  Mat src = imread(parser.get<string>(0), CV_LOAD_IMAGE_GRAYSCALE);
+  Mat src = imread(parser.get<string>(0));
   if (src.empty()) {
 	  cout << "Failed to open image file '" + parser.get<string>(0) + "'."
 		  << endl;
 	  return 0;
   }
 
-  CertainImageProcessor proc;
-  proc.CvtColor(src, Rect(0, 0, src.cols, src.rows));
+  ImageProcessorImpl proc;
+  Mat res = proc.CvtColor(src, Rect(0, 0, src.cols-30, src.rows-30));
 
   // Show source image.
   const string kSrcWindowName = "Source image";
-  const int kWaitKeyDelay = 0;
-  namedWindow(kSrcWindowName, WINDOW_NORMAL);
-  resizeWindow(kSrcWindowName, 640, 480);
   imshow(kSrcWindowName, src);
+  const string kResWindowName = "Processed image";
+  imshow(kResWindowName, res);
+  const int kWaitKeyDelay = 0;
   waitKey(kWaitKeyDelay);
 
   return 0;
