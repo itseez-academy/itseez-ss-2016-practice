@@ -4,6 +4,8 @@
 #include "opencv2/core.hpp"
 #include "opencv2/highgui.hpp"
 
+
+
 #include "workaround.hpp"
 
 using namespace std;
@@ -15,6 +17,8 @@ const char* kOptions =
     "{ @image         |        | image to process         }"
     "{ t              |  128   | threshold                }"
     "{ h ? help usage |        | print help message       }";
+
+
 
 int main(int argc, const char** argv) {
   // Parse command line arguments.
@@ -34,7 +38,7 @@ int main(int argc, const char** argv) {
          << endl;
     return 0;
   }
-
+ 
   // Show source image.
   const string kSrcWindowName = "Source image";
   const int kWaitKeyDelay = 1;
