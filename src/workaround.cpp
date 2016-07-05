@@ -17,7 +17,11 @@ void MatrixProcessor::Threshold(unsigned char* const data, const int width,
 }
 
 
-	
+void MatrixProcessor::window(unsigned char* const data, const int width,
+	const int height, const int threshold)
+{
+
+}
 	
 
 	
