@@ -16,3 +16,4 @@ class ImageProcessor {
    virtual cv::Mat Pixelize(const cv::Mat &src, const cv::Rect &roi, 
      const int kDivs) = 0;
 };
+
