@@ -17,8 +17,8 @@ void MatrixProcessor::Threshold(unsigned char* const data, const int width,
 
 void MatrixProcessor::Averaging(unsigned char * const data, const int width, const int height)
 {
-	for (int i = 1; i < width - 1; ++i)
-		for (int j = 1; j < height - 1; ++j)
+	for (int j = 1; j < width - 1; ++j)
+		for (int i = 1; i < height - 1; ++i)
 			data[i*width + j] = (data[(i-1)*width + j -1] + data[(i-1)*width + j] + data[(i-1)*width + j + 1] + 
 			                    data[i*width + j - 1] + data[i*width + j] + data[i*width + j + 1] +
 			                    data[(i+1)*width + j - 1] + data[(i+1)*width + j]  + data[(i+1)*width + j + 1])/9;
