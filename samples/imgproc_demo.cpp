@@ -38,7 +38,13 @@ int main(int argc, const char** argv) {
 
   ImageProcessorImpl proc;
   Mat res = proc.CvtColor(src, Rect(0, 0, src.cols-30, src.rows-30));
-
+  res = proc.Filter(src, Rect(10, 20, src.cols - 50, src.rows - 50), 11);
+  int filterSize = 5;
+  int lowThreshold = 50;
+  int ratio = 3;
+  int kernelSize = 5;
+  res = proc.DetectEdges(src, Rect(10, 20, src.cols - 50, src.rows - 50),
+	  filterSize, lowThreshold, ratio, kernelSize);
   // Show source image.
   const string kSrcWindowName = "Source image";
   imshow(kSrcWindowName, src);
