@@ -101,15 +101,17 @@ int main(int argc, const char** argv) {
 
   ImageProcessorImpl imgProc;
   if (parser.get<bool>("gray")) {
-     std::cout<<"gray chosen"<<std::endl;
      Mat cvtImg = imgProc.CvtColor(src, rectSelect);
      imshow(srcWinName, cvtImg);
      waitKey(0);
 
 	 return 0;
   }
-  else if (parser.get<bool>("median")) {
-	  parser.printMessage();
+  if (parser.get<bool>("median")) {
+      const int filterSize = 15;
+      Mat fltImg = imgProc.Filter(src, rectSelect, filterSize);
+      imshow(srcWinName, fltImg);
+      waitKey(0);
       return 0;
   }
 
