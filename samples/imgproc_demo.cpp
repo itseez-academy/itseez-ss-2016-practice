@@ -45,6 +45,7 @@ int main(int argc, const char** argv) {
   int kernelSize = 5;
   res = proc.DetectEdges(src, Rect(10, 20, src.cols - 50, src.rows - 50),
 	  filterSize, lowThreshold, ratio, kernelSize);
+  res = proc.Pixelize(src, Rect(10, 20, src.cols - 50, src.rows - 50), 5);
   // Show source image.
   const string kSrcWindowName = "Source image";
   imshow(kSrcWindowName, src);

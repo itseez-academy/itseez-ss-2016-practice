@@ -39,21 +39,21 @@ Mat ImageProcessorImpl::DetectEdges(const cv::Mat &src, const cv::Rect &roi,
 	dst_roi.setTo(Scalar::all(0));
 	src_roi.copyTo(dst_roi, detected_edges);
 	return dst;
-
-	/*Выделить подматрицу src_roi из копии src.
-		Сконвертировать матрицу src_roi в оттенки серого, результат записать в матрицу src_gray_roi.
-		Отфильтровать src_gray_roi с использованием линейного фильтра, результат записать в матрицу gray_blurred.Примечание: для фильтрации можно использовать функцию blur.
-		Построить ребра detected_edges на изображении gray_blurred с помощью функции Canny.
-		Создать матрицу dst.
-		Скопировать изображение src в dst.
-		Выделить подматрицу dst_roi из dst в соответствии с областью roi.
-		Обнулить все значения в подматрице dst_roi.Примечание : необходимо использовать статический метод all класса Scalar.
-		Скопировать src_roi в dst_roi в соответствии с маской detected_edges.
-		Вернуть dst.*/
-
 }
 
 Mat ImageProcessorImpl::Pixelize(const cv::Mat &src, const cv::Rect &roi,
 		const int kDivs) {
-	return src;
+	Mat src_copy = src.clone();
+	Mat src_copy_roi = src_copy(roi);
+	int block_size_x = roi.width / kDivs;
+	int block_size_y = roi.height / kDivs;
+	for (int i = 0; i < kDivs; i++) {
+		for (int j = 0; j < kDivs; j ++) {
+			int x = i*block_size_x;
+			int y = j*block_size_y;
+			Mat src_roi_block = src_copy_roi(Rect(x, y, block_size_x, block_size_y));
+			blur(src_roi_block, src_roi_block, Size(block_size_x, block_size_y));
+		}
+	}
+	return src_copy;
 }
