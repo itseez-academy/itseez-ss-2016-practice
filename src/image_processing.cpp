@@ -1,4 +1,5 @@
 #include "image_processing.hpp"
+#include "workaround.hpp"
 
 #include <opencv2\imgproc.hpp>
 
@@ -23,7 +24,19 @@ Mat ImageProcessorImpl::CvtColor(const cv::Mat &src, const cv::Rect &roi)
 
 Mat ImageProcessorImpl::Filter(const cv::Mat &src, const cv::Rect &roi, const int size)
 {
+	int actualSize = size % 2 == 0 ? max(size - 1, 1) : size;
 
+	MatrixProcessor mp;
+
+	Mat newMat = src.clone();
+
+	Mat roiMat = newMat(roi);
+	Mat dataMat = roiMat.clone();
+
+	mp.Median(dataMat.data, roi.width, roi.height, size / 2);
+	merge(&dataMat, 1, roiMat);
+
+	return newMat;
 }
 
 Mat ImageProcessorImpl::DetectEdges(const cv::Mat &src, const cv::Rect &roi,
