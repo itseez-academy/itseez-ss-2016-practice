@@ -5,6 +5,7 @@
 
 #include "opencv2/core.hpp"
 #include "opencv2/highgui.hpp"
+#include "opencv2/imgproc.hpp"
 
 using namespace std;
 using namespace cv;
@@ -14,6 +15,9 @@ bool median = false;
 bool edges = false;
 bool pixel = false;
 Mat src;
+
+Mat shownPicture;
+const string kSrcWindowName = "Source image";
 
 void processImage(const cv::Mat &src, const cv::Rect &roi)
 {
@@ -69,12 +73,27 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata)
 	}
 	else if (event == EVENT_MOUSEMOVE)
 	{
-		//TODO: draw rectangle if selection started
+		if (mcState.is_selection_started && !mcState.is_selection_finished)
+		{
+			mcState.point_second = Point(x, y);
+
+			namedWindow(kSrcWindowName, WINDOW_NORMAL);
+			resizeWindow(kSrcWindowName, src.cols, src.rows);
+			
+			shownPicture = src.clone();
+			rectangle(shownPicture, mcState.point_first, mcState.point_second, Scalar(100, 100, 100));
+			imshow(kSrcWindowName, shownPicture);
+		}
 	}
-	else if (event == EVENT_LBUTTONUP)
+	else if (event == EVENT_LBUTTONUP && !mcState.is_selection_finished)
 	{
 		mcState.is_selection_finished = true;
 		mcState.point_second = Point(x, y);
+
+		namedWindow(kSrcWindowName, WINDOW_NORMAL);
+		resizeWindow(kSrcWindowName, src.cols, src.rows);
+		shownPicture = src.clone();
+		imshow(kSrcWindowName, shownPicture);
 
 		processImage(src, Rect(mcState.point_first, mcState.point_second));
 	}
@@ -108,7 +127,7 @@ int main(int argc, const char** argv) {
   mcState.is_selection_finished = false;
 
   // Read image.
-  src = imread(parser.get<string>(0));
+  shownPicture = src = imread(parser.get<string>(0));
   if (src.empty()) {
 	  cout << "Failed to open image file '" + parser.get<string>(0) + "'."
 		  << endl;
@@ -133,7 +152,6 @@ int main(int argc, const char** argv) {
   }
 
   // Show source image.
-  const string kSrcWindowName = "Source image";
   const int kWaitKeyDelay = 1;
   namedWindow(kSrcWindowName, WINDOW_NORMAL);
   resizeWindow(kSrcWindowName, src.cols, src.rows);
