@@ -102,7 +102,7 @@ int main(int argc, const char** argv) {
   Rect roi(mouse.point_first.x, mouse.point_first.y, 
 	  mouse.point_second.x - mouse.point_first.x, 
 	  mouse.point_second.y - mouse.point_first.y);
-  rectangle(src, roi, Scalar(254));
+  
 
   ImageProcessorImpl proc;
   bool firstFrame = true;
@@ -136,6 +136,7 @@ int main(int argc, const char** argv) {
 
 	  firstFrame = false;
 	  cap >> src;
+	  rectangle(dst, roi, Scalar(254));
 	  imshow(kDstWindowName, dst);
 	  if(waitKey(30) >= 0) break;
   }
