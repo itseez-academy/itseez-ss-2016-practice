@@ -60,7 +60,7 @@ Mat MyImageProc::Pixelize(const cv::Mat &src, const cv::Rect &roi,
 {
 	Mat src_copy = src.clone();
 	Mat src_roi_copy = src_copy(roi);
-	int block_size_x = roi.width / kDivs, int block_size_y = roi.height / kDivs;
+	int block_size_x = roi.width / kDivs, block_size_y = roi.height / kDivs;
 
 	for (int x = 0; x < roi.width; x += block_size_x)
 	{
