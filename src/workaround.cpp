@@ -12,10 +12,6 @@ int compare(const void * x1, const void * x2)
 void MatrixProcessor::Threshold(unsigned char* const _data, const int _width,
                                 const int _height, const int _threshold) 
 {
-	/*int _width = width;
-	int _height = height;
-	int _threshold = threshold;
-	unsigned char* const _data = data;*/
 	for (int i = 0; i < _width*_height; i++)
 	{
 		if (_data[i] < _threshold)
@@ -25,9 +21,6 @@ void MatrixProcessor::Threshold(unsigned char* const _data, const int _width,
 }
 void MatrixProcessor::Middle1(unsigned char* const _data, const int _width, const int _height)
 {
-	/*int _width = width;
-	int _height = height;
-	unsigned char* const _data = data;*/
 	for (int i = 1; i < _height-1; i++)
 	{
 		for (int j = 1; j < _width-1; j++)
@@ -41,9 +34,6 @@ void MatrixProcessor::Middle1(unsigned char* const _data, const int _width, cons
 }
 void MatrixProcessor::Middle2(unsigned char* const _data, const int _width, const int _height)
 {
-	/*int _width = width;
-	int _height = height;
-	unsigned char* const _data = data;*/
 	for (int i = 1; i < _height - 1; i++)
 	{
 		for (int j = 1; j < _width - 1; j++)
