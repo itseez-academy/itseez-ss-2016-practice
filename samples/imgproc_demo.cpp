@@ -10,6 +10,36 @@ using namespace cv;
 #include "image_processing.hpp"
 
 
+struct MouseCallbackState {
+	bool is_selection_started;
+	bool is_selection_finished;
+	Point point_first;
+	Point point_second;
+};
+
+void CallBackFunc(int event, int x, int y, int flags, void* userdata)
+{
+	/*if (event == EVENT_LBUTTONDOWN)
+	{
+		cout << "Left button of the mouse is clicked - position (" << x << ", " << y << ")" << endl;
+		MouseCallbackState * p_mc_state = (MouseCallbackState *)userdata;
+		p_mc_state->point_first = 
+	}
+	else if (event == EVENT_RBUTTONDOWN)
+	{
+		cout << "Right button of the mouse is clicked - position (" << x << ", " << y << ")" << endl;
+	}
+	else if (event == EVENT_MBUTTONDOWN)
+	{
+		cout << "Middle button of the mouse is clicked - position (" << x << ", " << y << ")" << endl;
+	}
+	else if (event == EVENT_MOUSEMOVE)
+	{
+		cout << "Mouse move over the window - position (" << x << ", " << y << ")" << endl;
+
+	}*/
+}
+
 const char* kAbout =
     "This is image processing test application";
 
@@ -40,6 +70,17 @@ int main(int argc, const char** argv) {
 	  return 0;
   }
 
+  //set the callback function for any mouse event
+  // Show source image.
+  const string kSrcWindowName = "Source image";
+  imshow(kSrcWindowName, src);
+  MouseCallbackState mc_state;
+  setMouseCallback(kSrcWindowName, CallBackFunc, (void *)&mc_state);
+
+  while (!mc_state.is_selection_finished) {
+	waitKey(30);
+  }
+
   ImageProcessorImpl proc;
   Mat res = src.clone();
   if (parser.has("gray")) {
@@ -60,9 +101,6 @@ int main(int argc, const char** argv) {
 	  res = proc.Pixelize(src, Rect(10, 20, src.cols - 50, src.rows - 50), 5);
   }
  
-  // Show images.
-  const string kSrcWindowName = "Source image";
-  imshow(kSrcWindowName, src);
   const string kResWindowName = "Processed image";
   imshow(kResWindowName, res);
   const int kWaitKeyDelay = 0;
