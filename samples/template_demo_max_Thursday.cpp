@@ -4,13 +4,15 @@
 #include "opencv2/core.hpp"
 #include "opencv2/highgui.hpp"
 
-#include "workaround.hpp"
+//#include "workaround.hpp"
+
+#include "image_processing.hpp"
 
 using namespace std;
 using namespace cv;
 
 const char* kAbout = "Application for practice #1.";
-
+Mat dest;
 const char* kOptions =
 "{ @image         |        | image to process         }"
 "{ t              |  128   | threshold                }"
@@ -42,6 +44,7 @@ int main(int argc, const char** argv) {
 
 	// Read image.
 	Mat src = imread(parser.get<string>(0), CV_LOAD_IMAGE_COLOR);
+	
 	if (src.empty()) {
 		cout << "Failed to open image file '" + parser.get<string>(0) + "'."
 			<< endl;
@@ -56,12 +59,17 @@ int main(int argc, const char** argv) {
 	imshow(kSrcWindowName, src);
 	waitKey(kWaitKeyDelay);
 
+	Rect roi(100,100,300,300);
+	
+	
 	// Threshold data.
-	MatrixProcessor processor;
+	ImageProcessorMax processor;
 	const int threshold = parser.get<int>("t");
 	try {
-		addF(src.data, src.cols, src.rows, threshold);
-		//processor.Threshold(src.data, src.cols, src.rows, threshold);
+		//cvtColor(src, src, CV_RGB2GRAY);
+		//cvtColor(src, src, CV_GRAY2RGB);
+		processor.CvtColor(src, roi);
+
 	}
 	catch (const std::exception& ex) {
 		cout << ex.what() << endl;
@@ -72,7 +80,8 @@ int main(int argc, const char** argv) {
 	const string kDstWindowName = "Destination image";
 	namedWindow(kDstWindowName, WINDOW_NORMAL);
 	resizeWindow(kDstWindowName, 640, 480);
-	imshow(kDstWindowName, src);
+	
+	imshow(kDstWindowName,processor.tmp);
 	waitKey();
 
 	return 0;
