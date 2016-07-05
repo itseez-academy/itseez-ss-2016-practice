@@ -2,40 +2,59 @@
 
 cv::Mat ImageProcessorImpl::CvtColor(const cv::Mat &src, const cv::Rect &roi) {
 
-	cv::Mat src_copy;
-	src.copyTo(src_copy);
+	cv::Mat srcCopy;
+	src.copyTo(srcCopy);
 
-	cv::Mat src_copy_roi = src_copy(roi);
-	cv::Mat dst_gray_roi;
+	cv::Mat srcCopyRoi = srcCopy(roi);
+	cv::Mat dstGrayRoi;
 
-	cv::cvtColor(src_copy_roi, dst_gray_roi, cv::COLOR_BGR2GRAY);
+	cv::cvtColor(srcCopyRoi, dstGrayRoi, cv::COLOR_BGR2GRAY);
 
 	std::vector<cv::Mat> channels;
-	channels.push_back(dst_gray_roi);
+	channels.push_back(dstGrayRoi);
 
-	cv::Mat dst_roi;
-	cv::merge(channels, dst_roi);
-	dst_roi.copyTo(src_copy_roi);
+	cv::Mat dstRoi;
+	cv::merge(channels, dstRoi);
+	dstRoi.copyTo(srcCopyRoi);
 
-	return src_copy;
+	return srcCopy;
 }
 
 cv::Mat ImageProcessorImpl::Filter(const cv::Mat &src, const cv::Rect &roi,
 		const int kSize) {
 
-	cv::Mat src_copy;
-	src.copyTo(src_copy);
+	cv::Mat srcCopy;
+	src.copyTo(srcCopy);
 
-	cv::Mat src_copy_roi = src_copy(roi);
+	cv::Mat srcCopyRoi = srcCopy(roi);
+	cv::medianBlur(srcCopyRoi, srcCopyRoi, kSize);
 
-	cv::medianBlur(src_copy_roi, src_copy_roi, kSize);
-
-	return src_copy;
+	return srcCopy;
 }
 
 cv::Mat ImageProcessorImpl::DetectEdges(const cv::Mat &src, const cv::Rect &roi,
 		const int filterSize, const int lowThreshold, const int ratio, const int kernelSize) {
-	return cv::Mat();
+
+	cv::Mat srcCopy;
+	src.copyTo(srcCopy);
+	cv::Mat srcRoi = srcCopy(roi);
+
+	cv::Mat srcGrayRoi;
+	cv::cvtColor(srcRoi, srcGrayRoi, cv::COLOR_BGR2GRAY);
+
+	cv::Mat grayBlurred;
+	cv::blur(srcGrayRoi, grayBlurred, cv::Size(filterSize, filterSize));
+	
+	cv::Mat detectedEdges;
+	cv::Canny(grayBlurred, detectedEdges, lowThreshold, lowThreshold * ratio, kernelSize);
+
+	cv::Mat dst;
+	src.copyTo(dst);
+	cv::Mat dstRoi = dst(roi);
+	dstRoi = cv::Scalar::all(0);
+
+	srcRoi.copyTo(dstRoi, detectedEdges);
+	return srcCopy;
 }
 
 cv::Mat ImageProcessorImpl::Pixelize(const cv::Mat &src, const cv::Rect &roi,
