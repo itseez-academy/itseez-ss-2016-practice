@@ -19,3 +19,17 @@ cv::Mat ImageProcessorImpl::CvtColor(const cv::Mat &src, const cv::Rect &roi){
 	return src_copy;
 
 };
+
+cv::Mat ImageProcessorImpl::Filter(const cv::Mat &src, const cv::Rect &roi,
+    const int size){
+
+};
+cv::Mat ImageProcessorImpl::DetectEdges(const cv::Mat &src, const cv::Rect &roi,
+    const int filter_size, const int low_threshold,
+    const int ratio, const int kernel_size){
+
+};
+cv::Mat ImageProcessorImpl::Pixelize(const cv::Mat &src, const cv::Rect &roi,
+    const int divs){
+
+};

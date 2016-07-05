@@ -24,10 +24,14 @@ const char* kOptions =
 "{ h ? help usage |        | print help message          }";
 
 struct MouseCallbackState {
+
 	bool is_selection_started;
 	bool is_selection_finished;
 	Point point_first;
 	Point point_second;
+
+    MouseCallbackState()
+        :is_selection_started(false), is_selection_finished(false){};
 };
 
 static void onMouse(int event, int x, int y, int, void* data)
@@ -45,10 +49,10 @@ static void onMouse(int event, int x, int y, int, void* data)
 		state->is_selection_finished = true;
 		state->point_second = Point(x, y);
 		break;
-	case EVENT_MOUSEMOVE:
-		state->is_selection_started = true;
-		state->is_selection_finished = false;
-		state->point_second = Point(x, y);
+    case EVENT_MOUSEMOVE:
+        if(state->is_selection_finished == false){
+            state->point_second = Point(x, y);
+        }
 		break;
 	}
 }
@@ -68,7 +72,7 @@ int main(int argc, const char** argv) {
     return 0;
   }
   
-  const int kWaitTime = 15;
+  const int kWaitTime = 1;
   Mat src = imread(parser.get<string>(0));
   MouseCallbackState mouseState;
   const string srcWinName = "Source image";
@@ -77,14 +81,36 @@ int main(int argc, const char** argv) {
   imshow(srcWinName, src);
   waitKey(kWaitTime);
 
-  
+  Mat srcTemp;
+  Rect rectSelect;
+
+  while(mouseState.is_selection_finished != true ){
+    src.copyTo(srcTemp);
+    if(mouseState.is_selection_started){
+        int x = min(mouseState.point_first.x, mouseState.point_second.x);
+        int y = min(mouseState.point_first.y, mouseState.point_second.y);
+        int width = abs(mouseState.point_second.x - mouseState.point_first.x);
+        int height = abs(mouseState.point_second.y - mouseState.point_first.y);
+        rectSelect = Rect(x, y, width, height);
+        cv::rectangle(srcTemp, rectSelect, Scalar(255,0,0));
+    }
+    imshow(srcWinName, srcTemp);
+    waitKey(kWaitTime);
+  }
+
+
+  ImageProcessorImpl imgProc;
   if (parser.get<bool>("gray")) {
-	 
+     std::cout<<"gray chosen"<<std::endl;
+     Mat cvtImg = imgProc.CvtColor(src, rectSelect);
+     imshow(srcWinName, cvtImg);
+     waitKey(0);
+
 	 return 0;
   }
   else if (parser.get<bool>("median")) {
 	  parser.printMessage();
-	  return 0;
+      return 0;
   }
 
   
