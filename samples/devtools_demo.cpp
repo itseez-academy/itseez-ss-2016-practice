@@ -54,10 +54,28 @@ int main(int argc, const char** argv) {
   }
 
   // Show destination image.
-  const string kDstWindowName = "Destination image";
+  const string kDstWindowName = "Destination(Threshold) image";
   namedWindow(kDstWindowName, WINDOW_NORMAL);
   resizeWindow(kDstWindowName, 640, 480);
   imshow(kDstWindowName, src);
+  waitKey(1);
+
+  // Median filter
+  Mat src2 = imread(parser.get<string>(0), CV_LOAD_IMAGE_GRAYSCALE);
+  const int radius = 3;
+  try {
+    processor.Average(src2.data, src2.cols, src2.rows, radius);
+  }
+  catch (const std::exception& ex) {
+    cout << ex.what() << endl;
+    return 0;
+  }
+
+  // Show destination median image.
+  const string kDstWindowName2 = "Destination(Averaged) image";
+  namedWindow(kDstWindowName2, WINDOW_NORMAL);
+  resizeWindow(kDstWindowName2, 640, 480);
+  imshow(kDstWindowName2, src2);
   waitKey();
 
   return 0;
