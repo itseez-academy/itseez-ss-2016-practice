@@ -53,10 +53,15 @@ int main(int argc, const char** argv) {
 	resizeWindow(kDstWindowName, 640, 480);
 	imshow(kDstWindowName, imgproc.CvtColor(src, Rect(5, 5, 250, 250)));*/
 
-	const string kDstWindowName2 = "Destination image 2";
+	/*const string kDstWindowName2 = "Destination image 2";
 	namedWindow(kDstWindowName2, WINDOW_NORMAL);
 	resizeWindow(kDstWindowName2, 640, 480);
 	imshow(kDstWindowName2, imgproc.Filter(src, Rect(5, 5, 250, 250),1));
+	*/
+	const string kDstWindowName3 = "Destination image 3";
+	namedWindow(kDstWindowName3, WINDOW_NORMAL);
+	resizeWindow(kDstWindowName3, 640, 480);
+	imshow(kDstWindowName3, imgproc.DetectEdges(src, Rect(5, 5, 250, 250), 5, 50, 3,5));
 	waitKey();
   return 0;
 }
