@@ -43,7 +43,7 @@ int main(int argc, const char** argv) {
   imshow(kSrcWindowName, src);
   waitKey(kWaitKeyDelay);
 
-  // Average data.
+  // Threshold data.
   MatrixProcessor processor;
   const int threshold = parser.get<int>("t");
   try {
