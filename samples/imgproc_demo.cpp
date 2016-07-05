@@ -46,6 +46,13 @@ static void OnMouse(int event, int x, int y, int, void*) {
 	}
 }
 
+const int medianSize = 5;
+const int edgesFilterSize = 5;
+const int edgesLowThreshold = 100;
+const int edgesRatio = 2;
+const int edgesKernelSize = 5;
+const int pixDivs = 10;
+
 int main(int argc, const char** argv) {
   // Parse command line arguments.
   CommandLineParser parser(argc, argv, kOptions);
@@ -93,17 +100,18 @@ int main(int argc, const char** argv) {
 
   if (parser.get<bool>("median"))
   {
-	  dst = proc.Filter(src, roi, 5);
+	  dst = proc.Filter(src, roi, medianSize);
   }
 
   if (parser.get<bool>("edges"))
   {
-	  dst = proc.DetectEdges(src, roi, 5, 100, 2, 5);
+	  dst = proc.DetectEdges(src, roi, edgesFilterSize, edgesLowThreshold,
+							edgesRatio, edgesKernelSize);
   }
 
   if (parser.get<bool>("pix"))
   {
-	  dst = proc.Pixelize(src, roi, 10);
+	  dst = proc.Pixelize(src, roi, pixDivs);
   }
 
   const string kDstWindowName = "Destination image";

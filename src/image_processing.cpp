@@ -47,7 +47,7 @@ Mat ImageProcessorImpl::DetectEdges(const cv::Mat &src, const cv::Rect &roi,
 	blur(src_gray_roi, src_blurred, Size(filterSize, filterSize));
 
 	Mat detected_edges;
-	Canny(src_blurred, detected_edges, lowThreshold, lowThreshold + 100);
+	Canny(src_blurred, detected_edges, lowThreshold, lowThreshold * ratio, kernelSize);
 
 	Mat dst;
 	src.copyTo(dst);
