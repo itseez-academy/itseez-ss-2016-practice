@@ -114,7 +114,20 @@ int main(int argc, const char** argv) {
       waitKey(0);
       return 0;
   }
+  if (parser.get<bool>("edges")) {
+     const int filterSize = 1;
+     const int lowThreshold =80;
+     const int ratio = 3;
+     const int kernelSize= 5;
+     Mat edgImg = imgProc.DetectEdges(src, rectSelect, filterSize, lowThreshold, ratio, kernelSize);
+     imshow(srcWinName, edgImg);
+     waitKey(0);
 
+     return 0;
+
+  }if (parser.get<bool>("pix")) {
+
+   }
   
 
   // Do something cool.
