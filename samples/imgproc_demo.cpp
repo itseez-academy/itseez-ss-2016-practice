@@ -84,8 +84,18 @@ int main(int argc, const char** argv) {
 
   mouse.is_selection_started = false;
   mouse.is_selection_finished = false;
-
+  Rect rect;
   while (!mouse.is_selection_finished) {
+	  if (mouse.is_selection_started) {
+		  Mat src_cpy;
+		  src.copyTo(src_cpy);
+		  rect.x = mouse.point_first.x;
+		  rect.y = mouse.point_first.y;
+		  rect.width = mouse.point_second.x - mouse.point_first.x;
+		  rect.height = mouse.point_second.y - mouse.point_first.y;
+		  rectangle(src_cpy, rect, Scalar(254));
+		  imshow(kSrcWindowName, src_cpy);
+	  }
 	  waitKey(30);
   }
 
