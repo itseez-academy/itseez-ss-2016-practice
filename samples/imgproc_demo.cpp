@@ -47,11 +47,19 @@ int main(int argc, const char** argv) {
   ImageProcessorImpl imgproc;
 
   // Show destination image.
-  const string kDstWindowName = "Destination image";
-  namedWindow(kDstWindowName, WINDOW_NORMAL);
-  resizeWindow(kDstWindowName, 640, 480);
-  imshow(kDstWindowName, imgproc.CvtColor(src, roi));
-  waitKey();
+  const string kDstWindowName1 = "Destination image 1";
+  namedWindow(kDstWindowName1, WINDOW_NORMAL);
+  resizeWindow(kDstWindowName1, 640, 480);
+  imshow(kDstWindowName1, imgproc.CvtColor(src, roi));
+
+  int kSize = 9 * 9;
+
+  // Show destination image.
+  const string kDstWindowName2 = "Destination image 2";
+  namedWindow(kDstWindowName2, WINDOW_NORMAL);
+  resizeWindow(kDstWindowName2, 640, 480);
+  imshow(kDstWindowName2, imgproc.Filter(src, roi, kSize));
+  
 
   waitKey();
   return 0;
