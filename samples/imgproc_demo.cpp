@@ -15,11 +15,12 @@ const char* kAbout =
 
 const char* kOptions =
 	"{ @image         | <none> | image to process            }"
+	"{ v video        | <none> | video to process            }"
 	"{ gray           |        | convert ROI to gray scale   }"
 	"{ median         |        | apply median filter for ROI }"
 	"{ edges          |        | detect edges in ROI         }"
 	"{ pix            |        | pixelize ROI                }"
-    "{ h ? help usage |        | print help message       }";
+    "{ h ? help usage |        | print help message          }";
 
 struct MousePosition {
 	bool is_selection_started;
@@ -65,10 +66,11 @@ int main(int argc, const char** argv) {
   }
 
 	Mat src, dst;
-  src = imread(parser.get<string>(0), 1);
+  VideoCapture cap(argv[1]);
+  cap >> src;
   if (src.empty()) {
 	  cout << "Failed to open image file '" + parser.get<string>(0) + "'."
-		  << endl;
+	  << endl;
 	  return 0;
   }
 
@@ -93,32 +95,40 @@ int main(int argc, const char** argv) {
   rectangle(src, roi, Scalar(254));
 
   ImageProcessorImpl proc;
-  if (parser.get<bool>("gray"))
-  {
-	  dst = proc.CvtColor(src, roi);
-  }
-
-  if (parser.get<bool>("median"))
-  {
-	  dst = proc.Filter(src, roi, medianSize);
-  }
-
-  if (parser.get<bool>("edges"))
-  {
-	  dst = proc.DetectEdges(src, roi, edgesFilterSize, edgesLowThreshold,
-							edgesRatio, edgesKernelSize);
-  }
-
-  if (parser.get<bool>("pix"))
-  {
-	  dst = proc.Pixelize(src, roi, pixDivs);
-  }
-
+  bool firstFrame = true;
   const string kDstWindowName = "Destination image";
   namedWindow(kDstWindowName, WINDOW_NORMAL);
   resizeWindow(kDstWindowName, 640, 480);
-  imshow(kDstWindowName, dst);
-  waitKey();
+  for (;;) {
+	  if (src.empty() && !firstFrame)
+		  break;
 
+	  if (parser.get<bool>("gray"))
+	  {
+		  dst = proc.CvtColor(src, roi);
+	  }
+
+	  if (parser.get<bool>("median"))
+	  {
+		  dst = proc.Filter(src, roi, medianSize);
+	  }
+
+	  if (parser.get<bool>("edges"))
+	  {
+		  dst = proc.DetectEdges(src, roi, edgesFilterSize, edgesLowThreshold,
+			  edgesRatio, edgesKernelSize);
+	  }
+
+	  if (parser.get<bool>("pix"))
+	  {
+		  dst = proc.Pixelize(src, roi, pixDivs);
+	  }
+
+	  firstFrame = false;
+	  cap >> src;
+	  imshow(kDstWindowName, dst);
+	  if(waitKey(30) >= 0) break;
+  }
+  waitKey();
   return 0;
 }
