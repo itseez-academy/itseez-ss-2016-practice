@@ -13,9 +13,12 @@ const char* kAbout =
     "Practice2";
 
 const char* kOptions =
-	"{ @image         |        | image to process         }"
-    "{ v video        |        | video to process         }"
-    "{ h ? help usage |        | print help message       }";
+"{ @image         | <none> | image to process            }"
+"{ gray           |        | convert ROI to gray scale   }"
+"{ median         |        | apply median filter for ROI }"
+"{ edges          |        | detect edges in ROI         }"
+"{ pix            |        | pixelize ROI                }"
+"{ h ? help usage |        | print help message          }";
 
 
 int main(int argc, const char** argv) {
@@ -46,6 +49,22 @@ int main(int argc, const char** argv) {
   imshow(kSrcWindowName, src);
   waitKey(kWaitKeyDelay);
 
+  if (parser.get<bool>("gray"))
+  {
+
+  }
+  else if (parser.get<bool>("median"))
+  {
+
+  }
+  else if (parser.get<bool>("edges"))
+  {
+
+  }
+  else if (parser.get<bool>("pix"))
+  {
+
+  }
 
   // Show destination image.
   const string kDstWindowName = "Destination image";
