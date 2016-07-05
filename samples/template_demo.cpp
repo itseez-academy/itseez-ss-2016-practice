@@ -4,6 +4,7 @@
 #include "opencv2/core.hpp"
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
+#include "image_processing.hpp"
 
 
 using namespace std;
@@ -26,6 +27,7 @@ struct MouseCallbackState {
 };
 
 MouseCallbackState mouse;
+Rect selection;
 
 static void onMouse(int event, int x, int y, int, void*)
 {
@@ -88,19 +90,38 @@ int main(int argc, const char** argv) {
 
   cout << mouse.point_first << endl;
   cout << mouse.point_second << endl;
+  
+  ////
+
+
+  Point pTopLeft = mouse.point_first;
+  Point pBottomRight = mouse.point_second;
+  cv::Rect selection(pTopLeft.x, pTopLeft.y, pBottomRight.x - pTopLeft.x, pBottomRight.y - pTopLeft.y);
+
+
+  ///
 
 
   // Draw a rectangle 
   rectangle(copy_src, mouse.point_first, mouse.point_second, Scalar(0, 55, 255));
 
   
-  imshow("Copy Image", copy_src);
+ // imshow("Copy Image", copy_src);
 
 
 
 
   // Do something cool.
+
+  Mat im_grayscale;
   
+  ImageProcessorImpl imageprocessor;
+  im_grayscale = imageprocessor.CvtColor(copy_src, selection);
+
+
+
+  imshow("Gray scale", im_grayscale);
+
   while (cv::waitKey(1) != 27);
 
 

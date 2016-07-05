@@ -17,3 +17,15 @@ class ImageProcessor {
      const int kDivs) = 0;
 };
 
+class ImageProcessorImpl : public ImageProcessor {
+public:
+	cv::Mat CvtColor(const cv::Mat &src, const cv::Rect &roi);
+	cv::Mat Filter(const cv::Mat &src, const cv::Rect &roi,
+		const int size);
+	cv::Mat DetectEdges(const cv::Mat &src, const cv::Rect &roi,
+		const int filter_size, const int low_threshold,
+		const int ratio, const int kernel_size);
+	 cv::Mat Pixelize(const cv::Mat &src, const cv::Rect &roi,
+		const int divs);
+	
+};
