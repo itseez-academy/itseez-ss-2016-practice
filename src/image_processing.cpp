@@ -1,8 +1,10 @@
 #include "image_processing.hpp"
 
 #include <opencv2\imgproc.hpp>
+#include <iostream>
 
 using namespace cv;
+using namespace std;
 
 Mat ImageProcessorImpl::CvtColor(const cv::Mat &src, const cv::Rect &roi)
 {
@@ -11,12 +13,16 @@ Mat ImageProcessorImpl::CvtColor(const cv::Mat &src, const cv::Rect &roi)
 	Mat roiMat = newMat(roi);
 	Mat grayRoi;
 
-	cvtColor(roiMat, grayRoi, CV_RGB2GRAY, 1);
+	cvtColor(roiMat, grayRoi, CV_BGR2GRAY);
 
-	Mat tmp[3];
-	tmp[0] = tmp[2] = tmp[3] = grayRoi;
+	std::vector<Mat> tmp;
+	tmp.push_back(grayRoi);
+	tmp.push_back(grayRoi);
+	tmp.push_back(grayRoi);
 
-	merge(tmp, 3, roiMat);
+	Mat dstRoi;
+	merge(tmp, dstRoi);
+	dstRoi.copyTo(roiMat);
 
 	return newMat;
 }

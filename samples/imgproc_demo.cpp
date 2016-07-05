@@ -108,7 +108,7 @@ int main(int argc, const char** argv) {
   mcState.is_selection_finished = false;
 
   // Read image.
-  src = imread(parser.get<string>(0), CV_LOAD_IMAGE_GRAYSCALE);
+  src = imread(parser.get<string>(0));
   if (src.empty()) {
 	  cout << "Failed to open image file '" + parser.get<string>(0) + "'."
 		  << endl;
