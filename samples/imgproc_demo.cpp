@@ -60,6 +60,15 @@ int main(int argc, const char** argv) {
   resizeWindow(kDstWindowName2, 640, 480);
   imshow(kDstWindowName2, imgproc.Filter(src, roi, kSize));
   
+  int filterSize = 7;
+  int lowThreshold = 1;
+  int ratio = 50;
+  int kernelSize = 3;
+  // Show destination image.
+  const string kDstWindowName3 = "Destination image 3";
+  namedWindow(kDstWindowName3, WINDOW_NORMAL);
+  resizeWindow(kDstWindowName3, 640, 480);
+  imshow(kDstWindowName3, imgproc.DetectEdges(src, roi, filterSize, lowThreshold, ratio, kernelSize));
 
   waitKey();
   return 0;
