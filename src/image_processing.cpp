@@ -33,17 +33,31 @@ Mat ImageProcessorImpl::Filter(const cv::Mat &src, const cv::Rect &roi, const in
 	Mat roiMat = newMat(roi);
 	Mat dataMat = roiMat.clone();
 
-	mp.Median(dataMat.data, roi.width, roi.height, size / 2);
-	merge(&dataMat, 1, roiMat);
+	mp.Median(dataMat.data, roi.width, roi.height, actualSize / 2);
+	dataMat.copyTo(roiMat);
 
 	return newMat;
+	//TODO: check if I have to use cv::medianBlur
 }
 
+/*
+	This implementation uses kernel_size for Sobel and filter_size for blur
+*/
 Mat ImageProcessorImpl::DetectEdges(const cv::Mat &src, const cv::Rect &roi,
 	const int filter_size, const int low_threshold,
 	const int ratio, const int kernel_size)
 {
+	Mat grayRoi, grayBlurred, edges;
 
+	cvtColor(src(roi), grayRoi, CV_RGB2GRAY, 1);
+	blur(grayRoi, grayBlurred, Size(filter_size, filter_size));
+	Canny(grayBlurred, edges, low_threshold, ratio, kernel_size);
+
+	Mat newMat = src.clone();
+	newMat(roi).setTo(Scalar::all(0));
+	src(roi).copyTo(newMat(roi), edges);
+
+	return newMat;
 }
 
 Mat ImageProcessorImpl::Pixelize(const cv::Mat &src, const cv::Rect &roi, const int divs)
