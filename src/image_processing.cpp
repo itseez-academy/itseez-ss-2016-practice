@@ -1,5 +1,4 @@
 #include "image_processing.hpp"
-#include "workaround.hpp"
 
 #include <opencv2\imgproc.hpp>
 
@@ -24,20 +23,18 @@ Mat ImageProcessorImpl::CvtColor(const cv::Mat &src, const cv::Rect &roi)
 
 Mat ImageProcessorImpl::Filter(const cv::Mat &src, const cv::Rect &roi, const int size)
 {
-	int actualSize = size % 2 == 0 ? max(size - 1, 1) : size;
-
-	MatrixProcessor mp;
+	if (size % 2 == 0)
+		throw "wrong kernel size";
 
 	Mat newMat = src.clone();
 
 	Mat roiMat = newMat(roi);
 	Mat dataMat = roiMat.clone();
 
-	mp.Median(dataMat.data, roi.width, roi.height, actualSize / 2);
+	medianBlur(roiMat, dataMat, size);
 	dataMat.copyTo(roiMat);
 
 	return newMat;
-	//TODO: check if I have to use cv::medianBlur
 }
 
 /*
@@ -62,5 +59,29 @@ Mat ImageProcessorImpl::DetectEdges(const cv::Mat &src, const cv::Rect &roi,
 
 Mat ImageProcessorImpl::Pixelize(const cv::Mat &src, const cv::Rect &roi, const int divs)
 {
+	Mat newMat = src.clone();
 
+	int pixelWidth = roi.width / divs;
+	int pixelHeight = roi.height / divs;
+
+	Size * pixelSize = new Size(pixelWidth, pixelHeight);
+	Rect * pixelRect = new Rect(roi.x, roi.y, pixelWidth, pixelHeight);
+
+	for (int i = 0; i < divs; i++)
+		for (int j = 0; j < divs; j++)
+		{
+			pixelRect->x = roi.x + i * pixelWidth;
+			pixelRect->y = roi.y + j * pixelHeight;
+			
+
+			Mat pixel = newMat(*pixelRect), blurredPixel;
+			blur(pixel, blurredPixel, *pixelSize);
+
+			blurredPixel.copyTo(pixel);
+		}
+
+	delete pixelSize;
+	delete pixelRect;
+
+	return newMat;
 }
