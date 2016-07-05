@@ -126,6 +126,10 @@ int main(int argc, const char** argv) {
      return 0;
 
   }if (parser.get<bool>("pix")) {
+      const int divs = 3;
+      Mat edgImg = imgProc.Pixelize(src, rectSelect, divs);
+      imshow(srcWinName, edgImg);
+      waitKey(0);
 
    }
   
