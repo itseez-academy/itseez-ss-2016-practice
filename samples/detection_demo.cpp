@@ -72,18 +72,64 @@ int main(int argc, const char** argv) {
 	  namedWindow(windowName, WINDOW_NORMAL);
 	  resizeWindow(windowName, image.cols, image.rows);
 	  imshow(windowName, image);
-	  
+
 	  if (parser.has("model"))
 	  {
 		  showDetection(image, parser.get<string>("model"));
 	  }
-	  
+
 	  waitKey();
+  }
+  else if (parser.has("video"))
+  {
+  
+  }
+  else if (parser.has("camera"))
+  {
+	  VideoCapture cap(0); // open the default camera
+	  if (!cap.isOpened())  // check if we succeeded
+		  return -1;
+
+	  const string camWindowName = "Your camera";
+	  namedWindow(camWindowName, WINDOW_NORMAL);
+	  resizeWindow(camWindowName, 640, 480);
+
+	  const string detWindowName = "After detection";
+	  namedWindow(detWindowName, WINDOW_NORMAL);
+	  resizeWindow(detWindowName, 640, 480);
+	  
+	  if (parser.has("model"))
+	  {
+		  std::shared_ptr<Detector> detector = Detector::CreateDetector("cascade");
+
+		  if (detector->Init(parser.get<string>("model")))
+			  while (cap.isOpened())
+			  {
+				  Mat frame;
+				  cap >> frame;
+
+				  std::vector<cv::Rect> objects;
+				  std::vector<double> scores;
+				  detector->Detect(frame, objects, scores);
+
+				  Mat newMat = frame.clone();
+
+				  int i = 0;
+				  while (i < objects.size())
+				  {
+					  cv::rectangle(newMat, objects.at(i), cv::Scalar(0, 0, 0));
+					  i++;
+				  }
+
+				  imshow(camWindowName, frame);
+				  imshow(detWindowName, newMat);
+
+				  if (cv::waitKey(30) >= 0) break;
+			  }
+	  }
   }
 
   //TODO: allow video
-  //TODO: allow camera
-
 
 
   return 0;
