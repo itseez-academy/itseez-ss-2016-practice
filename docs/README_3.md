@@ -72,8 +72,8 @@ class Detector {
 
 ## Детальная инструкция по выполнению работы
 
-  1. Разработать объявление наследника `CascadeDetector` класса
-     `Detector` и поместить его в файл `include\detector.hpp`.
+  1. Дополнить заголовочный файл `include\detection.hpp` объявлением 
+     класса `CascadeDetector`, унаследовав его от класса `Detector`.
 
   ```cpp
   class CascadeDetector : public Detector {
@@ -114,8 +114,7 @@ class Detector {
      1. В качестве значения параметра `score` вернуть число срабатываний детектора,
         пришедшихся на один объект.
 
-  1. Скопировать `samples\template_demo.cpp` в директорию `samples`.
-  1. Переименовать копию примера в `samples\detection_demo.cpp`.
+  1. Сделать копию файла `samples\template_demo.cpp` под именем `samples\detection_demo.cpp`.
   1. Разработать приложение `samples\detection_demo.cpp` в соответствии
      с требованиями, перечисленными в основных задачах.
      
@@ -130,7 +129,7 @@ class Detector {
         "{ i image        | <none> | image to process                         }"
         "{ v video        | <none> | video to process                         }"
         "{ c camera       | <none> | camera to get video from                 }"
-        "{ m model        | <none> |                                          }"
+        "{ m model        | <none> | path to detector file                    }"
         "{ h ? help usage |        | print help message                       }";
      ```
 
@@ -141,9 +140,12 @@ class Detector {
      1. Отрисовать все срабатывания детектора в виде прямоугольников
         на изображении и отобразить результат.
 
-  1. Загрузить один из готовых детекторов на из директории
-     `test/test_data/detection/cascades` и визуально оценить качество его работы на
-     тестовом видео (`test/test_data/video/logo.mp4`) или/и изображении с веб-камеры.
+  1. Загрузить один из готовых детекторов из директории
+     `test/test_data/detection/cascades/` и визуально оценить качество его работы на
+     тестовом видео (`test/test_data/video/logo.mp4`) или/и видео с веб-камеры.
+     Также можно протестировать готовые модели для детектирования лиц/людей,
+     которые предоставляются в составе библиотеки OpenCV
+     (`<source-каталог OpenCV>/data/*cascades/`).
 
   1. Поочередно обучить детекторы на LBP- и HAAR-признаках для одного из логотипов
      из директории `test/test_data/detection/positives`.
@@ -152,7 +154,8 @@ class Detector {
         и файл `test/test_data/detection/negatives.txt` в текущую рабочую директорию.
 
      1. Запустить приложение `opencv_traincascade` из состава OpenCV
-        (`<build-каталог OpenCV>/bin/opencv_traincascade`), указав следующие параметры:
+        (`<build-каталог OpenCV>/bin/opencv_traincascade` или 
+        `<build-каталог OpenCV>/x64/vc*/bin/opencv_traincascade`), указав следующие параметры:
 
         * `-vec <путь до vec-файла с позитивными примерами>`.
           Готовые vec-файлы c 2000 позитивов для некоторых логотипов можно найти в
@@ -189,7 +192,8 @@ class Detector {
   1. Сгенерировать vec-файл для выбранного лого самостоятельно
      и повоторить обучение детектора. Для генерации vec-файла
      предназначено приложение `opencv_createsamples`
-     (`<build-каталог OpenCV>/bin/opencv_createsamples`).
+     (`<build-каталог OpenCV>/bin/opencv_createsamples` или
+     `<build-каталог OpenCV>/x64/vc*/bin/opencv_createsamples`).
      Данное приложение позволяет сгенерировать выборку позитивных изображений
      путем применения случайных геометрических преобразований
      и изменения яркости заданного позитивного изображения, а также
@@ -205,6 +209,6 @@ class Detector {
 
 
 <!-- LINKS -->
-[cascade-documentation]: docs.opencv.org/master/d1/de5/classcv_1_1CascadeClassifier.html
+[cascade-documentation]: http://docs.opencv.org/master/d1/de5/classcv_1_1CascadeClassifier.html
 [hog-documentation]: http://docs.opencv.org/master/d5/d33/structcv_1_1HOGDescriptor.html
 [feedback_day3]: https://docs.google.com/forms/d/1gyrYDnRgoHUZ_URK5j4p7lrXw6FEtk5tBYwo6eND7GI/viewform
