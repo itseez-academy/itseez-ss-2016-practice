@@ -33,7 +33,7 @@ int main(int argc, const char** argv) {
 
   // Do something cool.
   std::shared_ptr<Detector> detector = CascadeDetector::CreateDetector("cascade");
-  (*detector).Init("haarcascade_frontalface_default.xml");
+  detector->Init("haarcascade_frontalface_default.xml");
   cv::Mat frame = cv::imread("lena.png");
   std::vector<cv::Rect> objects;
   std::vector<double> score;
@@ -51,11 +51,10 @@ int main(int argc, const char** argv) {
   cv::waitKey();
 */
  cv::VideoCapture capture(0);
- cout << capture.isOpened();
  for (;;)
  {
 	 capture >> frame;
-	 (*detector).Detect(frame, objects, score);
+	 detector->Detect(frame, objects, score);
 	 cout << objects.size();
 	 if (frame.empty())
 	 {
