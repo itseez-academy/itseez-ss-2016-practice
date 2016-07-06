@@ -5,6 +5,7 @@
 
 #include "opencv2/core.hpp"
 #include "opencv2/highgui.hpp"
+#include "opencv2/imgproc.hpp"
 
 using namespace std;
 using namespace cv;
@@ -18,6 +19,30 @@ const char* kOptions =
 	"{ m model        | <none> |                                          }"
 	"{ h ? help usage |        | print help message                       }";
 
+void showDetection(Mat image, const std::string& model_file_path)
+{
+	std::shared_ptr<Detector> detector = Detector::CreateDetector("cascade");
+
+	std::vector<cv::Rect> objects;
+	std::vector<double> scores;
+
+	if (detector->Init(model_file_path))
+	{
+		detector->Detect(image, objects, scores);
+	}
+
+	Mat newMat = image.clone();
+	
+	for (int i = 0; i < objects.size(); i++)
+	{
+		cv::rectangle(newMat, objects[i], cv::Scalar(0, 0, 0));
+	}
+
+	const string windowName = "After detection";
+	namedWindow(windowName, WINDOW_NORMAL);
+	resizeWindow(windowName, image.cols, image.rows);
+	imshow(windowName, newMat);
+}
 
 int main(int argc, const char** argv) {
   // Parse command line arguments.
