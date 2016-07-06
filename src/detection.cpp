@@ -7,9 +7,13 @@ using std::shared_ptr;
 using namespace cv;
 
 shared_ptr<Detector> Detector::CreateDetector(const string& name) {
+	if (name == "cascade") {
+		return std::make_shared<CascadeDetector>();
+	}
   std::cerr << "Failed to create detector with name '" << name << "'"
             << std::endl;
   return nullptr;
+
 }
 
 bool CascadeDetector::Init(const std::string& model_file_path)
@@ -20,12 +24,7 @@ bool CascadeDetector::Init(const std::string& model_file_path)
 	}
 	else return false;
 }
-std::shared_ptr<Detector> CascadeDetector::CreateDetector(const std::string& name)
-{
-	if (name == "cascade") {
-		return std::make_shared<CascadeDetector>();
-	}
-}
+
 void CascadeDetector::Detect(const cv::Mat& frame, std::vector<cv::Rect>& objects,
 	std::vector<double>& scores)
 {
