@@ -20,5 +20,5 @@ protected:
 public:
 	virtual bool Init(const std::string& model_file_path);
 	virtual void Detect(const cv::Mat& frame, std::vector<cv::Rect>& objects,
-		std::vector<int>& scores);
+		std::vector<double>& scores);
 };
