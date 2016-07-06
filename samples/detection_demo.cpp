@@ -23,27 +23,28 @@ void showDetection(const Mat & image, const std::string& model_file_path)
 {
 	std::shared_ptr<Detector> detector = Detector::CreateDetector("cascade");
 
-	std::vector<cv::Rect> objects;
-	std::vector<double> scores;
-
-	if (detector->Init(model_file_path))
+	if (detector != nullptr)
 	{
-		detector->Detect(image, objects, scores);
-	}
+		std::vector<cv::Rect> objects;
+		std::vector<double> scores;
 
-	Mat newMat = image.clone();
-	
-	int i = 0;
-	while(i < objects.size())
-	{
-		cv::rectangle(newMat, objects.at(i), cv::Scalar(0, 0, 0));
-		i++;
-	}
+		if (detector->Init(model_file_path))
+		{
+			detector->Detect(image, objects, scores);
+		}
 
-	const string windowName = "After detection";
-	namedWindow(windowName, WINDOW_NORMAL);
-	resizeWindow(windowName, newMat.cols, newMat.rows);
-	imshow(windowName, newMat);
+		Mat newMat = image.clone();
+
+		for (int i = 0; i < objects.size(); i++)
+		{
+			cv::rectangle(newMat, objects.at(i), cv::Scalar(0, 0, 0));
+		}
+
+		const string windowName = "After detection";
+		namedWindow(windowName, WINDOW_NORMAL);
+		resizeWindow(windowName, newMat.cols, newMat.rows);
+		imshow(windowName, newMat);
+	}
 }
 
 int main(int argc, const char** argv) {
