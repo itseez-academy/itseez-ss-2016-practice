@@ -19,11 +19,11 @@ struct MouseCallbackState {
 
 void CallBackFunc(int event, int x, int y, int flags, void* userdata)
 {
-	/*if (event == EVENT_LBUTTONDOWN)
+	if (event == EVENT_LBUTTONDOWN)
 	{
 		cout << "Left button of the mouse is clicked - position (" << x << ", " << y << ")" << endl;
-		MouseCallbackState * p_mc_state = (MouseCallbackState *)userdata;
-		p_mc_state->point_first = 
+		/*MouseCallbackState * p_mc_state = (MouseCallbackState *)userdata;
+		p_mc_state->point_first = */
 	}
 	else if (event == EVENT_RBUTTONDOWN)
 	{
@@ -37,7 +37,7 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata)
 	{
 		cout << "Mouse move over the window - position (" << x << ", " << y << ")" << endl;
 
-	}*/
+	}
 }
 
 const char* kAbout =
@@ -77,9 +77,9 @@ int main(int argc, const char** argv) {
   MouseCallbackState mc_state;
   setMouseCallback(kSrcWindowName, CallBackFunc, (void *)&mc_state);
 
-  while (!mc_state.is_selection_finished) {
+  /*while (!mc_state.is_selection_finished) {
 	waitKey(30);
-  }
+  }*/
 
   ImageProcessorImpl proc;
   Mat res = src.clone();
