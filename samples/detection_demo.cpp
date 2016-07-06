@@ -30,27 +30,54 @@ int main(int argc, const char** argv) {
     return 0;
   }
 
-  Mat src = imread(parser.get<string>("i"));
+  /*Mat src = imread(parser.get<string>("i"));
   if (src.empty()) {
 	  cout << "Failed to open image file '" + parser.get<string>("i") + "'." << endl;
 	  return 0;
-  }
+  }*/
 	  
-  const string kSrcWindowName = "Source image";
+  VideoCapture capture;
+  Mat frame;
+  //capture.open(0);	//ÊÀÌÅÐÀ
+  capture.open("logo.mp4");
+  if (!capture.isOpened()) 
+  { 
+	  printf("--(!)Error opening video capture\n"); return -1; 
+  }
+  while (capture.read(frame))
+  {
+	  if (frame.empty())
+	  {
+		  printf(" --(!) No captured frame -- Break!");
+		  break;
+	  }
+	  //-- 3. Apply the classifier to the frame
+	  CascadeDetector detector;
+	  vector<Rect> obj;
+	  detector.Init(parser.get<string>("m"));
+	  detector.Detect(frame, obj);
+
+	  for (const auto& r : obj)
+		  rectangle(frame, r, CV_RGB(255, 0, 255));
+	  imshow("x", frame);
+	  int c = waitKey(1);
+	  if ((char)c == 27) { break; } // escape
+  }
+  /*const string kSrcWindowName = "Source image";
   const int kWaitKeyDelay = 1;
   namedWindow(kSrcWindowName, WINDOW_NORMAL);
   resizeWindow(kSrcWindowName, 640, 480);
-  imshow(kSrcWindowName, src);
+  imshow(kSrcWindowName, src);*/
 
   // Do something cool.
-  CascadeDetector detector;
+  /*CascadeDetector detector;
   vector<Rect> obj;
   detector.Init(parser.get<string>("m"));
   detector.Detect(src, obj);
 
   for (const auto& r:obj)
 	  rectangle(src, r , CV_RGB(255, 0, 255));
-  imshow("x", src);
+  imshow("x", src);*/
   waitKey();
   return 0;
 }
