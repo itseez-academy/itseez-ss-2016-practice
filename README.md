@@ -46,7 +46,7 @@ OpenCV. Каждая работа предполагает реализацию 
   1. [Практика 4. Сопровождение объектов с использованием алгоритма Median Flow](docs/README_4.md).
 
 По завершении изучения лекционных материалов пятого рабочего дня Летней школы
-заполните, пожалуйста, [отзыв участника][feedback_day5].
+заполниите, пожалуйста, [отзыв участника][feedback_day5].
 
 <!-- LINKS -->
 [feedback_form]: https://docs.google.com/forms/d/1tkVTza1_0zxO013ukRquIaODo2MirhCmWvLOIINFkxc/viewform
