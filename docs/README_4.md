@@ -1,5 +1,7 @@
 # Практика 4. Сопровождение объектов с использованием алгоритма Median Flow
 
+[![Feedback](feedback.png)][feedback_day4]
+
 ## Цели
 
 __Цель данной работы__ - ...
@@ -29,3 +31,4 @@ __Дополнительные задачи__
     
 
 <!-- LINKS -->
+[feedback_day4]: https://docs.google.com/forms/d/1eWnjGJ38lawv_JbmOtZuC6jx_sRyNywDzfnWySrxMvE/viewform
