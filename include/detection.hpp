@@ -12,8 +12,8 @@ class Detector {
  public:
 	 static std::shared_ptr<Detector> CreateDetector(const std::string& name);
 	 virtual bool Init(const std::string& model_file_path) = 0;
-	 void Detect(const cv::Mat& frame, std::vector<cv::Rect>& objects,
-		 std::vector<double>& scores) {};
+	 virtual void Detect(const cv::Mat& frame, std::vector<cv::Rect>& objects,
+		 std::vector<double>& scores) = 0;
 };
 
 class CascadeDetector : public Detector {
