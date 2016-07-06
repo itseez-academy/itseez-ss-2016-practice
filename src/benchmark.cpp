@@ -1,16 +1,17 @@
-#include "metrics.hpp"
+#include "benchmark.hpp"
 
 #include <algorithm>
 #include <iostream>
 #include <utility>
 #include <vector>
+#include <numeric>
 
 #include "opencv2/opencv.hpp"
 
 using namespace cv;
 using namespace std;
 
-float PrecisionRecallEvaluator::IntersectionOverUnion(const Rect& r,
+float DetectionQualityEvaluator::IntersectionOverUnion(const Rect& r,
                                                       const Rect& p) {
   float intersection_area = (r & p).area();
   float union_area = r.area() + p.area() - intersection_area;
@@ -18,7 +19,7 @@ float PrecisionRecallEvaluator::IntersectionOverUnion(const Rect& r,
   return iou;
 }
 
-PrecisionRecallEvaluator::PrecisionRecallEvaluator() {
+DetectionQualityEvaluator::DetectionQualityEvaluator() {
   num_objects_ = 0;
   num_objects_found_ = 0;
   num_responses_ = 0;
@@ -27,7 +28,7 @@ PrecisionRecallEvaluator::PrecisionRecallEvaluator() {
   threshold_ = 0.5f;
 }
 
-void PrecisionRecallEvaluator::UpdateMetrics(const vector<Rect>& guess,
+void DetectionQualityEvaluator::UpdateMetrics(const vector<Rect>& guess,
                                              const vector<Rect>& ground_truth) {
   num_frames_++;
   num_objects_ += ground_truth.size();
@@ -62,7 +63,7 @@ void PrecisionRecallEvaluator::UpdateMetrics(const vector<Rect>& guess,
       std::count(correct_detections.begin(), correct_detections.end(), false);
 }
 
-void PrecisionRecallEvaluator::UpdateMetrics(const vector<Rect>& guess,
+void DetectionQualityEvaluator::UpdateMetrics(const vector<Rect>& guess,
                                              const vector<double>& scores,
                                              const vector<Rect>& ground_truth) {
   if (guess.size() != scores.size()) {
@@ -82,13 +83,13 @@ void PrecisionRecallEvaluator::UpdateMetrics(const vector<Rect>& guess,
   UpdateMetrics(guess_sorted, ground_truth);
 }
 
-float PrecisionRecallEvaluator::GetDetectionRate() const {
+float DetectionQualityEvaluator::GetDetectionRate() const {
   return num_objects_ == 0
              ? 0.0f
              : num_objects_found_ / static_cast<float>(num_objects_);
 }
 
-float PrecisionRecallEvaluator::GetFalseAlarmRate() const {
+float DetectionQualityEvaluator::GetFalseAlarmRate() const {
   return num_responses_ == 0
              ? 0.0f
              : num_false_alarms_ / static_cast<float>(num_responses_);
