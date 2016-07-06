@@ -175,8 +175,5 @@ int main(int argc, const char** argv) {
 	  }
   }
 
-  //TODO: allow video
-
-
   return 0;
 }
