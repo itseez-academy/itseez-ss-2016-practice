@@ -4,6 +4,8 @@
 
 #include <iostream>
 
+#include "C:\Users\iss2016\itseez-ss-2016-practice\include\workaround.hpp"
+
 using namespace cv;
 
 TEST(dummy, dummy_test)
@@ -12,3 +14,5 @@ TEST(dummy, dummy_test)
     Mat submat = mat(Rect(0, 0, 2, 3));
     EXPECT_FALSE(submat.isContinuous());
 }
+
+
