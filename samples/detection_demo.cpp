@@ -19,7 +19,7 @@ const char* kOptions =
 	"{ m model        | <none> |                                          }"
 	"{ h ? help usage |        | print help message                       }";
 
-void showDetection(Mat image, const std::string& model_file_path)
+void showDetection(const Mat & image, const std::string& model_file_path)
 {
 	std::shared_ptr<Detector> detector = Detector::CreateDetector("cascade");
 
@@ -33,14 +33,16 @@ void showDetection(Mat image, const std::string& model_file_path)
 
 	Mat newMat = image.clone();
 	
-	for (int i = 0; i < objects.size(); i++)
+	int i = 0;
+	while(i < objects.size())
 	{
-		cv::rectangle(newMat, objects[i], cv::Scalar(0, 0, 0));
+		cv::rectangle(newMat, objects.at(i), cv::Scalar(0, 0, 0));
+		i++;
 	}
 
 	const string windowName = "After detection";
 	namedWindow(windowName, WINDOW_NORMAL);
-	resizeWindow(windowName, image.cols, image.rows);
+	resizeWindow(windowName, newMat.cols, newMat.rows);
 	imshow(windowName, newMat);
 }
 
@@ -70,6 +72,12 @@ int main(int argc, const char** argv) {
 	  namedWindow(windowName, WINDOW_NORMAL);
 	  resizeWindow(windowName, image.cols, image.rows);
 	  imshow(windowName, image);
+	  
+	  if (parser.has("model"))
+	  {
+		  showDetection(image, parser.get<string>("model"));
+	  }
+	  
 	  waitKey();
   }
 
