@@ -15,29 +15,23 @@ struct MouseCallbackState {
 	bool is_selection_finished;
 	Point point_first;
 	Point point_second;
+
+	MouseCallbackState() : is_selection_started(false), is_selection_finished(false) {}
 };
 
 void CallBackFunc(int event, int x, int y, int flags, void* userdata)
 {
+	MouseCallbackState * p_mc_state = (MouseCallbackState *)userdata;
 	if (event == EVENT_LBUTTONDOWN)
 	{
-		cout << "Left button of the mouse is clicked - position (" << x << ", " << y << ")" << endl;
-		/*MouseCallbackState * p_mc_state = (MouseCallbackState *)userdata;
-		p_mc_state->point_first = */
+		p_mc_state->point_first = Point(x, y);
+		p_mc_state->is_selection_started = true;
 	}
-	else if (event == EVENT_RBUTTONDOWN)
+	else if (event == EVENT_LBUTTONUP)
 	{
-		cout << "Right button of the mouse is clicked - position (" << x << ", " << y << ")" << endl;
+		p_mc_state->is_selection_finished = true;
 	}
-	else if (event == EVENT_MBUTTONDOWN)
-	{
-		cout << "Middle button of the mouse is clicked - position (" << x << ", " << y << ")" << endl;
-	}
-	else if (event == EVENT_MOUSEMOVE)
-	{
-		cout << "Mouse move over the window - position (" << x << ", " << y << ")" << endl;
-
-	}
+	p_mc_state->point_second = Point(x, y);
 }
 
 const char* kAbout =
@@ -77,28 +71,36 @@ int main(int argc, const char** argv) {
   MouseCallbackState mc_state;
   setMouseCallback(kSrcWindowName, CallBackFunc, (void *)&mc_state);
 
-  /*while (!mc_state.is_selection_finished) {
+  Rect roi;
+
+  while (!mc_state.is_selection_finished) {
+	  if (mc_state.is_selection_started) {
+	    Mat src_copy = src.clone();
+		roi = Rect(mc_state.point_first, mc_state.point_second);
+		rectangle(src_copy, roi, Scalar(255, 0, 0));
+		imshow(kSrcWindowName, src_copy);
+	  }
 	waitKey(30);
-  }*/
+  }
 
   ImageProcessorImpl proc;
   Mat res = src.clone();
   if (parser.has("gray")) {
-    res = proc.CvtColor(src, Rect(0, 0, src.cols - 30, src.rows - 30));
+    res = proc.CvtColor(src, roi);
   }
   else if (parser.has("median")) {
-	res = proc.Filter(src, Rect(10, 20, src.cols - 50, src.rows - 50), 11);
+	res = proc.Filter(src, roi, 11);
   }
   else if (parser.has("edges")) {
 	  int filterSize = 5;
 	  int lowThreshold = 50;
 	  int ratio = 3;
 	  int kernelSize = 5;
-	  res = proc.DetectEdges(src, Rect(10, 20, src.cols - 50, src.rows - 50),
+	  res = proc.DetectEdges(src, roi,
 		  filterSize, lowThreshold, ratio, kernelSize);
   }
   else if (parser.has("pix")) {
-	  res = proc.Pixelize(src, Rect(10, 20, src.cols - 50, src.rows - 50), 5);
+	  res = proc.Pixelize(src, roi, 5);
   }
  
   const string kResWindowName = "Processed image";
