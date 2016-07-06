@@ -1,8 +1,0 @@
-C:/Users/iss2016/itseez-ss-2016-practice/test/CMakeFiles/test_summer_school_2016.dir
-C:/Users/iss2016/itseez-ss-2016-practice/3rdparty/gtest/CMakeFiles/gtest.dir
-C:/Users/iss2016/itseez-ss-2016-practice/samples/CMakeFiles/template_demo.dir
-C:/Users/iss2016/itseez-ss-2016-practice/CMakeFiles/ALL_BUILD.dir
-C:/Users/iss2016/itseez-ss-2016-practice/src/CMakeFiles/summer_school_2016_lib.dir
-C:/Users/iss2016/itseez-ss-2016-practice/samples/CMakeFiles/imageproc_demo.dir
-C:/Users/iss2016/itseez-ss-2016-practice/samples/CMakeFiles/devtools_demo.dir
-C:/Users/iss2016/itseez-ss-2016-practice/CMakeFiles/ZERO_CHECK.dir

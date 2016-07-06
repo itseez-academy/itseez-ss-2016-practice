@@ -1,3 +1,0 @@
-﻿  image_processing.cpp
-image_processing.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
-  summer_school_2016_lib.vcxproj -> C:\Users\iss2016\itseez-ss-2016-practice\lib\Debug\summer_school_2016_lib.lib

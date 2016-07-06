@@ -1,5 +1,0 @@
-﻿  test_dummy.cpp
-  Source.cpp
-  Generating Code...
-c:\users\iss2016\itseez-ss-2016-practice\test\source.cpp(12): warning C4700: uninitialized local variable 'matrix' used
-  test_summer_school_2016.vcxproj -> C:\Users\iss2016\itseez-ss-2016-practice\bin\test_summer_school_2016.exe
