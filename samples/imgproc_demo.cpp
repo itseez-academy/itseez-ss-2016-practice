@@ -24,6 +24,7 @@ void processImage(const cv::Mat &src, const cv::Rect &roi)
 	ImageProcessorImpl ipi;
 	Mat newMat;
 
+
 	if (gray)
 	{
 		newMat = ipi.CvtColor(src, roi);
