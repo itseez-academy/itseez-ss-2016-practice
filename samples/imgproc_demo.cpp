@@ -37,7 +37,7 @@ static void onMouse(int op, int x, int y, int, void* m) {
 		mt->pointSecond = cv::Point(x, y);
 		break;
 	case cv::EVENT_MOUSEMOVE:
-		if (mt->isSelectionFinished == false)
+		if (mt->isSelectionStarted && mt->isSelectionFinished == false)
 			mt->pointSecond = cv::Point(x, y);
 		break;
 	}
@@ -54,6 +54,11 @@ int main(int argc, const char** argv) {
   }
 
   cv::Mat img = cv::imread(parser.get<string>(0));
+
+  if (img.empty()) {
+	  cout << "Error opening file " << parser.get<string>(0) << endl;
+	  return 1;
+  }
 
   const string basicWindowName = "Source";
   const int wk = 1;
