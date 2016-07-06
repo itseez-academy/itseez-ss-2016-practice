@@ -13,10 +13,10 @@ const char* kAbout = "Application for practice #2.";
 
 const char* kOptions =
 "{ @image         |        | image to process            }"
-"{ gray           |        | convert ROI to gray scale   }"
-"{ median         |        | apply median filter for ROI }"
-"{ edges          |        | detect edges in ROI         }"
-"{ pix            |        | pixelize ROI                }"
+"{ gray           | <none> | convert ROI to gray scale   }"
+"{ median         | <none> | apply median filter for ROI }"
+"{ edges          | <none> | detect edges in ROI         }"
+"{ pix            | <none> | pixelize ROI                }"
 "{ h ? help usage |        | print help message          }";
 
 struct MouseCallbackState {
@@ -96,20 +96,35 @@ int main(int argc, const char** argv) {
   // Threshold data.
   MyImageProc ImProc;
   if (parser.has("gray")) {
-    ImProc.CvtColor(src, roi);
+
+	  // Show destination image.
+	 const string kDstWindowName = "Destination image";
+	 namedWindow(kDstWindowName);
+	  imshow(kDstWindowName, ImProc.CvtColor(src, roi));
+	  waitKey();
+
+    
   }
 
   if( parser.has("median"))
   {
-  
-	  ImProc.Filter(src, roi,  2);
- 
+	  // Show destination image.
+	  const string kDstWindowName = "Destination image";
+	  namedWindow(kDstWindowName);
+	  imshow(kDstWindowName, ImProc.Filter(src, roi, 15));
+	  waitKey();
+   
   }
 
   if( parser.has("edges"))
   {
-  
-	  ImProc.DetectEdges( src, roi,	 4,  4,  4,	  4);
+	  // Show destination image.
+	  //const string kDstWindowName = "Destination image";
+	  //namedWindow(kDstWindowName);
+	  //imshow(kDstWindowName, ImProc.DetectEdges(src, roi, 4, 4, 4, 4));
+	  //waitKey();
+
+	  
     }
 
   if( parser.has("pix"))
@@ -117,12 +132,6 @@ int main(int argc, const char** argv) {
 	  ImProc.Pixelize(src, roi,	 10);
     }
 
-  // Show destination image.
-  const string kDstWindowName = "Destination image";
-  namedWindow(kDstWindowName, WINDOW_NORMAL);
-  resizeWindow(kDstWindowName, 640, 480);
-  imshow(kDstWindowName, src);
-  waitKey();
 
   return 0;
 }

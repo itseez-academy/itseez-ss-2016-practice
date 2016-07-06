@@ -13,7 +13,7 @@ Mat MyImageProc::CvtColor(const Mat &src, const Rect &roi)
 	Mat src_copy = src.clone();
 	Mat src_copy_roi = src_copy(roi);
 	Mat dst_gray_roi;
-	cvtColor(src_copy_roi, dst_gray_roi, CV_8UC1, 0);
+	cvtColor(src_copy_roi, dst_gray_roi, CV_BGR2GRAY);
 	vector<Mat>channels{ dst_gray_roi, dst_gray_roi, dst_gray_roi };
 	Mat dst_rgb_roi;
 	merge(channels, dst_rgb_roi);
