@@ -72,8 +72,8 @@ class Detector {
 
 ## Детальная инструкция по выполнению работы
 
-  1. Разработать объявление наследника `CascadeDetector` класса
-     `Detector` и поместить его в файл `include\detector.hpp`.
+  1. Дополнить заголовочный файл `include\detection.hpp` объявлением 
+     класса `CascadeDetector`, унаследовав его от класса `Detector`.
 
   ```cpp
   class CascadeDetector : public Detector {
@@ -114,8 +114,7 @@ class Detector {
      1. В качестве значения параметра `score` вернуть число срабатываний детектора,
         пришедшихся на один объект.
 
-  1. Скопировать `samples\template_demo.cpp` в директорию `samples`.
-  1. Переименовать копию примера в `samples\detection_demo.cpp`.
+  1. Сделать копию файла `samples\template_demo.cpp` под именем `samples\detection_demo.cpp`.
   1. Разработать приложение `samples\detection_demo.cpp` в соответствии
      с требованиями, перечисленными в основных задачах.
      
@@ -130,7 +129,7 @@ class Detector {
         "{ i image        | <none> | image to process                         }"
         "{ v video        | <none> | video to process                         }"
         "{ c camera       | <none> | camera to get video from                 }"
-        "{ m model        | <none> |                                          }"
+        "{ m model        | <none> | path to detector file                    }"
         "{ h ? help usage |        | print help message                       }";
      ```
 
