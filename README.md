@@ -1,9 +1,6 @@
 # Летняя межвузовская школа, 2016 год
 
-
-[![Feedback](./docs/feedback.png)][feedback_form]
-
-[![Join the chat at https://gitter.im/itseez-academy/itseez-ss-2016-practice](https://badges.gitter.im/itseez-academy/itseez-ss-2016-practice.svg)](https://gitter.im/itseez-academy/itseez-ss-2016-practice?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/itseez-academy/itseez-ss-2016-practice](https://badges.gitter.im/itseez-academy/itseez-ss-2016-practice.svg)](https://gitter.im/itseez-academy/itseez-ss-2016-practice?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)[![Feedback](./docs/feedback.png)][feedback_form]
 
 
 ## Практикум
