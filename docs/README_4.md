@@ -57,7 +57,7 @@ class Tracker {
   1. `Track` - метод сопровождения объекта, который по новому кадру `frame`
      находит новое положение объекта и возвращает его.
 
-Также класс содержит фабричный метод `CreateDetector`.
+Также класс содержит [фабричный метод][factory-method] `CreateDetector`.
   
 ## Общая последовательность действий
 
@@ -164,3 +164,4 @@ class Tracker {
 [feedback_day4]: https://docs.google.com/forms/d/1eWnjGJ38lawv_JbmOtZuC6jx_sRyNywDzfnWySrxMvE/viewform
 [calc-pyrlk-doc]: http://docs.opencv.org/master/dc/d6b/group__video__track.html#ga473e4b886d0bcc6b65831eb88ed93323
 [lucas-canade-tutorial]: http://opencv-python-tutroals.readthedocs.org/en/latest/py_tutorials/py_video/py_lucas_kanade/py_lucas_kanade.html
+[factory-method]: https://sourcemaking.com/design_patterns/factory_method

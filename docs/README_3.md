@@ -58,7 +58,7 @@ class Detector {
      определяющее уверенность детектора в наличии объекта 
      в соответствующей области изображения.
 
-Также класс содержит фабричный метод `CreateDetector`.
+Также класс содержит [фабричный метод][factory-method] `CreateDetector`.
   
 ## Общая последовательность действий
 
@@ -209,6 +209,8 @@ class Detector {
 
 
 <!-- LINKS -->
+
 [cascade-documentation]: http://docs.opencv.org/master/d1/de5/classcv_1_1CascadeClassifier.html
 [hog-documentation]: http://docs.opencv.org/master/d5/d33/structcv_1_1HOGDescriptor.html
 [feedback_day3]: https://docs.google.com/forms/d/1gyrYDnRgoHUZ_URK5j4p7lrXw6FEtk5tBYwo6eND7GI/viewform
+[factory-method]: https://sourcemaking.com/design_patterns/factory_method
