@@ -17,7 +17,7 @@ const char* kAbout =
 const char* kOptions =
 "{ i image        | <none> | image to process                         }"
 "{ v video        | <none> | video to process                         }"
-"{ c camera       | <none> | camera to get video from                 }"
+"{ c camera       | 0      | camera to get video from                 }"
 "{ m model        | <none> |                                          }"
 "{ h ? help usage |        | print help message                       }";
 
@@ -47,6 +47,7 @@ int main(int argc, const char** argv) {
 	  detectOnImage(src, detector);
 	  waitKey();
   }
+
   if (parser.has("video")) {
 	  VideoCapture cap(parser.get<string>("video"));
 	  if (!cap.isOpened())
@@ -60,6 +61,22 @@ int main(int argc, const char** argv) {
 		  if (waitKey(30) >= 0)
 			  break;
 	  }
+  }
+
+  if (parser.has("camera")) {
+	  VideoCapture cap(parser.get<int>("camera"));
+	  if (!cap.isOpened())
+		  cout << "Error!" << endl;
+	  for (;;) {
+		  Mat src;
+		  cap >> src;
+		  if (src.empty())
+			  break;
+		  detectOnImage(src, detector);
+		  if (waitKey(30) >= 0)
+			  break;
+	  }
+
   }
 
   return 0;
