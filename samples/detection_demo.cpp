@@ -5,6 +5,7 @@
 
 #include "opencv2/core.hpp"
 #include "opencv2/highgui.hpp"
+#include "opencv2/imgproc.hpp"
 #include "image_processing.hpp"
 
 using namespace std;
@@ -32,47 +33,77 @@ int main(int argc, const char** argv) {
     parser.printMessage();
     return 0;
   }
-
+//Image
   Mat src;
-  if (!parser.has("image")) {
-	  
-	  return 0;
-  }
-  src = imread(parser.get<string>("image"));
-  if (src.empty())
-  {
-	  cout << "image error" << endl;
-	  return 0;
-  }
-
   const string srcWinName = "Source image";
+  if (parser.has("image"))
+  {
+    src = imread(parser.get<string>("image"));
+    if (src.empty())
+    {
+      cout << "image error" << endl;
+      return 0;
+     }
   namedWindow(srcWinName);
   imshow(srcWinName, src);
   const int kWaitTime = 0;
   waitKey(kWaitTime);
+  }
 
-  CascadeDetector detectorFSample;
+
+
+//Model
   if (!parser.has("model"))
   {
 	  cout << "model error" << endl;
 	  return 0;
-  }
-  detectorFSample.CascadeDetector::Init(parser.get<string>("model"));
+  } 
+  CascadeDetector detectorFSample;
   vector<Rect> objs;
   vector<double> scores;
-  detectorFSample.CascadeDetector::Detect(src, objs, scores);
-  //cout << objs.size() << endl;
+    detectorFSample.CascadeDetector::Init(parser.get<string>("model"));
 
-  //for (int ind = 0; ind < objs.size(); ind++)
-  //{
-	 //// Mat rectSelect = objs[ind];
-	 // Mat srcTemp;
-	 // rectangle(srcTemp, objs[ind], Scalar(255, 0, 0));
-	 // imshow(srcWinName, srcTemp);
-	 // waitKey(kWaitTime);
-  //}
-  
-  
-	
+//Image
+  if (parser.has("image"))
+  {
+    detectorFSample.CascadeDetector::Detect(src, objs, scores);
+    Mat srcTemp;
+    src.copyTo(srcTemp);
+        for (int ind = 0; ind < objs.size(); ind++)
+        {
+         rectangle(srcTemp, objs[ind], Scalar(255, 0, 0));
+        }
+    imshow(srcWinName, srcTemp);
+    waitKey(0);
+    return 0;
+   }
+
+ //Video
+   if(parser.has("video"))
+   {
+     VideoCapture cap(parser.get<string>("video"));
+     if(!cap.isOpened())
+     {
+        return -1;
+     }
+     const string srcWinNameVideo = "Source video";
+     namedWindow(srcWinNameVideo);
+     const int kWaitTimeVideo = 30;
+     waitKey(kWaitTimeVideo);
+
+         while(cap.read(src))
+         {
+            detectorFSample.CascadeDetector::Detect(src, objs, scores);
+
+            for (int ind = 0; ind < objs.size(); ind++)
+            {
+                rectangle(src, objs[ind], Scalar(255, 0, 0));
+            }
+            imshow(srcWinNameVideo, src);
+            waitKey(kWaitTimeVideo);
+        }
+    return 0;
+   }
+
   return 0;
 }
