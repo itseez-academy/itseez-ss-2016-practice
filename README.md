@@ -1,6 +1,6 @@
 # Летняя межвузовская школа, 2016 год
 
-[![Feedback](docs/feedback.png)][feedback_form]
+[![Feedback](./docs/feedback.png)][feedback_form]
 
 ## Практикум
 
