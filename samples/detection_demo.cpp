@@ -17,7 +17,7 @@ const char* kAbout =
 const char* kOptions =
 "{ i image        | <none> | image to process                         }"
 "{ v video        | <none> | video to process                         }"
-"{ c camera       | 0      | camera to get video from                 }"
+"{ c camera       | <none> | camera to get video from                 }"
 "{ m model        | <none> |                                          }"
 "{ h ? help usage |        | print help message                       }";
 
