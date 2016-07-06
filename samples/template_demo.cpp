@@ -64,7 +64,7 @@ static void onMouse(int event, int x, int y, int, void*)
 
 void printNewImage()
 {
-	Mat dest;
+	/*Mat dest;
 	//dest.b
 	image.copyTo(dest);
 	const string kSrcWindowName = "Destination_image";
@@ -89,7 +89,7 @@ void printNewImage()
 	//cvShowImage("ROI", img);
 	resizeWindow(kSrcWindowName, 640, 480);
 
-	imshow(kSrcWindowName, dest);
+	imshow(kSrcWindowName, dest);**/
 }
 
 using namespace std;
@@ -99,15 +99,16 @@ const char* kAbout =
     "This is an empty application that can be treated as a template for your "
     "own doing-something-cool applications.";
 
+
 const char* kOptions =
-    "{ @image         |        | image to process         }"
-	"{ @image         | <none> | image to process            }"
-	"{ gray ? gray    |        | convert ROI to gray scale   }"
-	"{ median         |        | apply median filter for ROI }"
-	"{ edges          |        | detect edges in ROI         }"
-	"{ pix            |        | pixelize ROI                }"
-	"{ v video        |        | video to process         }"
-	"{ h ? help usage |        | print help message          }" ;
+"{ @image         | <none> | image to process            }"
+"{ gray ? gray    |        | convert ROI to gray scale   }"
+"{ median         |        | apply median filter for ROI }"
+"{ edges          |        | detect edges in ROI         }"
+"{ pix            |        | pixelize ROI                }"
+"{ v video        |        | video to process         }"
+"{ h ? help usage |        | print help message          }";
+
 
 
 int main(int argc, const char** argv) {
