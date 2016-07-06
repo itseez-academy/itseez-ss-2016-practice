@@ -42,6 +42,7 @@ int main(int argc, const char** argv) {
   resizeWindow(kSrcWindowName, 640, 480);
   imshow(kSrcWindowName, src);
   waitKey(kWaitKeyDelay);
+
   Rect roi(100, 200, 100, 100);
   ImageProcessorImpl imgproc;
 
@@ -69,7 +70,7 @@ int main(int argc, const char** argv) {
   resizeWindow(kDstWindowName3, 640, 480);
   imshow(kDstWindowName3, imgproc.DetectEdges(src, roi, filterSize, lowThreshold, ratio, kernelSize));
 
-  int kDive = 7;
+  int kDive = 5;
   const string kDstWindowName4 = "Destination image 4";
   namedWindow(kDstWindowName4, WINDOW_NORMAL);
   resizeWindow(kDstWindowName4, 640, 480);
