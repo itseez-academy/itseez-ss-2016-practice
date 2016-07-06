@@ -1,5 +1,7 @@
 # Практика 2. Основы работы с библиотекой OpenCV. Модули core, imgproc и highgui
 
+[![Feedback](feedback.png)][feedback_day2]
+
 ## Цели
 
 __Цель данной работы__ - изучить базовые примитивы модуля 
@@ -251,3 +253,4 @@ class ImageProcessor {
   1. Разработать приложения, решающие дополнительные задачи.
 
 <!-- LINKS -->
+[feedback_day2]: https://docs.google.com/forms/d/1geYzNWX1vb4WVRz5odTI2uJ5bNvNfwsBmCTCqsBGjV8/viewform

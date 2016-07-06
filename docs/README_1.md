@@ -1,5 +1,7 @@
 # Практика 1. Инструменты разработки ПО
 
+[![Feedback](feedback.png)][feedback_day1]
+
 ## Цели
 
 __Цель данной работы__ - освоить следующие инструменты 
@@ -357,3 +359,4 @@ Microsoft Visual Studio 2015. Далее для определенности в�
 [git-intro]: https://github.com/itseez-academy/itseez-ss-2016-practice/blob/master/docs/README_1.md#Общие-инструкции-по-работе-с-git
 [cmake-msvs]: https://github.com/itseez-academy/itseez-ss-2016-practice/blob/master/docs/README_1.md#Сборка-проекта-с-помощью-cmake-и-microsoft-visual-studio-2015
 [tasks]: https://github.com/itseez-academy/itseez-ss-2016-practice/blob/master/docs/README_1.md#Задачи
+[feedback_day1]: https://docs.google.com/forms/d/1-dPRj4E-BSNxMCXpJw1zX_4TaPsmjHnsaaYHKaXVsjc/viewform
