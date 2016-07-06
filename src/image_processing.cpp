@@ -41,7 +41,7 @@ Mat MyImageProc::DetectEdges(const Mat &src, const Rect &roi,
 	Mat src_copy = src.clone();
 	Mat src_roi = src_copy(roi);
 	Mat src_gray_roi;
-	cvtColor(src_roi, src_gray_roi, CV_8UC1, 0);
+	cvtColor(src_roi, src_gray_roi, CV_BGR2GRAY, 0);
 	Mat gray_blurred;
 	blur(src_gray_roi, gray_blurred, Size(kernelSize, kernelSize));
 	Mat detected_edges;

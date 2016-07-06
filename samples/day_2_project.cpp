@@ -98,10 +98,10 @@ int main(int argc, const char** argv) {
   if (parser.has("gray")) {
 
 	  // Show destination image.
-	 const string kDstWindowName = "Destination image";
-	 namedWindow(kDstWindowName);
-	  imshow(kDstWindowName, ImProc.CvtColor(src, roi));
-	  waitKey();
+	// const string kDstWindowName = "Destination image";
+	 //namedWindow(kDstWindowName);
+	  //imshow(kDstWindowName, ImProc.CvtColor(src, roi));
+	  //waitKey();
 
     
   }
@@ -109,19 +109,19 @@ int main(int argc, const char** argv) {
   if( parser.has("median"))
   {
 	  // Show destination image.
-	  const string kDstWindowName = "Destination image";
-	  namedWindow(kDstWindowName);
-	  imshow(kDstWindowName, ImProc.Filter(src, roi, 15));
-	  waitKey();
+	 // const string kDstWindowName = "Destination image";
+	  //namedWindow(kDstWindowName);
+	 // imshow(kDstWindowName, ImProc.Filter(src, roi, 15));
+	 // waitKey();
    
   }
 
   if( parser.has("edges"))
   {
 	  // Show destination image.
-	  //const string kDstWindowName = "Destination image";
+	//  const string kDstWindowName = "Destination image";
 	  //namedWindow(kDstWindowName);
-	  //imshow(kDstWindowName, ImProc.DetectEdges(src, roi, 4, 4, 4, 4));
+	  //imshow(kDstWindowName, ImProc.DetectEdges(src, roi, 10, 20, 0, 10));
 	  //waitKey();
 
 	  
@@ -129,7 +129,12 @@ int main(int argc, const char** argv) {
 
   if( parser.has("pix"))
    {
-	  ImProc.Pixelize(src, roi,	 10);
+	   // Show destination image.
+	   const string kDstWindowName = "Destination image";
+	   namedWindow(kDstWindowName);
+	   imshow(kDstWindowName, ImProc.Pixelize(src, roi,	 100));
+	  waitKey();
+	 
     }
 
 
