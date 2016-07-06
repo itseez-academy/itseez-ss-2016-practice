@@ -19,47 +19,62 @@ const char* kOptions =
 	"{ m model        | <none> |                                          }"
 	"{ h ? help usage |        | print help message                       }";
 
-void showDetection(const Mat & image, const std::string& model_file_path)
+void showDetection(const Mat & image, std::shared_ptr<Detector> detector)
 {
-	std::shared_ptr<Detector> detector = Detector::CreateDetector("cascade");
+	//TODO: it probably would be better to pass detected rects and window name instead of detector
 
-	if (detector != nullptr)
+	std::vector<cv::Rect> objects;
+	std::vector<double> scores;
+
+	Mat newMat = image.clone();
+
+	detector->Detect(image, objects, scores);
+
+	for (int i = 0; i < objects.size(); i++)
 	{
-		std::vector<cv::Rect> objects;
-		std::vector<double> scores;
-
-		if (detector->Init(model_file_path))
-		{
-			detector->Detect(image, objects, scores);
-		}
-
-		Mat newMat = image.clone();
-
-		for (int i = 0; i < objects.size(); i++)
-		{
-			cv::rectangle(newMat, objects.at(i), cv::Scalar(0, 0, 0));
-		}
-
-		const string windowName = "After detection";
-		namedWindow(windowName, WINDOW_NORMAL);
-		resizeWindow(windowName, newMat.cols, newMat.rows);
-		imshow(windowName, newMat);
+		cv::rectangle(newMat, objects.at(i), cv::Scalar(0, 0, 0));
 	}
+
+	const string windowName = "After detection";
+	namedWindow(windowName, WINDOW_NORMAL);
+	resizeWindow(windowName, newMat.cols, newMat.rows);
+	imshow(windowName, newMat);
 }
 
-int main(int argc, const char** argv) {
-  // Parse command line arguments.
-  CommandLineParser parser(argc, argv, kOptions);
-  parser.about(kAbout);
+int main(int argc, const char** argv) 
+{
+	// Parse command line arguments.
+	CommandLineParser parser(argc, argv, kOptions);
+	parser.about(kAbout);
 
-  // If help option is given, print help message and exit.
-  if (parser.get<bool>("help")) {
-    parser.printMessage();
-    return 0;
-  }
+	// If help option is given, print help message and exit.
+	if (parser.get<bool>("help")) 
+	{
+		parser.printMessage();
+		return 0;
+	}
+  
+	std::shared_ptr<Detector> detector = Detector::CreateDetector("cascade");
+	bool noModel = true;
 
-  if (parser.has("image"))
-  {
+	if (detector == nullptr)
+		cout << "\nCan't create detector\n";
+	else if (parser.has("model"))
+	{
+		string modelPath = parser.get<string>("model");
+		noModel = !(detector->Init(modelPath));
+	}
+	
+	if (noModel)
+	{
+		parser.printMessage();
+		return 0;
+	}
+
+	//Detector is supposed to be working
+
+	if (parser.has("image"))
+	{
 	  string imagePath = parser.get<string>("image");
 
 	  Mat image = imread(imagePath);
@@ -74,10 +89,7 @@ int main(int argc, const char** argv) {
 	  resizeWindow(windowName, image.cols, image.rows);
 	  imshow(windowName, image);
 
-	  if (parser.has("model"))
-	  {
-		  showDetection(image, parser.get<string>("model"));
-	  }
+	  showDetection(image, detector);
 
 	  waitKey();
   }
@@ -94,86 +106,70 @@ int main(int argc, const char** argv) {
 	  const string detWindowName = "After detection";
 	  namedWindow(detWindowName, WINDOW_NORMAL);
 	  resizeWindow(detWindowName, 640, 480);
-
-	  if (parser.has("model"))
-	  {
-		  std::shared_ptr<Detector> detector = Detector::CreateDetector("cascade");
-
-		  bool isDetectorReady = detector->Init(parser.get<string>("model")); 
 		  
-		  while (cap.isOpened())
-		  {
-			  Mat frame;
-			  cap >> frame;
+		while (cap.isOpened())
+		{
+			Mat frame;
+			cap >> frame;
 
-			  imshow(camWindowName, frame);
+			imshow(camWindowName, frame);
 
-			  if (isDetectorReady)
-			  {
-				  std::vector<cv::Rect> objects;
-				  std::vector<double> scores;
-				  detector->Detect(frame, objects, scores);
 
-				  Mat newMat = frame.clone();
+			std::vector<cv::Rect> objects;
+			std::vector<double> scores;
+			detector->Detect(frame, objects, scores);
 
-				  int i = 0;
-				  while (i < objects.size())
-				  {
-					  cv::rectangle(newMat, objects.at(i), cv::Scalar(0, 0, 0));
-					  i++;
-				  }
+			Mat newMat = frame.clone();
 
-				  imshow(detWindowName, newMat);
-			  }
+			int i = 0;
+			while (i < objects.size())
+			{
+				cv::rectangle(newMat, objects.at(i), cv::Scalar(0, 0, 0));
+				i++;
+			}
 
-			  if (cv::waitKey(30) >= 0) break;
-		  }
-			  
-	  }
+			imshow(detWindowName, newMat);
+
+			if (cv::waitKey(30) >= 0) break;
+		}
   }
   else if (parser.has("camera"))
   {
-	  VideoCapture cap(0); // open the default camera
-	  if (!cap.isOpened())  // check if we succeeded
-		  return -1;
+	VideoCapture cap(0); // open the default camera
+	if (!cap.isOpened())  // check if we succeeded
+		return -1;
 
-	  const string camWindowName = "Your camera";
-	  namedWindow(camWindowName, WINDOW_NORMAL);
-	  resizeWindow(camWindowName, 640, 480);
+	const string camWindowName = "Your camera";
+	namedWindow(camWindowName, WINDOW_NORMAL);
+	resizeWindow(camWindowName, 640, 480);
 
-	  const string detWindowName = "After detection";
-	  namedWindow(detWindowName, WINDOW_NORMAL);
-	  resizeWindow(detWindowName, 640, 480);
-	  
-	  if (parser.has("model"))
-	  {
-		  std::shared_ptr<Detector> detector = Detector::CreateDetector("cascade");
+	const string detWindowName = "After detection";
+	namedWindow(detWindowName, WINDOW_NORMAL);
+	resizeWindow(detWindowName, 640, 480);
 
-		  if (detector->Init(parser.get<string>("model")))
-			  while (cap.isOpened())
-			  {
-				  Mat frame;
-				  cap >> frame;
+	while (cap.isOpened())
+	{
+		Mat frame;
+		cap >> frame;
 
-				  std::vector<cv::Rect> objects;
-				  std::vector<double> scores;
-				  detector->Detect(frame, objects, scores);
+		std::vector<cv::Rect> objects;
+		std::vector<double> scores;
+		detector->Detect(frame, objects, scores);
 
-				  Mat newMat = frame.clone();
+		Mat newMat = frame.clone();
 
-				  int i = 0;
-				  while (i < objects.size())
-				  {
-					  cv::rectangle(newMat, objects.at(i), cv::Scalar(0, 0, 0));
-					  i++;
-				  }
+		int i = 0;
+		while (i < objects.size())
+		{
+			cv::rectangle(newMat, objects.at(i), cv::Scalar(0, 0, 0));
+			i++;
+		}
 
-				  imshow(camWindowName, frame);
-				  imshow(detWindowName, newMat);
+		imshow(camWindowName, frame);
+		imshow(detWindowName, newMat);
 
-				  if (cv::waitKey(30) >= 0) break;
-			  }
-	  }
+		if (cv::waitKey(30) >= 0) break;
+	}
   }
 
   return 0;
