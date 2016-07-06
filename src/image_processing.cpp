@@ -2,15 +2,16 @@
 
 cv::Mat ImageProcessorImpl::CvtColor(const cv::Mat &src, const cv::Rect &roi) {
 
-	cv::Mat srcCopy;
-	src.copyTo(srcCopy);
+	cv::Mat srcCopy = src.clone();
 
-	cv::Mat srcCopyRoi = srcCopy(roi);
+	cv::Mat srcCopyRoi(srcCopy(roi));
 	cv::Mat dstGrayRoi;
 
 	cv::cvtColor(srcCopyRoi, dstGrayRoi, cv::COLOR_BGR2GRAY);
 
 	std::vector<cv::Mat> channels;
+	channels.push_back(dstGrayRoi);
+	channels.push_back(dstGrayRoi);
 	channels.push_back(dstGrayRoi);
 
 	cv::Mat dstRoi;
@@ -35,9 +36,8 @@ cv::Mat ImageProcessorImpl::Filter(const cv::Mat &src, const cv::Rect &roi,
 cv::Mat ImageProcessorImpl::DetectEdges(const cv::Mat &src, const cv::Rect &roi,
 		const int filterSize, const int lowThreshold, const int ratio, const int kernelSize) {
 
-	cv::Mat srcCopy;
-	src.copyTo(srcCopy);
-	cv::Mat srcRoi = srcCopy(roi);
+
+	cv::Mat srcRoi = src(roi);
 
 	cv::Mat srcGrayRoi;
 	cv::cvtColor(srcRoi, srcGrayRoi, cv::COLOR_BGR2GRAY);
@@ -54,7 +54,7 @@ cv::Mat ImageProcessorImpl::DetectEdges(const cv::Mat &src, const cv::Rect &roi,
 	dstRoi = cv::Scalar::all(0);
 
 	srcRoi.copyTo(dstRoi, detectedEdges);
-	return srcCopy;
+	return dst;
 }
 
 cv::Mat ImageProcessorImpl::Pixelize(const cv::Mat &src, const cv::Rect &roi,
@@ -65,8 +65,8 @@ cv::Mat ImageProcessorImpl::Pixelize(const cv::Mat &src, const cv::Rect &roi,
 	cv::Mat srcCopyRoi = srcCopy(roi);
 	const int	blockSize_X = roi.width / kDivs,
 				blockSize_Y = roi.height / kDivs;
-	for (int x = 0; x < srcCopyRoi.rows; x += blockSize_X) {
-		for (int y = 0; y < srcCopyRoi.cols; y += blockSize_Y) {
+	for (int x = 0; x < srcCopyRoi.cols - blockSize_X; x += blockSize_X) {
+		for (int y = 0; y < srcCopyRoi.rows - blockSize_Y; y += blockSize_Y) {
 			cv::Mat srcRoiBlock = srcCopyRoi(cv::Rect(x, y, blockSize_X, blockSize_Y));
 			cv::blur(srcRoiBlock, srcRoiBlock, cv::Size(blockSize_X, blockSize_Y));
 		}
