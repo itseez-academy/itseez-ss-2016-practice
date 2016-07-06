@@ -20,5 +20,5 @@ target_link_libraries(${target} gtest ${LIBRARY})
 add_custom_command(
     TARGET ${target}
     POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/testdata" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE}/testdata"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/test/test_data" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE}/test_data"
 )
