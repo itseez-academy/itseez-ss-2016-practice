@@ -6,7 +6,8 @@
 
 //#include "workaround.hpp"
 
-#include "image_processing.hpp"
+#include "detection.hpp"
+
 
 using namespace std;
 using namespace cv;
@@ -58,19 +59,26 @@ int main(int argc, const char** argv) {
 	resizeWindow(kSrcWindowName, 640, 480);
 	imshow(kSrcWindowName, src);
 	waitKey(kWaitKeyDelay);
-
-	Rect roi(100,100,300,300);
-	
+	Mat frame;
 	
 	// Threshold data.
-	ImageProcessorMax processor;
-	const int threshold = parser.get<int>("t");
+	CascadeDetector CD;
+	std::vector<Rect> faces ;
+	std::vector<double> scores;
+	//std::shared_ptr<Detector> CreateDetector("cascade");
+	
+
+	//const int threshold = parser.get<int>("t");
 	try {
 		//cvtColor(src, src, CV_RGB2GRAY);
 		//cvtColor(src, src, CV_GRAY2RGB);
 		//processor.CvtColor(src, roi);
-		processor.Filter(src, roi, 20); 
+		//processor.Filter(src, roi, 20); 
 		//processor.DetectEdges(src, roi,	3,  10, 2,3 );
+		CD.Init("../../test/test_data/detection/cascades/intel_logo_cascade.xml");
+		CD.Detect(src, faces, scores);
+		for (int i = 0; i < faces.size(); i++)
+			cv::rectangle(src, faces[i], CV_RGB(255, 0, 0));
 	}
 	catch (const std::exception& ex) {
 		cout << ex.what() << endl;
@@ -82,7 +90,7 @@ int main(int argc, const char** argv) {
 	namedWindow(kDstWindowName, WINDOW_NORMAL);
 	resizeWindow(kDstWindowName, 640, 480);
 	
-	imshow(kDstWindowName,processor.tmp);
+	imshow(kDstWindowName,src);
 	waitKey();
 
 	return 0;
