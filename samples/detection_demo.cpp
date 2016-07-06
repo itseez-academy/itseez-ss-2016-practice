@@ -22,6 +22,8 @@ const char* kOptions =
 "{ h ? help usage |        | print help message                       }";
 
 
+int detectOnImage(Mat& frame, CascadeDetector& detector);
+
 int main(int argc, const char** argv) {
   CommandLineParser parser(argc, argv, kOptions);
   parser.about(kAbout);
@@ -32,29 +34,49 @@ int main(int argc, const char** argv) {
   }
 
   CascadeDetector detector;
+  detector.Init(parser.get<string>("model"));
 
-  Mat src;
-  src = imread(parser.get<string>("image"), 1);
-  if (src.empty()) {
-	  cout << "Failed to open image file '" + parser.get<string>(0) + "'."
-		   << endl;
-	  return 0;
+  if (parser.has("image")) {
+	  Mat src;
+	  src = imread(parser.get<string>("image"), 1);
+	  if (src.empty()) {
+		  cout << "Failed to open image file '" + parser.get<string>(0) + "'."
+			  << endl;
+		  return 0;
+	  }
+	  detectOnImage(src, detector);
+	  waitKey();
+  }
+  if (parser.has("video")) {
+	  VideoCapture cap(parser.get<string>("video"));
+	  if (!cap.isOpened())
+		  cout << "Error!" << endl;
+	  for (;;) {
+		  Mat src;
+		  cap >> src;
+		  if (src.empty())
+			  break;
+		  detectOnImage(src, detector);
+		  if (waitKey(30) >= 0)
+			  break;
+	  }
   }
 
-  vector<Rect> objects;
-  vector<double> scores;
-  detector.Init(parser.get<string>("model"));
-  detector.Detect(src, objects, scores);
-
-  for (int i = 0; i < objects.size(); i++)
-	  rectangle(src, objects[i], Scalar(0));
-  
-  const string kSrcWindowName = "Source image";
-  const int kWaitKeyDelay = 1;
-  namedWindow(kSrcWindowName, WINDOW_NORMAL);
-  resizeWindow(kSrcWindowName, 640, 480);
-  imshow(kSrcWindowName, src);
-  waitKey();
-
   return 0;
+}
+
+int detectOnImage(Mat& frame, CascadeDetector& detector) {
+	vector<Rect> objects;
+	vector<double> scores;
+	detector.Detect(frame, objects, scores);
+
+	for (int i = 0; i < objects.size(); i++)
+		rectangle(frame, objects[i], Scalar(0));
+
+	const string kSrcWindowName = "Source image";
+	const int kWaitKeyDelay = 1;
+	namedWindow(kSrcWindowName, WINDOW_NORMAL);
+	resizeWindow(kSrcWindowName, 640, 480);
+	imshow(kSrcWindowName, frame);
+	return 0;
 }
