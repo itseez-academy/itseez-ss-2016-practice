@@ -82,7 +82,53 @@ int main(int argc, const char** argv) {
   }
   else if (parser.has("video"))
   {
-  
+	  VideoCapture cap(parser.get<string>("video"));
+	  if (!cap.isOpened())
+		  return -1;
+
+	  const string camWindowName = "Your video";
+	  namedWindow(camWindowName, WINDOW_NORMAL);
+	  resizeWindow(camWindowName, 640, 480);
+
+	  const string detWindowName = "After detection";
+	  namedWindow(detWindowName, WINDOW_NORMAL);
+	  resizeWindow(detWindowName, 640, 480);
+
+	  if (parser.has("model"))
+	  {
+		  std::shared_ptr<Detector> detector = Detector::CreateDetector("cascade");
+
+		  bool isDetectorReady = detector->Init(parser.get<string>("model")); 
+		  
+		  while (cap.isOpened())
+		  {
+			  Mat frame;
+			  cap >> frame;
+
+			  imshow(camWindowName, frame);
+
+			  if (isDetectorReady)
+			  {
+				  std::vector<cv::Rect> objects;
+				  std::vector<double> scores;
+				  detector->Detect(frame, objects, scores);
+
+				  Mat newMat = frame.clone();
+
+				  int i = 0;
+				  while (i < objects.size())
+				  {
+					  cv::rectangle(newMat, objects.at(i), cv::Scalar(0, 0, 0));
+					  i++;
+				  }
+
+				  imshow(detWindowName, newMat);
+			  }
+
+			  if (cv::waitKey(30) >= 0) break;
+		  }
+			  
+	  }
   }
   else if (parser.has("camera"))
   {
