@@ -1,5 +1,7 @@
 # Практика 3. Детектирование объектов с использованием каскадного классификатора
 
+[![Feedback](feedback.png)][feedback_day3]
+
 ## Цели
 
 __Цель данной работы__ -  изучить программные средства библиотеки 
@@ -205,3 +207,4 @@ class Detector {
 <!-- LINKS -->
 [cascade-documentation]: docs.opencv.org/master/d1/de5/classcv_1_1CascadeClassifier.html
 [hog-documentation]: http://docs.opencv.org/master/d5/d33/structcv_1_1HOGDescriptor.html
+[feedback_day3]: https://docs.google.com/forms/d/1gyrYDnRgoHUZ_URK5j4p7lrXw6FEtk5tBYwo6eND7GI/viewform
