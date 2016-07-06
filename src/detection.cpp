@@ -36,8 +36,8 @@ void CascadeDetector::Detect(const cv::Mat& frame, std::vector<cv::Rect>& object
 	if (!frame.empty()) {
 		std::vector<int> numDetected;
 		detector.CascadeClassifier::detectMultiScale(frame, objects, numDetected);
+		scores.resize(numDetected.size());
 		std::copy(numDetected.begin(), numDetected.end(), scores.begin());
-		
+		std::cout << scores.size() << std::endl;
 	}
-
 }
