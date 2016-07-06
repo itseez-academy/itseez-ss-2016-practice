@@ -15,7 +15,8 @@ const char* kAbout =
 
 const char* kOptions =
   "{ i image        | <none> | image to process                         }"
-  "{ m model        | <none> |                                          }";
+  "{ m model        | <none> |                                          }"
+  "{ v video        | <none> | video to process                         }";
 
 int main(int argc, const char** argv) {
   CommandLineParser parser(argc, argv, kOptions);
@@ -45,6 +46,30 @@ int main(int argc, const char** argv) {
 	  imshow("ImageNew", img);
 
 	  waitKey();
+  }
+  Mat img;
+  if (parser.has("v") && parser.has("m")) {
+	  VideoCapture cap(parser.get<string>("v"));
+	  for (;;)
+	  {
+		  cap >> img;
+		  if (img.empty())
+			  break;
+
+		  if (!d.Init(parser.get<string>("m"))) {
+			  cout << "Not correct model way";
+			  return 0;
+		  }
+		  std::vector<cv::Rect> objects;
+		  std::vector<double> scores;
+		  d.Detect(img, objects, scores);
+		  int size = objects.size();
+		  for (int i = 0; i < size; i++)
+			  rectangle(img, objects[i], Scalar(0, 0, 0, 0));
+		  namedWindow("ImageNew", WINDOW_NORMAL);
+		  imshow("ImageNew", img);
+		  if (waitKey(30) > 0) break;
+	  }
   }
 
   return 0;
