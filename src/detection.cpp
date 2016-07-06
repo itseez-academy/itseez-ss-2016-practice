@@ -23,3 +23,6 @@ bool CascadeDetector::Init(const std::string& model_file_path, cv::CascadeClassi
 	else
 		return false;
 }
+
+void CascadeDetector::Detect(const cv::Mat& frame, std::vector<cv::Rect>& objects,
+	std::vector<double>& scores) {}

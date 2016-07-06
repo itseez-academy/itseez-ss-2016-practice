@@ -4,7 +4,7 @@
 #include "opencv2/core.hpp"
 #include "opencv2/highgui.hpp"
 
-
+#include "detection.hpp"
 
 using namespace std;
 using namespace cv;
@@ -35,18 +35,18 @@ int main(int argc, const char** argv) {
 
   // Do something cool.
 
- 
   // Read image.
-  Mat src = imread("C://Users/iss2016/Andreeva/itseez - ss - 2016 - practice/test/test_data/detection/positives/intel_logo.png", CV_LOAD_IMAGE_COLOR);
+ Mat src = imread("C://Users/iss2016/intel_logo.png", CV_LOAD_IMAGE_COLOR);
 
-  cout << "Read image" << endl;
+  //Mat src = imread(parser.get<string>(0), CV_LOAD_IMAGE_COLOR);
 
-  if (src.empty()) {
+ if (src.empty()) {
 	  cout << "Failed to open image file '" + parser.get<string>(0) + "'."
 		  << endl;
 	  return 0;
   }
 
+ CascadeDetector detector;
 
   cout << "This is empty template sample." << endl;
 
