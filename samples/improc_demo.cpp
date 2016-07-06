@@ -65,7 +65,7 @@ static void onMouse(int event, int x, int y, int, void* _state)
 		case 1: img = proc.CvtColor(img, Rect(state->point_first, state->point_second)); break;
 		case 2: img = proc.Filter(img, Rect(state->point_first, state->point_second), 15); break;
 		case 3: img = proc.DetectEdges(img, Rect(state->point_first, state->point_second), 5, 1, 1, 5);
-		case 4: img = proc.Pixelize(img, Rect(state->point_first, state->point_second), 2);
+		case 4: img = proc.Pixelize(img, Rect(state->point_first, state->point_second), 1);
 		}
 		//rectangle(img, Rect(state->point_first, state->point_second), Scalar(255, 0, 0));
 		//img = proc.CvtColor(img, Rect(state->point_first, state->point_second));
