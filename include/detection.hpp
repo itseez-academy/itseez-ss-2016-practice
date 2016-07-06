@@ -12,3 +12,12 @@ class Detector {
   virtual void Detect(const cv::Mat& frame, std::vector<cv::Rect>& objects,
                       std::vector<double>& scores) = 0;
 };
+
+/*class CascadeDetector {
+	virtual bool Init(const std::string& model_file_path);
+	virtual void Detect(const cv::Mat& frame, std::vector<cv::Rect>& objects,
+		std::vector<double>& scores);
+
+protected:
+	cv::CascadeClassifier detector;
+};*/
