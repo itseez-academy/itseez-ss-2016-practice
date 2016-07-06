@@ -1,7 +1,10 @@
 #include <iostream>
 #include <string>
 
+#include "detection.hpp"
+
 #include "opencv2/core.hpp"
+#include "opencv2/highgui.hpp"
 
 using namespace std;
 using namespace cv;
@@ -26,6 +29,27 @@ int main(int argc, const char** argv) {
     parser.printMessage();
     return 0;
   }
+
+  if (parser.has("image"))
+  {
+	  string imagePath = parser.get<string>("image");
+
+	  Mat image = imread(imagePath);
+	  if (image.empty()) {
+		  cout << "Failed to open image file '" + imagePath + "'."
+			  << endl;
+		  return 1;
+	  }
+
+	  const string windowName = "Your image";
+	  namedWindow(windowName, WINDOW_NORMAL);
+	  resizeWindow(windowName, image.cols, image.rows);
+	  imshow(windowName, image);
+	  waitKey();
+  }
+
+  //TODO: allow video
+  //TODO: allow camera
 
 
 
