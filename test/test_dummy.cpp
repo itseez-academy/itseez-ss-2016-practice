@@ -14,7 +14,7 @@ TEST(dummy, dummy_test)
 //    Mat submat = mat(Rect(0, 0, 2, 3));
 //   EXPECT_FALSE(submat.isContinuous());
 
-	unsigned char* data;
+//	unsigned char* data;
 
 	int const width1 = 1;
 	int const height1 = 100;

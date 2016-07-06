@@ -59,7 +59,7 @@ void OnMouse(int event, int x, int y, int flags, void* params )
 			state->point_second.y = y;
 			
 			state->img = state->processor.CvtColor(state->img, Rect (state->point_second, state->point_first));
-			imshow(kSrcWindowName, state->img);
+			imshow(state->kSrcWindowName, state->img);
 		}
 	else if (event == EVENT_RBUTTONDOWN)
 	{
