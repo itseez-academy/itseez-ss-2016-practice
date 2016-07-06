@@ -171,8 +171,8 @@ test/preinstall:
 # Target rules for target test/CMakeFiles/test_summer_school_2016.dir
 
 # All Build rule for target.
-test/CMakeFiles/test_summer_school_2016.dir/all: 3rdparty/gtest/CMakeFiles/gtest.dir/all
 test/CMakeFiles/test_summer_school_2016.dir/all: src/CMakeFiles/summer_school_2016_lib.dir/all
+test/CMakeFiles/test_summer_school_2016.dir/all: 3rdparty/gtest/CMakeFiles/gtest.dir/all
 	$(MAKE) -f test/CMakeFiles/test_summer_school_2016.dir/build.make test/CMakeFiles/test_summer_school_2016.dir/depend
 	$(MAKE) -f test/CMakeFiles/test_summer_school_2016.dir/build.make test/CMakeFiles/test_summer_school_2016.dir/build
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/chibisaincrada/itseez-ss-2016-practice/CMakeFiles  10 11

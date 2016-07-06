@@ -69,8 +69,8 @@ int main(int argc, const char** argv) {
 		//cvtColor(src, src, CV_RGB2GRAY);
 		//cvtColor(src, src, CV_GRAY2RGB);
 		//processor.CvtColor(src, roi);
-		processor.Filter(src, roi, 20); 
-		//processor.DetectEdges(src, roi,	3,  10, 2,3 );
+		//processor.Filter(src, roi, 20); 
+		processor.DetectEdges(src, roi,	3,  10, 2,3 );
 	}
 	catch (const std::exception& ex) {
 		cout << ex.what() << endl;

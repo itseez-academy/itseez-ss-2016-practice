@@ -6,29 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/home/chibisaincrada/itseez-ss-2016-practice/src/detection.cpp
-detection.hpp
-/home/chibisaincrada/itseez-ss-2016-practice/src/detection.hpp
-iostream
--
-
 /home/chibisaincrada/itseez-ss-2016-practice/src/image_processing.cpp
 image_processing.hpp
 /home/chibisaincrada/itseez-ss-2016-practice/src/image_processing.hpp
 opencv2/opencv.hpp
 /home/chibisaincrada/itseez-ss-2016-practice/src/opencv2/opencv.hpp
-
-/home/chibisaincrada/itseez-ss-2016-practice/src/tracking.cpp
-tracking.hpp
-/home/chibisaincrada/itseez-ss-2016-practice/src/tracking.hpp
-iostream
--
-
-/home/chibisaincrada/itseez-ss-2016-practice/src/workaround.cpp
-workaround.hpp
-/home/chibisaincrada/itseez-ss-2016-practice/src/workaround.hpp
-cstddef
--
 
 /usr/local/include/opencv/cxcore.h
 opencv2/core/core_c.h
@@ -486,14 +468,6 @@ opencv2/opencv.hpp
 opencv2/core/core_c.h
 /usr/local/include/opencv2/videoio/opencv2/core/core_c.h
 
-include/detection.hpp
-memory
--
-string
--
-opencv2/core/core.hpp
-include/opencv2/core/core.hpp
-
 include/image_processing.hpp
 memory
 -
@@ -503,14 +477,4 @@ opencv2/opencv.hpp
 include/opencv2/opencv.hpp
 opencv2/core/core.hpp
 include/opencv2/core/core.hpp
-
-include/tracking.hpp
-memory
--
-string
--
-opencv2/core/core.hpp
-include/opencv2/core/core.hpp
-
-include/workaround.hpp
 
