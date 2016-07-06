@@ -30,5 +30,12 @@ bool CascadeDetector::Init(const std::string& model_file_path)
 void CascadeDetector::Detect(const cv::Mat& frame, std::vector<cv::Rect>& objects,
 	std::vector<double>& scores)
 {
-	
+	if (!this->classifier.empty())
+	{
+		std::vector<int> intScores;
+
+		this->classifier.detectMultiScale(frame, objects, intScores);
+
+		std::copy(intScores.begin(), intScores.end(), scores);
+	}
 }
