@@ -60,40 +60,13 @@ int imageDetect(CommandLineParser& parser, shared_ptr<CascadeDetector>& detector
 	waitKey(0);
 }
 
-int cameraDetect(CommandLineParser& parser, shared_ptr<CascadeDetector>& detector)
+int videoDetect(VideoCapture& cap, CommandLineParser& parser, shared_ptr<CascadeDetector>& detector)
 {
-	VideoCapture cap(0);
-
 	if (!cap.isOpened()) {
 		cout << "Fail." << endl;
 		return -1;
 	}
 
-	for (;;)
-	{
-		Mat img;
-		cap >> img; if (img.empty()) break;
-
-		ImageProc(detector, img);
-
-		imshow("Detection video", img);
-		waitKey(5);
-	}
-	waitKey(0);
-}
-
-int videoDetect(CommandLineParser& parser, shared_ptr<CascadeDetector>& detector)
-{
-	string src = parser.get<string>("v");
-	VideoCapture cap;
-	cap.open(src);
-
-	if (!cap.isOpened()) {
-		cout << "Fail." << endl;
-		return -1;
-	}
-
-	
 	for (;;)
 	{
 		Mat img;
@@ -134,10 +107,19 @@ int main(int argc, const char** argv) {
 	  imageDetect(parser, detector);
 
   if (mode == 1)
-	 videoDetect(parser, detector);
+  {
+	  string src = parser.get<string>("v");
+	  VideoCapture cap;
+	  cap.open(src);
+	  videoDetect(cap, parser, detector);
+  }
 
   if (mode == 3)
-	  cameraDetect(parser, detector);
+  {
+	  VideoCapture cap(0);
+	  videoDetect(cap, parser, detector);
+  }
+	  
 
   return 0;
 }
