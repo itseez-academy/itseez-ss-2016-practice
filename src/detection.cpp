@@ -11,3 +11,28 @@ shared_ptr<Detector> Detector::CreateDetector(const string& name) {
             << std::endl;
   return nullptr;
 }
+
+bool CascadeDetector::Init(const std::string& model_file_path)
+{
+	if (detector.load(model_file_path)==true)
+	{
+		return true;
+	}
+	else return false;
+}
+std::shared_ptr<Detector> CascadeDetector::CreateDetector(const std::string& name)
+{
+	if (name == "cascade") {
+		return std::make_shared<CascadeDetector>();
+	}
+}
+void CascadeDetector::Detect(const cv::Mat& frame, std::vector<cv::Rect>& objects,
+	std::vector<double>& scores)
+{
+	std::vector<int> scores_int;
+	detector.detectMultiScale(frame, objects, scores_int);
+	scores.resize(scores_int.size());
+	for (std::vector<int>::size_type i = 0; i < scores_int.size(); ++i) {
+		scores[i] = scores_int[i];
+	}
+}
