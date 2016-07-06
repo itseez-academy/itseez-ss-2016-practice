@@ -46,9 +46,6 @@ Mat ImageProcessorImpl::CvtColor(const cv::Mat &src, const cv::Rect &roi)
 
 Mat ImageProcessorImpl::Filter(const cv::Mat &src, const cv::Rect &roi, const int size)
 {
-	if (size % 2 == 0)
-		throw "wrong kernel size";
-	
 	Rect containedRoi = getContainedRoi(src, roi);
 
 	Mat newMat = src.clone();
@@ -56,7 +53,15 @@ Mat ImageProcessorImpl::Filter(const cv::Mat &src, const cv::Rect &roi, const in
 	Mat roiMat = newMat(containedRoi);
 	Mat dataMat = roiMat.clone();
 
-	medianBlur(roiMat, dataMat, size);
+	try
+	{
+		medianBlur(roiMat, dataMat, size);
+	}
+	catch (...)
+	{
+		throw;
+	}
+
 	dataMat.copyTo(roiMat);
 
 	return newMat;
@@ -92,24 +97,21 @@ Mat ImageProcessorImpl::Pixelize(const cv::Mat &src, const cv::Rect &roi, const 
 	int pixelWidth = containedRoi.width / divs;
 	int pixelHeight = containedRoi.height / divs;
 
-	Size * pixelSize = new Size(pixelWidth, pixelHeight);
-	Rect * pixelRect = new Rect(containedRoi.x, containedRoi.y, pixelWidth, pixelHeight);
+	Size pixelSize = Size(pixelWidth, pixelHeight);
+	Rect pixelRect = Rect(containedRoi.x, containedRoi.y, pixelWidth, pixelHeight);
 
 	for (int i = 0; i < divs; i++)
 		for (int j = 0; j < divs; j++)
 		{
-			pixelRect->x = containedRoi.x + i * pixelWidth;
-			pixelRect->y = containedRoi.y + j * pixelHeight;
+			pixelRect.x = containedRoi.x + i * pixelWidth;
+			pixelRect.y = containedRoi.y + j * pixelHeight;
 			
 
-			Mat pixel = newMat(*pixelRect), blurredPixel;
-			blur(pixel, blurredPixel, *pixelSize);
+			Mat pixel = newMat(pixelRect), blurredPixel;
+			blur(pixel, blurredPixel, pixelSize);
 
 			blurredPixel.copyTo(pixel);
 		}
-
-	delete pixelSize;
-	delete pixelRect;
 
 	return newMat;
 }
