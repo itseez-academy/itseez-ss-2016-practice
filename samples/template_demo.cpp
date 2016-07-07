@@ -12,7 +12,7 @@ using namespace std;
 using namespace cv;
 
 
-/*
+
 const char* kAbout =
     "This is an empty application that can be treated as a template for your "
     "own doing-something-cool applications.";
@@ -61,4 +61,3 @@ int main(int argc, const char** argv) {
 
  return 0;
 }
-*/

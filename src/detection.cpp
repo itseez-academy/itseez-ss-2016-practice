@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include "opencv2/objdetect.hpp"
+#include "opencv2/highgui.hpp"
+#include "opencv2/imgproc.hpp"
 
 
 #include <memory>
@@ -40,5 +42,12 @@ void CascadeDetector::Detect(const cv::Mat& frame, std::vector<cv::Rect>& object
 		scores.resize(numDetections.size());
 		
 		std::copy(numDetections.begin(), numDetections.end(), scores.begin());
+
+		//
+		for (int i = 0; i < sizeof(objects); i++) {
+		
+		 rectangle(frame, objects[i], Scalar(0, 55, 255));
+
+		}
 	}
 }
