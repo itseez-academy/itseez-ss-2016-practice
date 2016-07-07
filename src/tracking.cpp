@@ -100,5 +100,21 @@ Rect MedianFlowTracker::Track(const Mat &frame) {
 	position_.y += shifts_y[shifts_y.size() / 2] + 0.5;
 
 	frame_ = frame.clone();
+
+	vector<float> scales;
+	float old_distance(0), new_distance(0);
+
+	for (int i = 0; i < corners.size(); i++) {
+		for (int j = i+1; j < corners.size(); j++) {
+			old_distance = (corners[i].x - corners[j].x) * (corners[i].x - corners[j].x) +
+				(corners[i].y - corners[j].y) * (corners[i].y - corners[j].y);
+			new_distance = (corners_forward[i].x - corners_forward[j].x) * (corners_forward[i].x - corners_forward[j].x) + 
+				(corners_forward[i].y - corners_forward[j].y) * (corners_forward[i].y - corners_forward[j].y);
+			scales.push_back(old_distance / new_distance);
+		}
+	}
+	std::nth_element(scales.begin(), scales.begin() + scales.size() / 2, scales.end());
+	float median_scale = scales[scales.size() / 2];
+
 	return position_;
 }
