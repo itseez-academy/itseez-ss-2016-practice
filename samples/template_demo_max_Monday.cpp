@@ -16,16 +16,18 @@ const char* kOptions =
     "{ t              |  128   | threshold                }"
     "{ h ? help usage |        | print help message       }";
 
-void addF(unsigned char* const data, const int width,
+void addF(unsigned char* const data, unsigned char* const data1, const int width,
 	const int height, const int threshold, int g) {
+
+
 
 	for (int k = g*height; k < height*(width - g); k++)
 	{
 		int j = k % width;
 		int i = k / width;
-		data[k] = (data[(i - g)*width + j - g] + 2 * data[(i - g)*width + j] +
-			data[(i)*width + j - g] + 2 * data[k] + 
-			data[(i + g)*width + j - g] + data[(i + g)*width + j - g]) / 9;
+		data1[k] = (data[(i - g)*width + j - g] + data[(i - g)*width + j] + data[(i - g)*width + j + g]+
+			data[(i)*width + j - g]		 + data[k] 		+ data[(i)*width + j + g]+
+			data[(i + g)*width + j - g] + data[(i + g)*width + j ] + data[(i + g)*width + j + g]) / 9;
 	}
 }
 
@@ -41,7 +43,9 @@ int main(int argc, const char** argv) {
   }
 
   // Read image.
+  Mat dest;
   Mat src = imread(parser.get<string>(0), CV_LOAD_IMAGE_GRAYSCALE);
+  src.copyTo(dest);	
   if (src.empty()) {
     cout << "Failed to open image file '" + parser.get<string>(0) + "'."
          << endl;
@@ -60,7 +64,7 @@ int main(int argc, const char** argv) {
   MatrixProcessor processor;
   const int threshold = parser.get<int>("t");
   try {
-	  addF(src.data, src.cols, src.rows, threshold,40);
+	  addF(src.data, dest.data, src.cols, src.rows, threshold,40);
     //processor.Threshold(src.data, src.cols, src.rows, threshold);
   } catch (const std::exception& ex) {
     cout << ex.what() << endl;
@@ -71,7 +75,7 @@ int main(int argc, const char** argv) {
   const string kDstWindowName = "Destination image";
   namedWindow(kDstWindowName, WINDOW_NORMAL);
   resizeWindow(kDstWindowName, 640, 480);
-  imshow(kDstWindowName, src);
+  imshow(kDstWindowName, dest);
   waitKey();
 
   return 0;
