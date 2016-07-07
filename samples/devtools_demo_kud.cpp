@@ -43,11 +43,11 @@ int main(int argc, const char** argv) {
   imshow(kSrcWindowName, src);
   waitKey(kWaitKeyDelay);
 
-  // Threshold data.
+  // Average data.
   MatrixProcessor processor;
   const int threshold = parser.get<int>("t");
   try {
-	  processor.Threshold(src.data, src.cols, src.rows, threshold);
+	  processor.Average(src.data, src.cols, src.rows);
   }
   catch (const std::exception& ex) {
 	  cout << ex.what() << endl;
