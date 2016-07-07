@@ -4,7 +4,9 @@
 #include <string>
 
 #include "opencv2/core/core.hpp"
-
+#include "opencv2/features2d.hpp"
+#include"opencv2/imgproc.hpp"
+#include"opencv2/video.hpp"
 class Tracker {
  public:
   static std::shared_ptr<Tracker> CreateTracker(const std::string &name);
