@@ -29,6 +29,18 @@ bool MedianFlowTracker::Init(const cv::Mat &frame, const cv::Rect &roi) {
 	return frame.cols && frame.rows && roi.width && roi.height;
 }
 
+template<class T> void erase_elements (vector<T> & data, vector<unsigned char> & status) {
+	int erase_index = 0;
+	for (int i = 0; i < data.size(); i++) {
+		if (!status[i]) {
+			data.erase(data.begin() + erase_index);
+		}
+		else {
+			erase_index++;
+		}
+	}
+};
+
 Rect MedianFlowTracker::Track(const Mat &frame) {
 	vector<Point2f> corners;
 	const int maxCorners = 50;
@@ -45,24 +57,40 @@ Rect MedianFlowTracker::Track(const Mat &frame) {
 	Mat gray_frame;
 	cvtColor(frame, gray_frame, CV_BGR2GRAY);
 
-	/*Mat markers_frame = frame_.clone();
-	for each (auto corner in corners) {
-		drawMarker(markers_frame, corner, Scalar(0, 255, 0));
-	}
-	imshow("markers", markers_frame);
-	waitKey(1);*/
-	vector<Point2f> new_corners;
-	vector<unsigned char> status;
-	Mat error;
-	calcOpticalFlowPyrLK(gray_frame_, gray_frame, corners, new_corners, status, error);
+	vector<Point2f> corners_forward, corners_backward;
+	vector<unsigned char> status_forward, status_backward; 
+	Mat error_forward, error_backward;
 
-	vector<float> shifts_x;
-	vector<float> shifts_y;
+	calcOpticalFlowPyrLK(gray_frame_, gray_frame, corners, corners_forward, status_forward, error_forward);	
+	erase_elements(corners, status_forward);
+	erase_elements(corners_forward, status_forward);
+
+	calcOpticalFlowPyrLK(gray_frame, gray_frame_, corners_forward, corners_backward, status_backward, error_backward);
+	erase_elements(corners, status_backward);
+	erase_elements(corners_forward, status_backward);
+	erase_elements(corners_backward, status_backward);
+
+	vector<float> fb_error(corners.size());
+	for (int i = 0; i < fb_error.size(); i++) {
+		fb_error[i] = (corners[i].x - corners_backward[i].x) * (corners[i].x - corners_backward[i].x) +
+			(corners[i].y - corners_backward[i].y) * (corners[i].y - corners_backward[i].y);
+	}
+	std::nth_element(fb_error.begin(), fb_error.begin() + fb_error.size() / 2, fb_error.end());
+	float median_error = fb_error[fb_error.size() / 2];
+
+	vector<unsigned char> error_status(fb_error.size());
+	for (int i = 0; i < error_status.size(); i++) {
+		error_status[i] = fb_error[i] > median_error ? 0 : 1;
+	}
+	erase_elements(corners, error_status);
+	erase_elements(corners_forward, error_status);
+	erase_elements(corners_backward, error_status);
+
+	vector<float> shifts_x(corners.size());
+	vector<float> shifts_y(corners.size());
 	for (int i = 0; i < corners.size(); i++) {
-		if (status[i]) {
-			shifts_x.push_back(new_corners[i].x - corners[i].x);
-			shifts_y.push_back(new_corners[i].y - corners[i].y);
-		}
+		shifts_x[i] = (corners_forward[i].x - corners[i].x);
+		shifts_y[i] = (corners_forward[i].y - corners[i].y);
 	}
 
 	std::nth_element(shifts_x.begin(), shifts_x.begin() + shifts_x.size() / 2, shifts_x.end());
