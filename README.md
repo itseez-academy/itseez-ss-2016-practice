@@ -1,6 +1,7 @@
 # Летняя [] межвузовская школа, 2016 год
 
-[![Join the chat at https://gitter.im/itseez-academy/itseez-ss-2016-practice](https://badges.gitter.im/itseez-academy/itseez-ss-2016-practice.svg)](https://gitter.im/itseez-academy/itseez-ss-2016-practice?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/itseez-academy/itseez-ss-2016-practice](https://badges.gitter.im/itseez-academy/itseez-ss-2016-practice.svg)](https://gitter.im/itseez-academy/itseez-ss-2016-practice?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Feedback](./docs/feedback.png)][feedback_form]
+
 
 ## Практикум
 
@@ -43,3 +44,10 @@ OpenCV. Каждая работа предполагает реализацию 
   1. [Практика 2. Основы работы с библиотекой OpenCV. Модули core, imgproc и highgui](docs/README_2.md).
   1. [Практика 3. Детектирование объектов с использованием каскадного классификатора](docs/README_3.md).
   1. [Практика 4. Сопровождение объектов с использованием алгоритма Median Flow](docs/README_4.md).
+
+По завершении изучения лекционных материалов пятого рабочего дня Летней школы
+заполните, пожалуйста, [отзыв участника][feedback_day5].
+
+<!-- LINKS -->
+[feedback_form]: https://docs.google.com/forms/d/1tkVTza1_0zxO013ukRquIaODo2MirhCmWvLOIINFkxc/viewform
+[feedback_day5]: https://docs.google.com/forms/d/1F0VMvP67dYnOGTzMuWlZROZ5FODjw9zKmJUCIATEoy8/viewform
