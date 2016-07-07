@@ -20,6 +20,8 @@ class MedianFlowTracker : public Tracker {
  protected:
   cv::Rect position_;
   cv::Mat frame_;
+  cv::Size initial_size_;
+  float scale_;
 
   float Median(const std::vector<float> &v) const;
 
@@ -45,5 +47,5 @@ class MedianFlowTracker : public Tracker {
 
   bool RestoreBoundingBox(const std::vector<cv::Point2f> &corners,
                           const std::vector<cv::Point2f> &corners_next_frame,
-                          cv::Rect &new_position) const;
+                          cv::Rect &new_position, float& scale) const;
 };

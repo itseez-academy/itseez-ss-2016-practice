@@ -3,8 +3,7 @@
 #include <algorithm>
 #include <iostream>
 
-#include "opencv2/imgproc.hpp"
-#include "opencv2/video/tracking.hpp"
+#include "opencv2/opencv.hpp"
 
 using std::string;
 using std::shared_ptr;
@@ -28,9 +27,11 @@ bool MedianFlowTracker::Init(const Mat &frame, const Rect &roi) {
   Rect image_bounding_rect(Point(0, 0), frame.size());
   if ((image_bounding_rect & roi) == roi) {
     position_ = roi;
+    initial_size_ = roi.size();
+    scale_ = 1.0f;
     return true;
   } else {
-    std::cerr << "ROI " << roi << "is outside of image.";
+    std::cerr << "ROI " << roi << " is outside of image.";
   }
   return false;
 }
@@ -135,18 +136,16 @@ bool MedianFlowTracker::ComputeScaleFactor(
 
 bool MedianFlowTracker::RestoreBoundingBox(
     const vector<Point2f> &corners, const vector<Point2f> &corners_next_frame,
-    Rect &new_position) const {
+    Rect &new_position, float& scale) const {
   Point2f shift;
   ComputeMedianShift(corners, corners_next_frame, shift);
 
-  float scale;
   if (!ComputeScaleFactor(corners, corners_next_frame, scale)) {
     return false;
   }
-
-  new_position = position_ + Point(shift);
   new_position.width *= scale;
   new_position.height *= scale;
+  new_position = position_ + Point(shift);
   Rect image_bounding_box(Point(0, 0), frame_.size());
   new_position = image_bounding_box & new_position;
   if (new_position.area() == 0) {
@@ -190,12 +189,31 @@ Rect MedianFlowTracker::Track(const Mat &frame) {
     return Rect();
   }
 
+  Mat debug_image(frame_.rows, frame_.cols * 2, frame_.type());
+  Mat im1 = debug_image.colRange(Range(0, frame_.cols));
+  Mat im2 = debug_image.colRange(Range(frame_.cols, frame_.cols * 2));
+  frame_.copyTo(im1);
+  next_frame.copyTo(im2);
+
+  for (size_t i = 0; i < corners.size(); ++i) {
+    line(debug_image, Point(corners.at(i)), Point(corners_next_frame.at(i)) + Point(frame_.cols, 0), CV_RGB(0, 255, 255));
+  }
+
+  imshow("debug", debug_image);
+  
+
   Rect new_position;
-  if (!RestoreBoundingBox(corners, corners_next_frame, new_position)) {
+  float scale_factor;
+  if (!RestoreBoundingBox(corners, corners_next_frame, new_position, scale_factor)) {
     std::cout << "There are not enough points to restore bounding box."
               << std::endl;
     return Rect();
   }
+
+  scale_ *= scale_factor;
+  new_position = Rect(new_position.tl(), Size2f(initial_size_) * scale_);
+  Rect image_bounding_box(Point(0, 0), frame_.size());
+  new_position = image_bounding_box & new_position;
 
   position_ = new_position;
   frame_ = next_frame;

@@ -14,8 +14,9 @@ using namespace cv;
 const char* kAbout = "This is tracking sample application.";
 
 const char* kOptions =
-    "{ v video        |        | video to process         }"
-    "{ h ? help usage |        | print help message       }";
+    "{ v video        | <none> | video to process                }"
+    "{ c camera       | <none> | camera id to capture video from }"
+    "{ h ? help usage |        | print help message              }";
 
 struct MouseCallbackState {
   bool is_selection_started;
@@ -57,17 +58,29 @@ int main(int argc, const char** argv) {
   }
 
   // Load input video.
-  string video_path = parser.get<String>("video");
-  VideoCapture video(video_path);
+  VideoCapture video;
+  bool is_live_stream = false;
+  if (parser.has("video")) {
+    string video_path = parser.get<string>("video");
+    video.open(video_path);
+    is_live_stream = false;
+  }
+  if (parser.has("camera")) {
+    video.open(parser.get<int>("camera"));
+    is_live_stream = true;
+  }
+
   if (!video.isOpened()) {
-    cout << "Failed to open video file '" << video_path << "'" << endl;
+    cout << "Failed to open video." << endl;
     return 0;
   }
 
   const string kWindowName = "video";
-  const int kWaitKeyDelay = 100;
+  const int kWaitKeyDelay = 20;
   const int kEscapeKey = 27;
   const Scalar kColorBlue = CV_RGB(0, 0, 255);
+  const Scalar kColorGreen = CV_RGB(0, 255, 0);
+  const int kLineThickness = 2;
 
   namedWindow(kWindowName);
   MouseCallbackState mouse_state;
@@ -76,12 +89,19 @@ int main(int argc, const char** argv) {
   setMouseCallback(kWindowName, OnMouse, &mouse_state);
 
   Mat frame;
+  Rect roi;
   video >> frame;
   imshow(kWindowName, frame);
   while (!mouse_state.is_selection_finished) {
+	  Mat frame_with_selection = frame.clone();
+    roi = Rect(mouse_state.point_first, mouse_state.point_second);
+    rectangle(frame_with_selection, roi, kColorGreen, kLineThickness);
+	  imshow(kWindowName, frame_with_selection);
     waitKey(kWaitKeyDelay);
+    if (is_live_stream) {
+      video >> frame;
+    }
   }
-  Rect roi = Rect(mouse_state.point_first, mouse_state.point_second);
 
   MedianFlowTracker tracker;
   tracker.Init(frame, roi);
@@ -89,7 +109,7 @@ int main(int argc, const char** argv) {
 
   while (!frame.empty()) {
     roi = tracker.Track(frame);
-    rectangle(frame, roi, kColorBlue, 1);
+    rectangle(frame, roi, kColorBlue, kLineThickness);
     imshow(kWindowName, frame);
     int key = waitKey(kWaitKeyDelay) & 0x00FF;
     if (key == kEscapeKey) {
