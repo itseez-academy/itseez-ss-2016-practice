@@ -70,7 +70,7 @@ Rect MedianFlowTracker::Track(const cv::Mat &frame)
 		this->position_.y += diffy.at(diffy.size() / 2);
 
 		this->frame_ = frame;
-		this->features_.resize(features.size);
+		this->features_.resize(features.size());
 		std::copy(features.begin(), features.end(), this->features_.begin());
 
 		return Rect(this->position_);
