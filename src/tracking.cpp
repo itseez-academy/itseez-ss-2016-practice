@@ -7,7 +7,10 @@ using std::shared_ptr;
 using namespace cv;
 
 shared_ptr<Tracker> Tracker::CreateTracker(const string &name) {
-  std::cerr << "Failed to create tracker with name '" << name << "'"
-            << std::endl;
+    if (name == "median_flow") {
+        return std::make_shared<MedianFlowTracker>();
+    }
   return nullptr;
 }
+bool MedianFlowTracker::Init(const cv::Mat &frame, const cv::Rect &roi){}
+cv::Rect MedianFlowTracker::Track(const cv::Mat &frame){}
