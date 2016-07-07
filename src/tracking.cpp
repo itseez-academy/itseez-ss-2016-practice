@@ -189,19 +189,6 @@ Rect MedianFlowTracker::Track(const Mat &frame) {
     return Rect();
   }
 
-  Mat debug_image(frame_.rows, frame_.cols * 2, frame_.type());
-  Mat im1 = debug_image.colRange(Range(0, frame_.cols));
-  Mat im2 = debug_image.colRange(Range(frame_.cols, frame_.cols * 2));
-  frame_.copyTo(im1);
-  next_frame.copyTo(im2);
-
-  for (size_t i = 0; i < corners.size(); ++i) {
-    line(debug_image, Point(corners.at(i)), Point(corners_next_frame.at(i)) + Point(frame_.cols, 0), CV_RGB(0, 255, 255));
-  }
-
-  imshow("debug", debug_image);
-  
-
   Rect new_position;
   float scale_factor;
   if (!RestoreBoundingBox(corners, corners_next_frame, new_position, scale_factor)) {
