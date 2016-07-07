@@ -25,11 +25,6 @@ struct MouseCallbackState {
 	bool is_selection_finished;
 	Point point_first;
 	Point point_second;
-	ImageProcessorImpl processor;
-	Mat img;
-	Rect roi;
-	bool grayOk;
-	string kSrcWindowName;
 };
 
 struct ProgState {
@@ -39,8 +34,6 @@ struct ProgState {
 
 void OnMouse(int event, int x, int y, int flags, void* params )
 {
-	
-	//state.
 	MouseCallbackState* state = (MouseCallbackState*)params;
 	if (event == EVENT_LBUTTONDOWN)
 	{
@@ -49,27 +42,26 @@ void OnMouse(int event, int x, int y, int flags, void* params )
 		state->point_first.x = x;
 		state->point_first.y = y;
 	}
+	if (event == EVENT_LBUTTONUP)
+		
+	{
+		state->is_selection_started = false;
+		state->is_selection_finished = true;
+		state->point_second.x = x;
+		state->point_second.y = y;
+	}
 
-	
-		if (event == EVENT_LBUTTONUP)
-		{
-			state->is_selection_started = false;
-			state->is_selection_finished = true;
-			state->point_second.x = x;
-			state->point_second.y = y;
-			
-			state->img = state->processor.CvtColor(state->img, Rect (state->point_second, state->point_first));
-			imshow(state->kSrcWindowName, state->img);
-		}
-	else if (event == EVENT_RBUTTONDOWN)
+	if (event == EVENT_RBUTTONDOWN)
 	{
 		//cout << "Right button of the mouse is clicked - position (" << x << ", " << y << ")" << endl;
 	}
-	else if (event == EVENT_MBUTTONDOWN)
+
+	if (event == EVENT_MBUTTONDOWN)
 	{
 		//cout << "Middle button of the mouse is clicked - position (" << x << ", " << y << ")" << endl;
 	}
-	else if (event == EVENT_MOUSEMOVE)
+
+	if (event == EVENT_MOUSEMOVE)
 	{
 		if (state->is_selection_finished == false)
 		{
@@ -78,22 +70,6 @@ void OnMouse(int event, int x, int y, int flags, void* params )
 		}
 
 	}
-}
-
-
-void DstImgCallback(int event, int x, int y, int flags, void* params)
-{
-
-	//state.
-	MouseCallbackState* state = (MouseCallbackState*)params;
-	if (event == EVENT_LBUTTONDOWN)
-	{
-		state->is_selection_started = true;
-		state->is_selection_finished = false;
-		state->point_first.x = x;
-		state->point_first.y = y;
-	}
-
 }
 
 
@@ -107,6 +83,9 @@ int main(int argc, const char** argv) {
 		parser.printMessage();
 		return 0;
 	}
+	bool grayOk = false;
+	if (parser.has("gray"))
+		grayOk = true;
 
 	// Do something cool.
 	cout << "This is empty template sample." << endl;
@@ -128,51 +107,22 @@ int main(int argc, const char** argv) {
 	resizeWindow(kSrcWindowName, 640, 480);
 	ImageProcessorImpl processor;
 	MouseCallbackState state;
-	state.img = img;
-	state.processor = processor;
-	state.kSrcWindowName = kSrcWindowName;
 	setMouseCallback(kSrcWindowName, OnMouse, &state);
 	imshow(kSrcWindowName, img);
-	bool grayOk = false;
-	const int threshold = parser.get<int>("gray");
-	try {
-		grayOk = true;
-		
+
+	for (;;)
+	{
+		if (state.is_selection_finished)
+		{
+			img = processor.CvtColor(img, Rect(state.point_second, state.point_first));
+			imshow(kSrcWindowName, img);
+		}
+
+		char c = waitKey(30);
+		if (c == 27) { // если нажата ESC - выходим
+			break;
+		}
 	}
-	
-	catch (const std::exception& ex) {
-		cout << ex.what() << endl;
-		return 0;
-	}
-	state.grayOk = grayOk;
-	
-	imshow(kSrcWindowName, state.img);
-	/*
-	const string kDstWindowName = "Destination image";
-	namedWindow(kDstWindowName, WINDOW_NORMAL);
-	resizeWindow(kDstWindowName, 640, 480);
-	setMouseCallback(kDstWindowName, DstImgCallback, &state);
-
-	if (grayOk) {
-
-	}*/
-	
-	
-	//waitKey(kWaitKeyDelay);
-	waitKey(0);
-
-	//Create a window
-	//namedWindow("My Window", 1);
-
-	//set the callback function for any mouse event
-	//setMouseCallback("My Window", CallBackFunc, NULL);
-
-	//show the image
-	//imshow("My Window", img);
-
-	// Wait until user press some key
-	//waitKey(0);
-
 	return 0;
 }
 
