@@ -19,11 +19,9 @@ shared_ptr<Tracker> Tracker::CreateTracker(const string &name)
 	{
 		return std::make_shared<MedianFlowTracker>();
 	}
-	else
-	{
-		cerr << "Failed to create tracker with name '" << name << "'"<< endl;
-		return nullptr;
-	}
+
+	cerr << "Failed to create tracker with name '" << name << "'"<< endl;
+	return nullptr;
 }
 
 
