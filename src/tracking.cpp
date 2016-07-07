@@ -87,8 +87,8 @@ Rect MedianFlowTracker::Track(const cv::Mat &frame)
 		for (int i = 0, erased = 0; i < status.size(); i++)
 			if (status[i] != 1) //no optical flow found
 			{
-				this->features_.erase(this->features_.begin() + i - erased);
-				features.erase(features.begin() + i - erased);
+				this->features_.erase(this->features_.begin() + (i - erased));
+				features.erase(features.begin() + (i - erased));
 				erased++;
 			}
 
