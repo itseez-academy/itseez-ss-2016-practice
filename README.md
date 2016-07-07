@@ -49,5 +49,5 @@ OpenCV. Каждая работа предполагает реализацию 
 заполните, пожалуйста, [отзыв участника][feedback_day5].
 
 <!-- LINKS -->
-[feedback_form]: https://docs.google.com/forms/d/1tkVTza1_0zxO013ukRquIaODo2MirhCmWvLOIINFkxc/viewform
+[feedback_form]: http://bit.ly/algo2016
 [feedback_day5]: https://docs.google.com/forms/d/1F0VMvP67dYnOGTzMuWlZROZ5FODjw9zKmJUCIATEoy8/viewform
