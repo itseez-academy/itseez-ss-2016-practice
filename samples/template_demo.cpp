@@ -2,6 +2,11 @@
 #include <string>
 
 #include "opencv2/core.hpp"
+#include <opencv2/highgui/highgui.hpp>
+#include <iostream>
+
+#include "tracking.hpp"
+
 
 using namespace std;
 using namespace cv;
@@ -25,6 +30,44 @@ int main(int argc, const char** argv) {
     parser.printMessage();
     return 0;
   }
+
+
+  string filename = "pedestrians.mpg";
+
+  VideoCapture capture(filename);
+  Mat frame;
+  Mat next_frame;
+
+  if (!capture.isOpened())
+	  throw "Error when reading steam_avi";
+
+  
+  MedianFlowTracker medianflowtraacker;
+
+  Rect ROI(70, 70, 90, 90);
+   
+  const cv::Rect &roi = ROI;
+  
+  namedWindow("video", 1);
+  for (; ; )
+  {   
+	  capture >> frame;
+
+	  if (frame.empty()) {
+		 continue;
+	  }
+	
+	  //getting next frame
+	  capture.read(next_frame);
+
+	  medianflowtraacker.Init(frame, next_frame, roi);
+ 	  
+	  imshow("video", frame);
+	  waitKey(20); 
+  }
+  waitKey(0);
+
+
 
   // Do something cool.
   cout << "This is empty template sample." << endl;
