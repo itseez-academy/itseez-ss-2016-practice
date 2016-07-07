@@ -99,42 +99,39 @@ int main(int argc, const char** argv)
 		}
 
 		std::shared_ptr<Tracker> tracker = Tracker::CreateTracker("median_flow");
-		bool trackingInitialized = false;
 
-		for (;;)
+		Mat frame;
+		cap >> frame;
+
+		imshow(windowName, frame);
+
+		for (;;)//wait until tracking is initialized
 		{
-			Mat frame;
-			cap >> frame;
-
-			if (frame.empty()) break;
-
 			if (mcState->is_selection_finished)
 			{
-				if (!trackingInitialized)
+				Rect actualRoi = getContainedRoi(frame, Rect(mcState->point_first, mcState->point_second));
+
+				if (!tracker->Init(frame, actualRoi))
 				{
-					Rect actualRoi = getContainedRoi(frame, Rect(mcState->point_first, mcState->point_second));
-					
-					if (!tracker->Init(frame, actualRoi))
-					{
-						cout << "Failed to initialize tracker";
-						return 1;
-					}
-
-					showWithRect(frame, actualRoi);
-
-					trackingInitialized = true;
+					cout << "Failed to initialize tracker";
+					return 1;
 				}
-				else
-				{
-					Rect object = tracker->Track(frame);
 
-					showWithRect(frame, object);
-				}
+				showWithRect(frame, actualRoi);
+				break;
 			}
 			else if (mcState->is_selection_started)
 				showWithRect(frame, Rect(mcState->point_first, mcState->point_second));
-			else
-				imshow(windowName, frame);
+
+			waitKey(10);
+		}
+
+		while(!frame.empty())
+		{
+			cap >> frame;
+
+			Rect object = tracker->Track(frame);
+			showWithRect(frame, object);
 
 			if (cv::waitKey(30) >= 0) break;
 		}
