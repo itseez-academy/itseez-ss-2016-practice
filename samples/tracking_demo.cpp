@@ -84,6 +84,10 @@ int main(int argc, const char** argv) {
 		{
 			Rect obj = tracker.Track(frame);
 			Mat tracking_frame = frame.clone();
+			if (! (obj.width * obj.height)) {
+				cout << "Tracking lost!" << endl;
+				break;
+			}
 			rectangle(tracking_frame, obj, Scalar(255, 0, 0));
 			imshow("Tracking object", tracking_frame);
 			waitKey(30);
