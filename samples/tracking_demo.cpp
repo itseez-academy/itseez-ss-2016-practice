@@ -2,6 +2,7 @@
 #include <string>
 
 #include "tracking.hpp"
+#include "roi.hpp"
 
 #include "opencv2/core.hpp"
 #include "opencv2/highgui.hpp"
@@ -16,22 +17,6 @@ const char* kOptions =
 	"{ v video        | <none> | video to process         }"
 	"{ c camera       | <none> | camera to get video from }"
     "{ h ? help usage |        | print help message       }";
-
-Rect getContainedRoi(const Mat & src, const Rect & roi)
-{
-	Rect newRoi = Rect();
-
-	newRoi.x = max(0, roi.x);
-	newRoi.y = max(0, roi.y);
-
-	newRoi.width = roi.x < 0 ? roi.width + roi.x : roi.width;
-	newRoi.height = roi.y < 0 ? roi.height + roi.y : roi.height;
-
-	newRoi.width = min(newRoi.width, src.cols - newRoi.x);
-	newRoi.height = min(newRoi.height, src.rows - newRoi.y);
-
-	return newRoi;
-}
 
 struct MouseCallbackState 
 {
@@ -72,7 +57,7 @@ const string windowName = "Tracking demo";
 void showWithRect(const Mat & frame, const Rect & rect)
 {
 	Mat shownPicture = frame.clone();
-	rectangle(shownPicture, rect, Scalar(0, 0, 0));
+	rectangle(shownPicture, getContainedRoi(frame, rect), Scalar(0, 0, 0));
 	imshow(windowName, shownPicture);
 }
 
@@ -141,7 +126,9 @@ int main(int argc, const char** argv)
 				}
 				else
 				{
-					showWithRect(frame, tracker->Track(frame));
+					Rect object = tracker->Track(frame);
+
+					showWithRect(frame, object);
 				}
 			}
 			else if (mcState->is_selection_started)

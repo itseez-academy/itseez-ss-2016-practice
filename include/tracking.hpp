@@ -21,5 +21,5 @@ public:
 protected:
 	cv::Rect position_;
 	cv::Mat frame_;
-	std::vector<cv::KeyPoint> features_;
+	std::vector<cv::Point2f> features_;
 };
