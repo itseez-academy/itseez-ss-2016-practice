@@ -7,7 +7,9 @@ using std::shared_ptr;
 using namespace cv;
 
 shared_ptr<Detector> Detector::CreateDetector(const string& name) {
-  std::cerr << "Failed to create detector with name '" << name << "'"
-            << std::endl;
+	if (name == "cascade") {
+		return std::make_shared<CascadeDetector>();
+	}
   return nullptr;
 }
+ 
