@@ -23,6 +23,4 @@ public:
 protected:
 	cv::Rect position_;
 	cv::Mat frame_;
-	float xPos;
-	float yPos;
 };
