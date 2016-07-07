@@ -13,7 +13,7 @@ using namespace std;
 
 float DetectionQualityEvaluator::IntersectionOverUnion(const Rect& r,
                                                       const Rect& p) {
-  float intersection_area = (r & p).area();
+	float intersection_area = 0; //= (r & p).area();
   float union_area = r.area() + p.area() - intersection_area;
   float iou = union_area > 0 ? intersection_area / union_area : 0.0f;
   return iou;
