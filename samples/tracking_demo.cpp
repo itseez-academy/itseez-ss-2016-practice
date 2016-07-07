@@ -26,19 +26,8 @@ struct MouseCallbackState {
 	bool is_selection_finished;
 	Point point_first;
 	Point point_second;
-	///// to cut begin
-	//ImageProcessorImpl processor;
-	//Mat img;
-	//Rect roi;
-	//bool grayOk;
-	//string kSrcWindowName;
-	///// to cut end
 };
 
-struct ProgState {
-	MouseCallbackState mouseState;
-	bool GrayOk;
-};
 
 void OnMouse(int event, int x, int y, int flags, void* params)
 {
@@ -60,19 +49,16 @@ void OnMouse(int event, int x, int y, int flags, void* params)
 		state->is_selection_finished = true;
 		state->point_second.x = x;
 		state->point_second.y = y;
-
-	//	state->img = state->processor.CvtColor(state->img, Rect(state->point_second, state->point_first));
-	//	imshow(state->kSrcWindowName, state->img);
 	}
-	else if (event == EVENT_RBUTTONDOWN)
+	if (event == EVENT_RBUTTONDOWN)
 	{
 		//cout << "Right button of the mouse is clicked - position (" << x << ", " << y << ")" << endl;
 	}
-	else if (event == EVENT_MBUTTONDOWN)
+	if (event == EVENT_MBUTTONDOWN)
 	{
 		//cout << "Middle button of the mouse is clicked - position (" << x << ", " << y << ")" << endl;
 	}
-	else if (event == EVENT_MOUSEMOVE)
+	if (event == EVENT_MOUSEMOVE)
 	{
 		if (state->is_selection_finished == false)
 		{
@@ -111,6 +97,10 @@ int main(int argc, const char** argv) {
 		return 0;
 	}
 
+	bool grayOk = false;
+	if (parser.has("gray"))
+		grayOk = true;
+
 	// Do something cool.
 	cout << "This is empty template sample." << endl;
 
@@ -122,6 +112,15 @@ int main(int argc, const char** argv) {
 		return 0;
 	}
 
+	VideoCapture videoCap("F:/GTAtitles.mpg"); // open the video file for reading
+	
+
+	//if (!videoCap.isOpened())  // if not success, exit program
+	//{
+	//	cout << "Cannot open the video file" << endl;
+	//	return -1;
+	//}
+	
 
 
 	const string kSrcWindowName = "Source image";
@@ -130,79 +129,60 @@ int main(int argc, const char** argv) {
 	namedWindow(kSrcWindowName, WINDOW_NORMAL);
 	resizeWindow(kSrcWindowName, 640, 480);
 	MedianFlowTracker tracker;
+	ImageProcessorImpl processor;
 	MouseCallbackState state;
-	//state.img = img;
-	//state.processor = processor;
-	//state.kSrcWindowName = kSrcWindowName;
+	state.is_selection_finished = true;
+	state.is_selection_started = true;
 	setMouseCallback(kSrcWindowName, OnMouse, &state);
-	imshow(kSrcWindowName, img);
-	bool grayOk = false;
-	const int threshold = parser.get<int>("gray");
-	try {
-		grayOk = true;
+	bool detectChanges = state.is_selection_finished;
+	char c;
+	Mat frame;
+	bool bSuccess = true;// = videoCap.read(frame); // read a new frame from video
 
+	videoCap >> frame;
+	if (frame.empty())
+	{
+		return -1;
 	}
 
-	catch (const std::exception& ex) {
-		cout << ex.what() << endl;
-		return 0;
-	}
-	//state.grayOk = grayOk;
+	//if (!bSuccess) //if not success, break loop
+	//{
+	//	cout << "Cannot read the frame from video file" << endl;
+	//	return 0;
+	//}
+	imshow(kSrcWindowName, frame);
 	for (;;)
 	{
-
-		img = tracker.Init(img, Rect(state.point_second, state.point_first));
-
-		imshow(kSrcWindowName, img);
 		
+		videoCap >> frame;
+		//bSuccess = videoCap.read(frame); // read a new frame from video
 
-		char c = waitKey(300);
+		/*if (!bSuccess) //if not success, break loop
+		{
+			cout << "Cannot read the frame from video file" << endl;
+			break;
+		}*/
+		
+		//img = tracker.Init(img, Rect(state.point_second, state.point_first));
+		if ((detectChanges != state.is_selection_finished) & (state.is_selection_finished))
+		{
+			frame = tracker.Init(frame, Rect(state.point_second, state.point_first));
+			rectangle(frame, Rect(state.point_second, state.point_first), Scalar(0, 128, 0), 2, 8, 0);
+			imshow(kSrcWindowName, frame);
+			
+		}
+		detectChanges = state.is_selection_finished;
+		
+		if (!state.is_selection_started)
+		{
+			tracker.Track(frame);
+		}
+
+		c = waitKey(30);
 		if (c == 27) { // если нажата ESC - выходим
 			break;
 		}
 	}
-
-
-	/*while (1) {
-		// получаем следующий кадр
-		img = processor.CvtColor(img, Rect(state.point_second, state.point_first));
-
-		// здесь можно вставить
-		// процедуру обработки
-
-		// показываем кадр
-		imshow(kSrcWindowName, img);
-
-		
-
-	}*/
-
-	/*
-	const string kDstWindowName = "Destination image";
-	namedWindow(kDstWindowName, WINDOW_NORMAL);
-	resizeWindow(kDstWindowName, 640, 480);
-	setMouseCallback(kDstWindowName, DstImgCallback, &state);
-
-	if (grayOk) {
-
-	}*/
-
-
-	//waitKey(kWaitKeyDelay);
-	//waitKey(0);
-
-	//Create a window
-	//namedWindow("My Window", 1);
-
-	//set the callback function for any mouse event
-	//setMouseCallback("My Window", CallBackFunc, NULL);
-
-	//show the image
-	//imshow("My Window", img);
-
-	// Wait until user press some key
-	//waitKey(0);
-
 	return 0;
 }
 
