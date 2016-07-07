@@ -136,10 +136,9 @@ Rect MedianFlowTracker::Track(const cv::Mat &frame)
 		medXY.y = differents[differents.size() / 2 + 1].y;
 	}
 
-
-
-
 	
-	Rect position;
-	return position;
+	Rect newPosition;
+	newPosition.x = this->position_.x + medXY.x;
+	newPosition.y = this->position_.y + medXY.y;
+	return newPosition;
 }
