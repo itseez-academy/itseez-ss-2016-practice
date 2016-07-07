@@ -44,8 +44,4 @@ class MedianFlowTracker : public Tracker {
   bool ComputeScaleFactor(const std::vector<cv::Point2f> &corners,
                           const std::vector<cv::Point2f> &corners_next_frame,
                           float &scale) const;
-
-  bool RestoreBoundingBox(const std::vector<cv::Point2f> &corners,
-                          const std::vector<cv::Point2f> &corners_next_frame,
-                          cv::Rect &new_position, float& scale) const;
 };

@@ -47,7 +47,7 @@ bool MedianFlowTracker::FilterCorners(vector<Point2f> &corners,
                                       vector<Point2f> &corners_next_frame,
                                       vector<uchar> &status,
                                       vector<float> &errors) const {
-  for (int i = status.size() - 1; i >= 0; i--) {
+  for (int i = static_cast<int>(status.size()) - 1; i >= 0; i--) {
     if (!status[i]) {
       status.erase(status.begin() + i);
       corners.erase(corners.begin() + i);
@@ -62,7 +62,7 @@ bool MedianFlowTracker::FilterCorners(vector<Point2f> &corners,
   std::copy(errors.begin(), errors.end(), errors_copy.begin());
   float median_error = Median(errors_copy);
 
-  for (int i = errors.size() - 1; i >= 0; i--) {
+  for (int i = static_cast<int>(errors.size()) - 1; i >= 0; i--) {
     if (errors[i] > median_error) {
       errors.erase(errors.begin() + i);
       corners.erase(corners.begin() + i);
@@ -96,7 +96,7 @@ bool MedianFlowTracker::ComputePointDistances(const vector<Point2f> &corners,
   dist.clear();
   for (int i = 0; i < corners.size(); i++) {
     for (int j = i + 1; j < corners.size(); j++) {
-      dist.push_back(cv::norm(corners.at(i) - corners.at(j)));
+      dist.push_back(static_cast<float>(cv::norm(corners.at(i) - corners.at(j))));
     }
   }
   return true;
@@ -134,27 +134,6 @@ bool MedianFlowTracker::ComputeScaleFactor(
   return true;
 }
 
-bool MedianFlowTracker::RestoreBoundingBox(
-    const vector<Point2f> &corners, const vector<Point2f> &corners_next_frame,
-    Rect &new_position, float& scale) const {
-  Point2f shift;
-  ComputeMedianShift(corners, corners_next_frame, shift);
-
-  if (!ComputeScaleFactor(corners, corners_next_frame, scale)) {
-    return false;
-  }
-  new_position.width *= scale;
-  new_position.height *= scale;
-  new_position = position_ + Point(shift);
-  Rect image_bounding_box(Point(0, 0), frame_.size());
-  new_position = image_bounding_box & new_position;
-  if (new_position.area() == 0) {
-    return false;
-  }
-
-  return true;
-}
-
 Rect MedianFlowTracker::Track(const Mat &frame) {
   CV_Assert(!frame.empty());
   Mat object = frame_(position_);
@@ -189,16 +168,16 @@ Rect MedianFlowTracker::Track(const Mat &frame) {
     return Rect();
   }
 
-  Rect new_position;
+  Point2f shift;
+  ComputeMedianShift(corners, corners_next_frame, shift);
+
   float scale_factor;
-  if (!RestoreBoundingBox(corners, corners_next_frame, new_position, scale_factor)) {
-    std::cout << "There are not enough points to restore bounding box."
-              << std::endl;
+  if (!ComputeScaleFactor(corners, corners_next_frame, scale_factor)) {
+    std::cout << "Failed to compute scale factor." << std::endl;
     return Rect();
   }
-
   scale_ *= scale_factor;
-  new_position = Rect(new_position.tl(), Size2f(initial_size_) * scale_);
+  Rect new_position = Rect(position_.tl() + Point(shift), Size2f(initial_size_) * scale_);
   Rect image_bounding_box(Point(0, 0), frame_.size());
   new_position = image_bounding_box & new_position;
 
