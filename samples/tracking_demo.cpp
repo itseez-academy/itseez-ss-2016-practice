@@ -112,7 +112,7 @@ int main(int argc, const char** argv) {
 		return 0;
 	}
 
-	VideoCapture videoCap("F:/GTAtitles.mpg"); // open the video file for reading
+	VideoCapture videoCap("C:\\Users\\iss2016\\itseez-ss-2016-practice\\test\\test_data\\video\\logo.mp4"); // open the video file for reading
 	
 
 	//if (!videoCap.isOpened())  // if not success, exit program
@@ -154,7 +154,7 @@ int main(int argc, const char** argv) {
 	for (;;)
 	{
 		
-		videoCap >> frame;
+		
 		//bSuccess = videoCap.read(frame); // read a new frame from video
 
 		/*if (!bSuccess) //if not success, break loop
@@ -166,7 +166,8 @@ int main(int argc, const char** argv) {
 		//img = tracker.Init(img, Rect(state.point_second, state.point_first));
 		if ((detectChanges != state.is_selection_finished) & (state.is_selection_finished))
 		{
-			frame = tracker.Init(frame, Rect(state.point_second, state.point_first));
+			if (!tracker.Init(frame, Rect(state.point_second, state.point_first)))
+				break;
 			rectangle(frame, Rect(state.point_second, state.point_first), Scalar(0, 128, 0), 2, 8, 0);
 			imshow(kSrcWindowName, frame);
 			
@@ -176,6 +177,7 @@ int main(int argc, const char** argv) {
 		if (!state.is_selection_started)
 		{
 			tracker.Track(frame);
+			videoCap >> frame;
 		}
 
 		c = waitKey(30);
