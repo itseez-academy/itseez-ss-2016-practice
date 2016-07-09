@@ -52,7 +52,16 @@ int main(int argc, const char** argv) {
     cout << ex.what() << endl;
     return 0;
   }
+  // Data.
 
+  try {
+	  processor.Mean(src.data, src.cols, src.rows);
+  }
+  catch (const std::exception& ex) {
+	  cout << ex.what() << endl;
+	  return 0;
+  }
+  
   // Show destination image.
   const string kDstWindowName = "Destination image";
   namedWindow(kDstWindowName, WINDOW_NORMAL);
