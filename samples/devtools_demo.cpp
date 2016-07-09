@@ -45,6 +45,7 @@ int main(int argc, const char** argv) {
 
   // Threshold data.
   MatrixProcessor processor;
+  
   const int threshold = parser.get<int>("t");
   try {
     processor.Threshold(src.data, src.cols, src.rows, threshold);
@@ -52,6 +53,20 @@ int main(int argc, const char** argv) {
     cout << ex.what() << endl;
     return 0;
   }
+
+ /*
+  //Average
+
+  int locality = 1;
+  try {
+	  processor.Average(src.data, src.cols, src.rows, locality);
+  }
+  catch (const std::exception& ex) {
+	  cout << ex.what() << endl;
+	  return 0;
+  }
+ */
+  
 
   // Show destination image.
   const string kDstWindowName = "Destination image";
