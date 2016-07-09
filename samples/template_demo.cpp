@@ -3,6 +3,17 @@
 
 #include "opencv2/core.hpp"
 
+#include "workaround.hpp"
+
+#include <cstddef>
+
+using namespace std;
+
+void MatrixProcessor::Threshold(unsigned char* const data, const int width,
+	const int height, const int threshold) {
+	// TODO: Add thresholding logic here.
+}
+
 using namespace std;
 using namespace cv;
 
@@ -26,8 +37,8 @@ int main(int argc, const char** argv) {
     return 0;
   }
 
-  // Do something cool.
-  cout << "This is empty template sample." << endl;
+ // MatrixProcessor::Threshold()
+	//  Mat src = imread(parser.get<string>(0), CV_LOAD_IMAGE_GRAYSCALE);
 
   return 0;
 }
