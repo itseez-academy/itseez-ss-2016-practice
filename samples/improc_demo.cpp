@@ -1,20 +1,25 @@
 #include <iostream>
 #include <string>
 
+
 #include "opencv2/core.hpp"
 #include "opencv2/highgui.hpp"
 
-#include "workaround.hpp"
+#include "image_processing.hpp"
 
 using namespace std;
 using namespace cv;
 
-const char* kAbout = "Application for practice #1.";
+const char* kAbout =   "Application for practice #2.";
 
 const char* kOptions =
-    "{ @image         |        | image to process         }"
-    "{ t              |  128   | threshold                }"
-    "{ h ? help usage |        | print help message       }";
+	"{ @image        | <none> | image to process           }"
+    "{ gray          |        | convert ROI to gray scale  }"
+	"{ median        |        | apply median filter for ROI}"
+	"{ edges         |        | detect edges in ROI        }"
+	"{ pix           |        | pixelize ROI               }"
+	"{ h ? help usage|        | print help message         }";
+
 
 int main(int argc, const char** argv) {
   // Parse command line arguments.
@@ -22,7 +27,7 @@ int main(int argc, const char** argv) {
   parser.about(kAbout);
 
   // If help option is given, print help message and exit.
-  if (parser.has("help")) {
+  if (parser.get<bool>("help")) {
     parser.printMessage();
     return 0;
   }
@@ -30,9 +35,9 @@ int main(int argc, const char** argv) {
   // Read image.
   Mat src = imread(parser.get<string>(0), CV_LOAD_IMAGE_GRAYSCALE);
   if (src.empty()) {
-    cout << "Failed to open image file '" + parser.get<string>(0) + "'."
-         << endl;
-    return 0;
+	  cout << "Failed to open image file '" + parser.get<string>(0) + "'."
+		  << endl;
+	  return 0;
   }
 
   // Show source image.
@@ -43,25 +48,10 @@ int main(int argc, const char** argv) {
   imshow(kSrcWindowName, src);
   waitKey(kWaitKeyDelay);
 
-
-  // Threshold data.
-  MatrixProcessor processor;
-  const int threshold = parser.get<int>("t");
-  try {
-    processor.Threshold(src.data, src.cols, src.rows, threshold);
-  } catch (const std::exception& ex) {
-    cout << ex.what() << endl;
-    return 0;
-  }
-  // Data.
-  try {
-	  processor.Mean(src.data, src.cols, src.rows);
-  }
-  catch (const std::exception& ex) {
-	  cout << ex.what() << endl;
-	  return 0;
-  }
-
+  ImageProcessorImpl processor;
+  Rect roi(20, 20, 220, 220);
+  processor.CvtColor(src, roi);
+ // processor.Filter(src, roi,3);
 
   // Show destination image.
   const string kDstWindowName = "Destination image";
@@ -69,6 +59,9 @@ int main(int argc, const char** argv) {
   resizeWindow(kDstWindowName, 640, 480);
   imshow(kDstWindowName, src);
   waitKey();
+
+  // Do something cool.
+  cout << "This is empty template sample." << endl;
 
   return 0;
 }
