@@ -4,6 +4,8 @@
 #include "opencv2/core.hpp"
 #include "opencv2/highgui.hpp"
 
+
+
 #include "workaround.hpp"
 
 using namespace std;
@@ -15,6 +17,8 @@ const char* kOptions =
     "{ @image         |        | image to process         }"
     "{ t              |  128   | threshold                }"
     "{ h ? help usage |        | print help message       }";
+
+
 
 int main(int argc, const char** argv) {
   // Parse command line arguments.
@@ -34,7 +38,7 @@ int main(int argc, const char** argv) {
          << endl;
     return 0;
   }
-
+ 
   // Show source image.
   const string kSrcWindowName = "Source image";
   const int kWaitKeyDelay = 1;
@@ -52,12 +56,41 @@ int main(int argc, const char** argv) {
     cout << ex.what() << endl;
     return 0;
   }
-
-  // Show destination image.
   const string kDstWindowName = "Destination image";
   namedWindow(kDstWindowName, WINDOW_NORMAL);
   resizeWindow(kDstWindowName, 640, 480);
   imshow(kDstWindowName, src);
+
+  src = imread(parser.get<string>(0), CV_LOAD_IMAGE_GRAYSCALE);
+  // Medium
+  try {
+	  processor.Medium(src.data, src.cols, src.rows);
+  }
+  catch (const std::exception& ex) {
+	  cout << ex.what() << endl;
+	  return 0;
+  }
+  const string kDstWindowName1 = "Destination image Medium";
+  namedWindow(kDstWindowName1, WINDOW_NORMAL);
+  resizeWindow(kDstWindowName1, 640, 480);
+  imshow(kDstWindowName1, src);
+
+
+  //Mediana
+  try {
+	  processor.Mediana(src.data, src.cols, src.rows);
+  }
+  catch (const std::exception& ex) {
+	  cout << ex.what() << endl;
+	  return 0;
+  }
+  src = imread(parser.get<string>(0), CV_LOAD_IMAGE_GRAYSCALE);
+  const string kDstWindowName2 = "Destination Mediana";
+  namedWindow(kDstWindowName2, WINDOW_NORMAL);
+  resizeWindow(kDstWindowName2, 640, 480);
+  imshow(kDstWindowName2, src);
+
+
   waitKey();
 
   return 0;
