@@ -1,7 +1,8 @@
 #include <iostream>
 #include <string>
 
-#include "opencv2/core.hpp"
+#include "opencv2/opencv.hpp"
+#include "detection.hpp"
 
 using namespace std;
 using namespace cv;
@@ -11,8 +12,13 @@ const char* kAbout =
     "own doing-something-cool applications.";
 
 const char* kOptions =
-    "{ v video        |        | video to process         }"
-    "{ h ? help usage |        | print help message       }";
+"{ i image        | <none> | image to process                         }"
+"{ v video        | <none> | video to process                         }"
+"{ c camera       | <none> | camera to get video from                 }"
+"{ m model        | <none> |                                          }"
+"{ h ? help usage |        | print help message                       }";
+
+
 
 
 int main(int argc, const char** argv) {
@@ -26,8 +32,26 @@ int main(int argc, const char** argv) {
     return 0;
   }
 
-  // Do something cool.
-  cout << "This is empty template sample." << endl;
+  // Read image.
 
+  string src = parser.get<string>("m");
+  Mat frame;//= imread(parser.get<string>("v"));
+  vector<Rect> obj;
+  VideoCapture cap;
+  vector<double> sc;
+  CascadeDetector DETECTOR;
+  cap.open(-1);
+  DETECTOR.Init(src);
+  DETECTOR.Detect(frame, obj, sc);
+  while (cap.read(frame)) {
+
+
+	  for (const auto& r : obj)
+		  rectangle(frame, r, CV_RGB(255, 0, 0));
+	  imshow("x", frame);
+	  waitKey();
+	  int c = waitKey(10);
+	  if ((char)c == 27) { break; } // escape
+  }
   return 0;
 }
