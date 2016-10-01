@@ -43,6 +43,11 @@ int main(int argc, const char** argv) {
   imshow(kSrcWindowName, src);
   waitKey(kWaitKeyDelay);
 
+  //MeanFilter
+  Mat mean_img = src.clone();
+//MedianFilter
+  Mat median_img = src.clone();
+
   // Threshold data.
   MatrixProcessor processor;
   const int threshold = parser.get<int>("t");
@@ -52,7 +57,11 @@ int main(int argc, const char** argv) {
     cout << ex.what() << endl;
     return 0;
   }
-
+ 
+  processor.MeanFilter(mean_img.data, mean_img.cols, mean_img.rows);
+  imshow("MeanFilter Window", mean_img);
+  processor.MedianFilter(median_img.data, median_img.cols, median_img.rows);
+  imshow("MedianFilter Window", median_img);
   // Show destination image.
   const string kDstWindowName = "Destination image";
   namedWindow(kDstWindowName, WINDOW_NORMAL);
