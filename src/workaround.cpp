@@ -1,5 +1,6 @@
 #include "workaround.hpp"
 
+#include <cstddef>
 #include <stdexcept>
 
 using namespace std;
