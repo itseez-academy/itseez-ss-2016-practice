@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include "string"
 
 #include "workaround.hpp"
 
@@ -55,6 +56,10 @@ TEST(MatrixProcessor, Averaging_Correct_Work) {
     unsigned char expected[width * height] = { '2','2','3','3','4','4','5','5','6' };
     mp.Averaging(data, width, height,surroundings);
     bool flag = true;
+
+    std::string str;
+    for (int i = 0; i < width * height; i++)
+        str[i] = data[i];
 
     for (int i = 0; i < width * height; i++)
         if (data[i] != expected[i])
