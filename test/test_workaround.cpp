@@ -2,7 +2,7 @@
 
 #include "workaround.hpp"
 
-TEST(MatrixProcessor, Threshold_No_Throw_When_DataOK) {
+TEST(Threshold, No_Throw_When_DataOK) {
   MatrixProcessor mp;
   int width = 4, height = 4;
   unsigned char* data;
@@ -15,7 +15,7 @@ TEST(MatrixProcessor, Threshold_No_Throw_When_DataOK) {
   EXPECT_NO_THROW(mp.Threshold(data, width, height, threshold));
 }
 
-TEST(MatrixProcessor, Threshold_Correct_Work) {
+TEST(Threshold, Correct_Work) {
   MatrixProcessor mp;
   int width = 4, height = 4;
   unsigned char* data;
@@ -29,7 +29,7 @@ TEST(MatrixProcessor, Threshold_Correct_Work) {
   EXPECT_EQ(0, data[0]);
 }
 
-TEST(MatrixProcessor, Threshold_Correct_Work_With_One_Element) {
+TEST(Threshold, Correct_Work_With_One_Element) {
   MatrixProcessor mp;
   int width = 1, height = 1;
   unsigned char* data;
@@ -42,7 +42,7 @@ TEST(MatrixProcessor, Threshold_Correct_Work_With_One_Element) {
   EXPECT_EQ(threshold + 1, data[0]);
 }
 
-TEST(MatrixProcessor, Averaging_Correct_Work) {
+TEST(Averaging, Correct_Work) {
   MatrixProcessor mp;
   const int width = 3, height = 3;
   unsigned char* data;
@@ -59,7 +59,7 @@ TEST(MatrixProcessor, Averaging_Correct_Work) {
     EXPECT_EQ(expected[i], data[i]);
 }
 
-TEST(MatrixProcessor, Averaging_Correct_Work_With_Big_Surroudings) {
+TEST(Averaging, Correct_Work_With_Big_Surroudings) {
   MatrixProcessor mp;
   const int width = 5, height = 5;
   unsigned char* data;
@@ -78,7 +78,7 @@ TEST(MatrixProcessor, Averaging_Correct_Work_With_Big_Surroudings) {
   EXPECT_EQ(expected, data[0]);
 }
 
-TEST(MatrixProcessor, MefianFilter_Correct_Work) {
+TEST(MefianFilter, Correct_Work) {
   MatrixProcessor mp;
   const int width = 3, height = 3;
   unsigned char* data;
