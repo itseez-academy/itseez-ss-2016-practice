@@ -1,10 +1,9 @@
 #include <vector>
+#include <algorithm>
+#include <string.h>
 #include "workaround.hpp"
 
-//#include <cstddef>
-#include <algorithm>
 
-//using namespace std;
 
 void MatrixProcessor::Threshold(unsigned char* const data, const int width,
                                 const int height, const int threshold) {
@@ -38,8 +37,8 @@ void MatrixProcessor::Averaging(unsigned char* const data, const int width,
     dst[i] = sum / count;
   }
 
-  for (int i = 0; i < width * height; i++)
-    data[i] = dst[i];
+  memcpy(data, dst, width * height);
+  delete[] dst;
 }
 
 void MatrixProcessor::MedianFilter(unsigned char* const data, const int width,
@@ -70,6 +69,6 @@ void MatrixProcessor::MedianFilter(unsigned char* const data, const int width,
       dst[i] = vect[vect.size() / 2];
   }
 
-  for (int i = 0; i < width * height; i++)
-    data[i] = dst[i];
+  memcpy(data, dst, width * height);
+  delete[] dst;
 }
