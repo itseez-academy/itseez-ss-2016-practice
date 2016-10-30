@@ -54,13 +54,9 @@ TEST(MatrixProcessor, Averaging_Correct_Work) {
 
   unsigned char expected[width * height] = { 2,2,3,3,4,4,5,5,6 };
   mp.Averaging(data, width, height,surroundings);
-  bool flag = true;
 
   for (int i = 0; i < width * height; i++)
-    if (data[i] != expected[i])
-      flag = false;
-
-  EXPECT_TRUE(flag);
+    EXPECT_EQ(expected[i], data[i]);
 }
 
 TEST(MatrixProcessor, Averaging_Correct_Work_With_Big_Surroudings) {
@@ -80,4 +76,21 @@ TEST(MatrixProcessor, Averaging_Correct_Work_With_Big_Surroudings) {
   mp.Averaging(data, width, height, surroundings);
 
   EXPECT_EQ(expected, data[0]);
+}
+
+TEST(MatrixProcessor, MefianFilter_Correct_Work) {
+  MatrixProcessor mp;
+  const int width = 3, height = 3;
+  unsigned char* data;
+  int surroundings = 1;
+
+  data = new unsigned char[width * height];
+  for (int i = 0; i < width * height; i++)
+    data[i] = i;
+
+  unsigned char expected[width * height] = { 1,2,2,3,4,4,4,5,5 };
+  mp.MedianFilter(data, width, height,surroundings);
+
+  for (int i = 0; i < width * height; i++)
+    EXPECT_EQ(expected[i], data[i]);
 }
