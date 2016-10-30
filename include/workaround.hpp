@@ -9,5 +9,5 @@ class MatrixProcessor {
                  const int surroundings);
 
   void MedianFilter(unsigned char* const data, const int width,
-                    const int height);
+                    const int height, const int surroundings);
 };

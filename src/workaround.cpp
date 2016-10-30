@@ -1,6 +1,8 @@
+#include <vector>
 #include "workaround.hpp"
 
 //#include <cstddef>
+#include <algorithm>
 
 //using namespace std;
 
@@ -40,7 +42,31 @@ void MatrixProcessor::Averaging(unsigned char* const data, const int width,
     data[i] = dst[i];
 }
 
-void MatrixProcessor::MedianFilter(unsigned char *const data, const int width,
-                                   const int height) {
+void MatrixProcessor::MedianFilter(unsigned char* const data, const int width,
+                                   const int height, const int surroundings) {
+  unsigned char* dst = new unsigned char[width * height];
 
+  for (int i = 0; i < width * height; i++) {
+    std::vector<unsigned char> vect;
+
+    for (int k = -surroundings; k <= surroundings; k++) {
+      if (i / width < 1 && k < 0 || i / width == width - 1 && k > 0)
+        continue;
+
+      for (int l = -surroundings; l <= surroundings; l++) {
+        if (i % width == 0 && l < 0 || (i + 1) % width == 0 && l > 0)
+          continue;
+
+        int index = i + k * width + l;
+
+        vect.push_back(data[index]);
+      }
+    }
+
+    std::sort(vect.begin(), vect.end());
+    dst[i] = vect[vect.size() / 2];
+  }
+
+  for (int i = 0; i < width * height; i++)
+    data[i] = dst[i];
 }
