@@ -64,7 +64,10 @@ void MatrixProcessor::MedianFilter(unsigned char* const data, const int width,
     }
 
     std::sort(vect.begin(), vect.end());
-    dst[i] = vect[vect.size() / 2];
+    if (vect.size() % 2 == 0)
+      dst[i] = vect[vect.size() / 2 - 1];
+    else
+      dst[i] = vect[vect.size() / 2];
   }
 
   for (int i = 0; i < width * height; i++)
