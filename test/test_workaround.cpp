@@ -88,7 +88,7 @@ TEST(MefianFilter, Correct_Work) {
   for (int i = 0; i < width * height; i++)
     data[i] = i;
 
-  unsigned char expected[width * height] = { 1,2,2,3,4,4,4,5,5 };
+  unsigned char expected[width * height] = { 2,2,3,3,4,4,5,5,6 };
   mp.MedianFilter(data, width, height,surroundings);
 
   for (int i = 0; i < width * height; i++)
