@@ -16,6 +16,19 @@ const char* kOptions =
     "{ t              |  128   | threshold                }"
     "{ h ? help usage |        | print help message       }";
 
+void addF(unsigned char* const data, const int width,
+	const int height, const int threshold, int g) {
+
+	for (int k = g*height; k < height*(width - g); k++)
+	{
+		int j = k % width;
+		int i = k / width;
+		data[k] = (data[(i - g)*width + j - g] + 2 * data[(i - g)*width + j] +
+			data[(i)*width + j - g] + 2 * data[k] + 
+			data[(i + g)*width + j - g] + data[(i + g)*width + j - g]) / 9;
+	}
+}
+
 int main(int argc, const char** argv) {
   // Parse command line arguments.
   CommandLineParser parser(argc, argv, kOptions);
@@ -47,7 +60,8 @@ int main(int argc, const char** argv) {
   MatrixProcessor processor;
   const int threshold = parser.get<int>("t");
   try {
-    processor.Threshold(src.data, src.cols, src.rows, threshold);
+	  addF(src.data, src.cols, src.rows, threshold,40);
+    //processor.Threshold(src.data, src.cols, src.rows, threshold);
   } catch (const std::exception& ex) {
     cout << ex.what() << endl;
     return 0;
