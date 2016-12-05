@@ -4,7 +4,7 @@
 #include "opencv2/core.hpp"
 #include "opencv2/highgui.hpp"
 
-#include "workaround.hpp"
+#include "image_processing.hpp"
 
 using namespace std;
 using namespace cv;
@@ -28,7 +28,7 @@ int main(int argc, const char** argv) {
   }
 
   // Read image.
-  Mat src = imread(parser.get<string>(0), CV_LOAD_IMAGE_GRAYSCALE);
+  Mat src = imread(parser.get<string>(0));
   if (src.empty()) {
     cout << "Failed to open image file '" + parser.get<string>(0) + "'."
          << endl;
@@ -43,23 +43,20 @@ int main(int argc, const char** argv) {
   imshow(kSrcWindowName, src);
   waitKey(kWaitKeyDelay);
 
-  // Threshold data.
-  MatrixProcessor processor;
-  const int threshold = parser.get<int>("t");
-  try {
-    processor.Threshold(src.data, src.cols, src.rows, threshold);
-  } catch (const std::exception& ex) {
-    cout << ex.what() << endl;
-    return 0;
-  }
+  Rect rec(50,50,200,200);
+  int size = 5;
+
+  // CvtColor data.
+  ImageProcessorImpl processor;
+    processor.DetectEdges(src, rec,size,10,10,5);
+
 
   // Show destination image.
   const string kDstWindowName = "Destination image";
   namedWindow(kDstWindowName, WINDOW_NORMAL);
   resizeWindow(kDstWindowName, 640, 480);
-  imshow(kDstWindowName, src);
+  imshow(kDstWindowName, processor.DetectEdges(src, rec, size, 10, 10, 5));
   waitKey();
-  
 
   return 0;
 }
