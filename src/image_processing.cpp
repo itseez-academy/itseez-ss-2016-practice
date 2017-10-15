@@ -49,8 +49,19 @@ ImageProcessorImpl::DetectEdges(const cv::Mat &src, const cv::Rect &roi,
 cv::Mat ImageProcessorImpl::Pixelize(const cv::Mat &src,
                                      const cv::Rect &roi,
                                      const int kDivs) {
-    
+    cv::Mat src_copy;
+    src.copyTo(src_copy);
 
+    cv::Mat src_copy_roi = src_copy(roi);
+    int x_block_size     = roi.width  / kDivs;
+    int y_block_size     = roi.height / kDivs;
+
+    for(int i = 0; i < src_copy_roi.rows; i += y_block_size )
+        for(int j = 0; j < src_copy_roi.cols; j += x_block_size) {
+            cv::Mat src_roi_block = src_copy_roi(cv::Rect(j, i, x_block_size, y_block_size));
+            cv::blur(src_roi_block, src_roi_block, cv::Size(x_block_size, y_block_size));
+        }
+    return src_copy;
 }
 
 
