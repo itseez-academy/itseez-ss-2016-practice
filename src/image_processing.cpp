@@ -58,7 +58,11 @@ cv::Mat ImageProcessorImpl::Pixelize(const cv::Mat &src,
 
     for(int i = 0; i < src_copy_roi.rows; i += y_block_size )
         for(int j = 0; j < src_copy_roi.cols; j += x_block_size) {
-            cv::Mat src_roi_block = src_copy_roi(cv::Rect(j, i, x_block_size, y_block_size));
+            cv::Mat src_roi_block = src_copy_roi(cv::Rect(j, i, j + x_block_size <= src_copy_roi.cols ?
+                                                                x_block_size : src_copy_roi.cols - j,
+                                                                i + y_block_size <= src_copy_roi.rows ?
+                                                                y_block_size : src_copy_roi.rows - i));
+            
             cv::blur(src_roi_block, src_roi_block, cv::Size(x_block_size, y_block_size));
         }
     return src_copy;
