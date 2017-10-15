@@ -104,7 +104,7 @@ int main(int argc, const char** argv) {
   cv::imshow("input_image", output_image);
   cv::waitKey(0);
 
-  cout << "This is empty template sample." << endl;
+  
 
   return 0;
 }
