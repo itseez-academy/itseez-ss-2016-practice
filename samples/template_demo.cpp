@@ -113,7 +113,7 @@ int main(int argc, const char** argv) {
     namedWindow(kSrcWindowName, WINDOW_NORMAL);
     imshow(kSrcWindowName, processor.DetectEdges(src, selected, 3, 50, 3, 3));
   } else
-  if (!parser.get<bool>("pix")) {
+  if (parser.get<bool>("pix")) {
     kSrcWindowName = "pix image";
     namedWindow(kSrcWindowName, WINDOW_NORMAL);
     imshow(kSrcWindowName, processor.Pixelize(src, selected, 10));
