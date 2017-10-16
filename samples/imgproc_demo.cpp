@@ -68,8 +68,8 @@ int main(int argc, const char** argv) {
   cv::Mat input_image  = cv::imread(filepath);
   cv::Mat copy_input_image;
   cv::Rect rect;
-  cv::namedWindow("input image");
-  cv::setMouseCallback("input image", onMouse);
+  cv::namedWindow("input_image");
+  cv::setMouseCallback("input_image", onMouse);
 
   while(true){
       input_image.copyTo(copy_input_image);
@@ -88,6 +88,7 @@ int main(int argc, const char** argv) {
           break;
   }
   cv::Mat output_image;
+
   if(parser.has("gray")){
       output_image = imageProcessor.CvtColor(input_image, rect);
   }
@@ -100,11 +101,15 @@ int main(int argc, const char** argv) {
   else if(parser.has("pix")){
       output_image = imageProcessor.Pixelize(input_image, rect, 5 );
   }
+  else{
+      cerr << "bad key" << endl;
+      exit(-1);
+  }
 
   cv::imshow("input_image", output_image);
   cv::waitKey(0);
 
-  
+
 
   return 0;
 }

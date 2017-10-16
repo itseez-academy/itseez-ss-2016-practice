@@ -1,7 +1,11 @@
 #include <gtest/gtest.h>
 
 #include "opencv2/core/core.hpp"
+#include <image_processing.hpp>
 
+#include <iostream>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv/cv.hpp>
 
 using namespace cv;
 
