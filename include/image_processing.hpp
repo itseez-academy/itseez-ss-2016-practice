@@ -29,9 +29,8 @@ public:
         cv::Mat dst_gray_roi;
         cv::cvtColor(src_copy_roi, dst_gray_roi, CV_BGR2GRAY);
         std::vector<cv::Mat> channels(3);
-        std::for_each(channels.begin(), channels.end(), [&dst_gray_roi](cv::Mat elem){
-            elem = dst_gray_roi;
-        });
+
+        std::fill(channels.begin(), channels.end(), dst_gray_roi);
         cv::Mat dst_roi;
         cv::merge(channels, dst_roi);
         dst_roi.copyTo(src_copy_roi);
