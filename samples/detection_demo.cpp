@@ -43,23 +43,37 @@ int main(int argc, const char** argv) {
   }
 
 
-  string filepath;
-  if(parser.has("i")) {
-      filepath = parser.get<string>("i");
+//  string filepath;
+//  if(parser.has("i")) {
+//      filepath = parser.get<string>("i");
+//  }
+//  else{
+//      cerr << "not found filepath";
+//      exit(-1);
+//  }
+//  Mat frame = imread(filepath);
+  VideoCapture cap(0);
+  if(!cap.isOpened()){
+      cout << "Error opening video stream or file" << endl;
+      return -1;
   }
-  else{
-      cerr << "not found filepath";
-      exit(-1);
-  }
-  Mat frame = imread(filepath);
+
   vector<Rect>   objects;
   vector<double> scores;
-  detector.Detect(frame, objects, scores);
-  for(const auto& obj : objects){
-      rectangle(frame, obj, Scalar(0, 255, 0));
+  Mat frame;
+  while(true){
+
+      cap >> frame;
+      detector.Detect(frame, objects, scores);
+      for(const auto& obj : objects){
+          rectangle(frame, obj, Scalar(0, 255, 0));
+      }
+      imshow("detecion", frame);
+      char c=(char)waitKey(25);
+      if(c==27)
+          break;
   }
-  imshow("detecion", frame);
-  waitKey(0);
+  cap.release();
   std::cout <<"object size : " <<objects.size() << endl;
   return 0;
 }
