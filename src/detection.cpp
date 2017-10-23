@@ -14,9 +14,15 @@ shared_ptr<Detector> Detector::CreateDetector(const string& name) {
 
 bool CascadeDetector::Init(const std::string &model_file_path) {
     detector.load(model_file_path);
-    return true;
+    return !detector.empty();
 }
 
-void CascadeDetector::Detect(const cv::Mat &frame, std::vector<cv::Rect> &objects, std::vector<double> &scores) {
-
+void CascadeDetector::Detect(const cv::Mat &frame, std::vector<cv::Rect> &objects,
+                             std::vector<double> &scores) {
+    if(detector.empty()){
+        std::cerr << "detector is empty ";
+        exit(-1);
+    }
+    std::vector<int>levels;
+    detector.detectMultiScale(frame, objects);
 }
