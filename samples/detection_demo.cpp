@@ -42,7 +42,7 @@ int main(int argc, const char** argv) {
   namedWindow(windName);
 
   if (parser.get<bool>("image")) {  //  IMAGE
-    img = imread(parser.get<string>(0), cv::IMREAD_COLOR);
+    img = imread(parser.get<string>("image"), cv::IMREAD_COLOR);
     if (img.empty()) {
       std::cout << "Failed to open image file" << std::endl;
       return 0;
