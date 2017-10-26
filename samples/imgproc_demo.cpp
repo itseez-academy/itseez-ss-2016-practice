@@ -84,6 +84,15 @@ int main(int argc, const char** argv) {
     if(parser.has("gray")){
         input = processor.CvtColor(input, rect);
     }
+    else if(parser.has("pix")) {
+        input = processor.Pixelize(input, rect, 5);
+    }
+       else if(parser.has("edges")) {
+        input = processor.DetectEdges(input, rect, 5, 2, 3, 5);
+    }
+    else if(parser.has("median")) {
+        input = processor.Filter(input, rect, 5);
+    }
     else{
         cerr << "no flag" << endl;
     }
