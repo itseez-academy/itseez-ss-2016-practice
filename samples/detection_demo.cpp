@@ -61,6 +61,7 @@ int main(int argc, const char** argv) {
   vector<Rect>   objects;
   vector<double> scores;
   Mat frame;
+  namedWindow("detection");
   while(true){
 
       cap >> frame;
@@ -68,12 +69,11 @@ int main(int argc, const char** argv) {
       for(const auto& obj : objects){
           rectangle(frame, obj, Scalar(0, 255, 0));
       }
-      imshow("detecion", frame);
+      imshow("detection", frame);
       char c=(char)waitKey(25);
       if(c==27)
           break;
   }
   cap.release();
-  std::cout <<"object size : " <<objects.size() << endl;
   return 0;
 }

@@ -96,7 +96,7 @@ int main(int argc, const char** argv) {
       output_image = imageProcessor.Filter(input_image, rect, 21 );
   }
   else if(parser.has("edges")){
-      output_image = imageProcessor.DetectEdges(input_image, rect, 5, 5, 5, 5 );
+      output_image = imageProcessor.DetectEdges(input_image, rect, 5, 5, 5, 5);
   }
   else if(parser.has("pix")){
       output_image = imageProcessor.Pixelize(input_image, rect, 5 );
@@ -108,8 +108,6 @@ int main(int argc, const char** argv) {
 
   cv::imshow("input_image", output_image);
   cv::waitKey(0);
-
-
-
+    
   return 0;
 }
