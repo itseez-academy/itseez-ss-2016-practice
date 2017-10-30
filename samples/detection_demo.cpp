@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <detection.hpp>
 
 #include "opencv2/core.hpp"
 
@@ -31,8 +32,10 @@ int main(int argc, const char** argv) {
   // Do something cool.
   //cout << "This is empty template sample." << endl;
 
-    CascadeDetector detector("../test/test_data/detection/cascades/intel_logo_cascade.xml");
-    cv::VideoCapture video("../test/test_data/video/logo.mp4");
+    CascadeDetector detector;
+            //("../test/test_data/detection/cascades/intel_logo_cascade.xml");
+    detector.Init("../test/test_data/detection/cascades/intel_logo_cascade.xml");
+    cv::VideoCapture video("../test/test_data/video/pedestrians.mpg");
     std::vector<cv::Rect> objects;
     std::vector<double>  scores;
 
@@ -51,8 +54,6 @@ int main(int argc, const char** argv) {
     cv::Mat frame;
     while(true){
         video >> frame;
-        if (!frame)
-            break;
         detector.Detect(frame, objects, scores);
     }
 
