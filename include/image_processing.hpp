@@ -32,6 +32,7 @@ public:
         std::fill(channels.begin(), channels.end(), dst_gray_roi);
         cv::Mat dst_roi;
         cv::merge(channels, dst_roi);
+        cv::merge(dst_gray_roi, dst_gray_roi, dst_gray_roi, dst_roi);
         dst_roi.copyTo(src_copy_roi);
         return src_copy;
     }

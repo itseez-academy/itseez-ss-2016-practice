@@ -34,15 +34,19 @@ public:
             return false;
         }
         else
-            return  true;
+            return true;
     }
     virtual void Detect(const cv::Mat& frame, std::vector<cv::Rect>& objects,
                         std::vector<double>& scores){
-        if (detector.empty() ) {  //проверяет: загружен ли классификатор
-            detector.detectMultiScale(frame, objects);
-         //   scores[0] = objects.size();
-            ///????
-        } else return;
+        if (!detector.empty() ) {  //проверяет: загружен ли классификатор
+            std::vector<int> sc;
+            detector.detectMultiScale(frame, objects, sc);
+            std::copy(sc.begin(), sc.end(), scores.begin());
+        }
+        else {
+            std::cerr << "error";
+            exit(-1);
+        }
 
     }
 
