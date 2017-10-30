@@ -31,8 +31,30 @@ int main(int argc, const char** argv) {
   // Do something cool.
   //cout << "This is empty template sample." << endl;
 
-    CascadeDetector detector;
+    CascadeDetector detector("../test/test_data/detection/cascades/intel_logo_cascade.xml");
+    cv::VideoCapture video("../test/test_data/video/logo.mp4");
+    std::vector<cv::Rect> objects;
+    std::vector<double>  scores;
 
+    /*if(parser.has("v")){
+
+    }
+    else if(parser.has("i")){
+
+    }
+    else if(parser.has("c")){
+
+    }
+    else if(parser.has("m")){
+
+    }*/
+    cv::Mat frame;
+    while(true){
+        video >> frame;
+        if (!frame)
+            break;
+        detector.Detect(frame, objects, scores);
+    }
 
   return 0;
 }
