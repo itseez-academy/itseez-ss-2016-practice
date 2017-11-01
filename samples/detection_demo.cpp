@@ -42,16 +42,6 @@ int main(int argc, const char** argv) {
       exit(-1);
   }
 
-
-//  string filepath;
-//  if(parser.has("i")) {
-//      filepath = parser.get<string>("i");
-//  }
-//  else{
-//      cerr << "not found filepath";
-//      exit(-1);
-//  }
-//  Mat frame = imread(filepath);
   VideoCapture cap(0);
   if(!cap.isOpened()){
       cout << "Error opening video stream or file" << endl;

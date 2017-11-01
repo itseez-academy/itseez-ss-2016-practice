@@ -1,10 +1,12 @@
-#include "detection.hpp"
-
 #include <iostream>
+#include "detection.hpp"
 
 using std::string;
 using std::shared_ptr;
-using namespace cv;
+using std::vector;
+using std::copy;
+using cv::Mat;
+using cv::Rect;
 
 shared_ptr<Detector> Detector::CreateDetector(const string& name) {
     if (name == "cascade") {
@@ -23,6 +25,8 @@ void CascadeDetector::Detect(const cv::Mat &frame, std::vector<cv::Rect> &object
         std::cerr << "detector is empty ";
         exit(-1);
     }
-    std::vector<int>levels;
-    detector.detectMultiScale(frame, objects);
+    vector<int> sc;
+    detector.detectMultiScale(frame, objects, sc);
+    scores.resize(sc.size());
+    copy(sc.cbegin(), sc.cend(), scores.begin());
 }

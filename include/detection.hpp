@@ -3,7 +3,6 @@
 #include <memory>
 #include <string>
 #include <opencv/cv.hpp>
-
 #include "opencv2/core/core.hpp"
 
 class Detector {
