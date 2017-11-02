@@ -1,3 +1,4 @@
+#include <iostream>
 #include "detection.hpp"
 
 using namespace std;
@@ -15,80 +16,81 @@ int main(int argc, const char** argv) {
   CommandLineParser parser(argc, argv, kOptions);
 
   // If help option is given, print help message and exit.
-  if (parser.get<bool>("help")) {
+  if (parser.get<bool>("h")) {
     parser.printMessage();
     return 0;
   }
 
     CascadeDetector detector;
-            //("../test/test_data/detection/cascades/intel_logo_cascade.xml");
-    detector.Init("/home/luba/github/itseez-ss-2016-practice/logo_cascade/intel_LBP.xml");
 
-    cv::Mat frame1;
     std::vector<cv::Rect> objects;
     std::vector<double>  scores;
 
-    /*if(parser.has("v")){
-      std::string filePath;
-      filePath = parser.get("v");
-      cv::VideoCapture video(filePath);
+    std::string filePath;
 
-      while(true){
-         video >> frame1;
-         detector.Detect(frame1, objects, scores);
-      }
+   if(parser.has("m")){
+        std::string filePathDetector;
+        filePathDetector = parser.get<std::string>("m");
+        detector.Init(filePathDetector);
     }
-    else if(parser.has("i")){
+    
+   if(parser.has("i")){
         std::string filePath;
-        filePath = parser.get("i");
-        cv::Mat input = cv::imread(filePath);
+        filePath = parser.get<std::string>("i");
+        Mat input = imread(filePath);
         detector.Detect(input, objects, scores);
     }
-    else if(parser.has("c")){
+    else if(parser.has("v")){
+        Mat frame;
+        std::string filePath;
+        filePath = parser.get<std::string>("v");
+        cv::VideoCapture video(filePath);
 
-        CvCapture* capture = cvCreateCameraCapture(CV_CAP_ANY);
-        assert( capture );
-        IplImage* frame=0;
-        cvNamedWindow("capture", CV_WINDOW_AUTOSIZE);
-        printf("[i] press Esc for quit!\n\n");
-        while(true) {// получаем кадр
-            frame = cvQueryFrame(capture);
-            detector.Detect(frame1, objects, scores);
-            cvShowImage("capture", frame);
-            char c = cvWaitKey(33);
-            if (c == 27) { // нажата ESC
+        while(true) {
+            video >> frame;
+            detector.Detect(frame, objects, scores);
+            for(const auto& rect : objects){
+                rectangle(frame, rect, Scalar(250, 150, 10));
+            }
+            imshow("capture", frame);
+            char c = waitKey(33);
+            if (c == 27) {
                 break;
             }
+            objects.clear();
         }
-        cvReleaseCapture( &capture );
-        cvDestroyWindow("capture");
+        video.release();
     }
-    else if(parser.has("m")){
-        std::string filePathDetector;
-        filePathDetector = parser.has("m");
-        detector.Init( filePathDetector);
-    }*/
+     else if(parser.has("c")){
 
-    VideoCapture cap(0); // open the default camera
-    if(!cap.isOpened())  // check if we succeeded
-        return -1;
-    Mat frame;
-    //namedWindow("capture", CV_WINDOW_AUTOSIZE);
-
-    while(true) {
-        cap >> frame;
-        detector.Detect(frame, objects, scores);
-        for(const auto& rect : objects){
-            rectangle(frame, rect, Scalar(250, 150, 10));
-        }
-        imshow("capture", frame);
-        char c = waitKey(33);
-        if (c == 27) { // нажата ESC
-            break;
-        }
-        objects.clear();
-    }
-        cap.release();
+       VideoCapture cap(0);
+       if(!cap.isOpened())
+           return -1;
+       Mat frame;
+       if (detector.Init(parser.get<std::string>("m"))) {
+           while (true) {
+               cap >> frame;
+               detector.Detect(frame, objects, scores);
+               for (const auto &rect : objects) {
+                   rectangle(frame, rect, Scalar(250, 150, 10));
+               }
+               imshow("capture", frame);
+               char c = waitKey(33);
+               if (c == 27) {
+                   break;
+               }
+               objects.clear();
+           }
+           cap.release();
+       }
+       else{
+           cerr << "Error load model";
+           return -1;
+       }
+   }
+    else{
+        cerr << "no flag" << endl;
+   }
 
   return 0;
 }

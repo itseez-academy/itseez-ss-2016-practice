@@ -18,7 +18,7 @@ bool CascadeDetector::Init(const std::string &model_file_path) {
 }
 
 void CascadeDetector::Detect(const cv::Mat &frame, std::vector<cv::Rect> &objects, std::vector<double> &scores) {
-  if (!detector.empty() ) {
+  if (!detector.empty()) {
     std::vector<int> sc;
     detector.detectMultiScale(frame, objects, sc);
     scores.resize(sc.size());
