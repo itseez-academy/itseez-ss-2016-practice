@@ -1,16 +1,11 @@
 #include <iostream>
 #include <string>
 #include <opencv/cv.hpp>
+#include <opencv2/core.hpp>
 #include <image_processing.hpp>
-
-#include "opencv2/core.hpp"
 
 using namespace std;
 using namespace cv;
-
-const char* kAbout =
-    "This is an empty application that can be treated as a template for your "
-    "own doing-something-cool applications.";
 
 const char* kOptions =
                 "{ @image         | <none> | image to process            }"
@@ -48,8 +43,6 @@ void onMouse(int event, int x, int y, int flag, void* param)
 int main(int argc, const char** argv) {
   // Parse command line arguments.
   CommandLineParser parser(argc, argv, kOptions);
-  parser.about(kAbout);
-
 
   // If help option is given, print help message and exit.
   if (parser.get<bool>("help")) {
@@ -61,7 +54,11 @@ int main(int argc, const char** argv) {
   // Do something cool.
   cv::namedWindow("input");
   cv::setMouseCallback("input", onMouse);
-  cv::Mat input = cv::imread("/home/luba/Downloads/Lenna.jpg");
+  std::string filePath;
+  if (parser.has("@image")){
+      filePath = parser.get<std::string>("@image");
+  }
+  cv::Mat input = cv::imread(filePath);
   cv::Mat input_copy;
   cv::Rect rect;
   while(true)
@@ -70,14 +67,14 @@ int main(int argc, const char** argv) {
 
       if(mouseCallbackState.is_selection_started && !mouseCallbackState.is_selection_finished) {
            rect = cv::Rect(mouseCallbackState.point_first.x, mouseCallbackState.point_first.y,
-                        mouseCallbackState.point_second.x - mouseCallbackState.point_first.x,
-                        mouseCallbackState.point_second.y - mouseCallbackState.point_first.y);
+                           mouseCallbackState.point_second.x - mouseCallbackState.point_first.x,
+                           mouseCallbackState.point_second.y - mouseCallbackState.point_first.y);
       }
-      cv::rectangle(input_copy, rect, cv::Scalar(90, 108, 70));
+      cv::rectangle(input_copy, rect, cv::Scalar(255, 0, 100));
       cv::imshow("input", input_copy);
-    char c = cv::waitKey(39);
-    if (c == 27)
-      break;
+      char c = cv::waitKey(33);
+      if (c == 27)
+        break;
   }
     ImageProcessorImpl processor;
 
