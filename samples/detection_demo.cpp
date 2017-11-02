@@ -1,15 +1,7 @@
-#include <iostream>
-#include <string>
-#include <detection.hpp>
-
-#include "opencv2/core.hpp"
+#include "detection.hpp"
 
 using namespace std;
 using namespace cv;
-
-const char* kAbout =
-    "This is an empty application that can be treated as a template for your "
-    "own doing-something-cool applications.";
 
 const char* kOptions =
                 "{ i image        | <none> | image to process                         }"
@@ -21,7 +13,6 @@ const char* kOptions =
 int main(int argc, const char** argv) {
   // Parse command line arguments.
   CommandLineParser parser(argc, argv, kOptions);
-  parser.about(kAbout);
 
   // If help option is given, print help message and exit.
   if (parser.get<bool>("help")) {
@@ -29,33 +20,77 @@ int main(int argc, const char** argv) {
     return 0;
   }
 
-  // Do something cool.
-  //cout << "This is empty template sample." << endl;
-
     CascadeDetector detector;
             //("../test/test_data/detection/cascades/intel_logo_cascade.xml");
-    detector.Init("../test/test_data/detection/cascades/intel_logo_cascade.xml");
-    cv::VideoCapture video("../test/test_data/video/pedestrians.mpg");
+    detector.Init("/home/luba/github/itseez-ss-2016-practice/logo_cascade/intel_LBP.xml");
+
+    cv::Mat frame1;
     std::vector<cv::Rect> objects;
     std::vector<double>  scores;
 
     /*if(parser.has("v")){
+      std::string filePath;
+      filePath = parser.get("v");
+      cv::VideoCapture video(filePath);
 
+      while(true){
+         video >> frame1;
+         detector.Detect(frame1, objects, scores);
+      }
     }
     else if(parser.has("i")){
-
+        std::string filePath;
+        filePath = parser.get("i");
+        cv::Mat input = cv::imread(filePath);
+        detector.Detect(input, objects, scores);
     }
     else if(parser.has("c")){
 
+        CvCapture* capture = cvCreateCameraCapture(CV_CAP_ANY);
+        assert( capture );
+        IplImage* frame=0;
+        cvNamedWindow("capture", CV_WINDOW_AUTOSIZE);
+        printf("[i] press Esc for quit!\n\n");
+        while(true) {// получаем кадр
+            frame = cvQueryFrame(capture);
+            detector.Detect(frame1, objects, scores);
+            cvShowImage("capture", frame);
+            char c = cvWaitKey(33);
+            if (c == 27) { // нажата ESC
+                break;
+            }
+        }
+        cvReleaseCapture( &capture );
+        cvDestroyWindow("capture");
     }
     else if(parser.has("m")){
-
+        std::string filePathDetector;
+        filePathDetector = parser.has("m");
+        detector.Init( filePathDetector);
     }*/
-    cv::Mat frame;
-    while(true){
-        video >> frame;
+
+    VideoCapture cap(0); // open the default camera
+    if(!cap.isOpened())  // check if we succeeded
+        return -1;
+    Mat frame;
+    //namedWindow("capture", CV_WINDOW_AUTOSIZE);
+
+    while(true) {
+        cap >> frame;
         detector.Detect(frame, objects, scores);
+        for(const auto& rect : objects){
+            rectangle(frame, rect, Scalar(250, 150, 10));
+        }
+        imshow("capture", frame);
+        char c = waitKey(33);
+        if (c == 27) { // нажата ESC
+            break;
+        }
+        objects.clear();
     }
+        cap.release();
 
   return 0;
 }
+
+
