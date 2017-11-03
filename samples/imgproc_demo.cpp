@@ -55,7 +55,7 @@ int main(int argc, const char** argv) {
   cv::namedWindow("input");
   cv::setMouseCallback("input", onMouse);
   std::string filePath;
-  if (parser.has("image"){
+  if (parser.has("image")){
       filePath = parser.get("image");
   }
   cv::Mat input = cv::imread(filePath);

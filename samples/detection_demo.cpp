@@ -31,11 +31,17 @@ int main(int argc, const char** argv) {
    if(parser.has("m")){
         std::string filePathDetector;
         filePathDetector = parser.get<std::string>("m");
-        detector.Init(filePathDetector);
+        if(!detector.Init(filePathDetector)){
+            cerr << "Error init detector" << endl;
+            return -1;
+        };
     }
-    
+    else{
+       cerr << "enter key m" << endl;
+       return -1;
+   }
+
    if(parser.has("i")){
-        std::string filePath;
         filePath = parser.get<std::string>("i");
         Mat input = imread(filePath);
         detector.Detect(input, objects, scores);
@@ -67,7 +73,6 @@ int main(int argc, const char** argv) {
        if(!cap.isOpened())
            return -1;
        Mat frame;
-       if (detector.Init(parser.get<std::string>("m"))) {
            while (true) {
                cap >> frame;
                detector.Detect(frame, objects, scores);
@@ -82,11 +87,6 @@ int main(int argc, const char** argv) {
                objects.clear();
            }
            cap.release();
-       }
-       else{
-           cerr << "Error load model";
-           return -1;
-       }
    }
     else{
         cerr << "no flag" << endl;
