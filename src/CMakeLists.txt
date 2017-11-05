@@ -4,7 +4,7 @@ file(GLOB incl "../include/*.h*")
 file(GLOB hdrs "*.h*")
 file(GLOB srcs "*.cpp")
 
-add_library(${target} STATIC ${srcs} ${hdrs} ${incl} image_processing.cpp)
+add_library(${target} STATIC ${srcs} ${hdrs} ${incl})
 if (UNIX)
   target_link_libraries(${target} ${CMAKE_THREAD_LIBS_INIT})
 endif (UNIX)
