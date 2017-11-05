@@ -12,3 +12,4 @@ TEST(dummy, dummy_test)
     Mat submat = mat(Rect(0, 0, 2, 3));
     EXPECT_FALSE(submat.isContinuous());
 }
+
