@@ -1,6 +1,6 @@
 #include <iostream>
 #include "detection.hpp"
-
+#include <stdexcept>
 using std::string;
 using std::shared_ptr;
 using std::vector;
@@ -12,6 +12,8 @@ shared_ptr<Detector> Detector::CreateDetector(const string& name) {
     if (name == "cascade") {
         return std::make_shared<CascadeDetector>();
     }
+    throw std::invalid_argument("name != cascasde");
+
 }
 
 bool CascadeDetector::Init(const std::string &model_file_path) {
