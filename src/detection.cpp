@@ -17,12 +17,7 @@ shared_ptr<Detector> Detector::CreateDetector(const string& name) {
 }
 
 bool CascadeDetector::Init(const std::string& model_file_path) {
-  if (!detector.load(model_file_path)) {
-    std::cout << "Couldn't load cascade detector" << std::endl;
-    return false;
-  } else {
-    return true;
-  }
+  return detector.load(model_file_path);
 }
 
 void CascadeDetector::Detect(const cv::Mat& frame, std::vector<cv::Rect>& objects,
