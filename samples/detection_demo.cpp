@@ -11,6 +11,27 @@ const char* kOptions =
                 "{ m model        | <none> | path to detector file                    }"
                 "{ h ? help usage |        | print help message                       }";
 
+void detectOnVideo( VideoCapture& capture, CascadeDetector& detector){
+    Mat frame;
+    vector<Rect>   objects;
+    vector<double> scores;
+    while(true) {
+        capture >> frame;
+        detector.Detect(frame, objects, scores);
+        for(const auto& rect : objects){
+            rectangle(frame, rect, Scalar(250, 150, 10));
+        }
+        imshow("capture", frame);
+        char c = waitKey(33);
+        if (c == 27) {
+            break;
+        }
+        objects.clear();
+        scores.clear();
+    }
+
+}
+
 int main(int argc, const char** argv) {
   // Parse command line arguments.
   CommandLineParser parser(argc, argv, kOptions);
@@ -31,40 +52,23 @@ int main(int argc, const char** argv) {
    if(parser.has("m")){
         std::string filePathDetector;
         filePathDetector = parser.get<std::string>("m");
-        if(!detector.Init(filePathDetector)){
-            cerr << "Error init detector" << endl;
-            return -1;
-        };
+        detector.Init(filePathDetector);
     }
-    else{
-       cerr << "enter key m" << endl;
+   else{
+       cerr << "Error load model";
        return -1;
    }
 
    if(parser.has("i")){
+        std::string filePath;
         filePath = parser.get<std::string>("i");
         Mat input = imread(filePath);
         detector.Detect(input, objects, scores);
     }
     else if(parser.has("v")){
-        Mat frame;
-        std::string filePath;
-        filePath = parser.get<std::string>("v");
+        std::string filePath = parser.get<std::string>("v");;
         cv::VideoCapture video(filePath);
-
-        while(true) {
-            video >> frame;
-            detector.Detect(frame, objects, scores);
-            for(const auto& rect : objects){
-                rectangle(frame, rect, Scalar(250, 150, 10));
-            }
-            imshow("capture", frame);
-            char c = waitKey(33);
-            if (c == 27) {
-                break;
-            }
-            objects.clear();
-        }
+        detectOnVideo(video, detector);
         video.release();
     }
      else if(parser.has("c")){
@@ -72,22 +76,11 @@ int main(int argc, const char** argv) {
        VideoCapture cap(0);
        if(!cap.isOpened())
            return -1;
-       Mat frame;
-           while (true) {
-               cap >> frame;
-               detector.Detect(frame, objects, scores);
-               for (const auto &rect : objects) {
-                   rectangle(frame, rect, Scalar(250, 150, 10));
-               }
-               imshow("capture", frame);
-               char c = waitKey(33);
-               if (c == 27) {
-                   break;
-               }
-               objects.clear();
-           }
-           cap.release();
-   }
+       detectOnVideo(cap, detector);
+       cap.release();
+     }
+
+
     else{
         cerr << "no flag" << endl;
    }
