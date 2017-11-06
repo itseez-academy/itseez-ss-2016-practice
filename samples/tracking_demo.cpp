@@ -53,7 +53,7 @@ void OnMouse(int event, int x, int y, int, void *param) {
 int main(int argc, const char** argv) {
   cv::CommandLineParser parser(argc, argv, kOptions);
 
-  cv::Mat img;
+  Mat img;
   cv::VideoCapture cap;
 
   if (parser.has("video")) {
@@ -89,7 +89,7 @@ int main(int argc, const char** argv) {
   }
 
   imshow(SrcWinName, img);
- // cv::waitKey(10);
+  //cv::waitKey(10);
 
   Rect selected;
   while (!mouse.is_selection_finished) {
@@ -110,12 +110,12 @@ int main(int argc, const char** argv) {
   cap >> img;
 
   for (;;) {
-    Mat copy;
-    img.copyTo(copy);
+    /*Mat copy;
+    img.copyTo(copy);*/
 
     selected = track.Track(img);
-    rectangle(copy, selected, cv::Scalar(0, 0, 255), 1, cv::LINE_AA);
-    imshow(SrcWinName, copy);
+    rectangle(img, selected, cv::Scalar(0, 0, 255), 1, cv::LINE_AA);
+    imshow(SrcWinName, img);
 
     cap >> img;
 

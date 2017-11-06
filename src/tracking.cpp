@@ -26,7 +26,7 @@ shared_ptr<Tracker> Tracker::CreateTracker(const string &name) {
 
 bool MedianFlowTracker::Init(const cv::Mat &frame, const cv::Rect &roi) {
   if (!frame.empty() && !roi.empty()) {
-    frame_ = frame;
+    cvtColor(frame, frame_, CV_BGR2GRAY);
     position_ = roi;
     return true;
   }
@@ -43,7 +43,7 @@ Rect MedianFlowTracker::Track(const cv::Mat &frame) {
   }
 
   Mat nextFrame;
-  frame.copyTo(nextFrame);
+  cvtColor(frame, nextFrame, CV_BGR2GRAY);
   vector<Point2f> nextCorners;
   vector<uchar> status;
   vector<float> err;
