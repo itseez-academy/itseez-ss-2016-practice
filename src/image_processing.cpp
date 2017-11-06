@@ -1,4 +1,3 @@
-
 #include <memory>
 #include <string>
 
@@ -6,10 +5,6 @@
 #include <opencv2/core/core.hpp>
 
 #include "image_processing.hpp"
-
-
-
-
 
     cv::Mat ImageProcessorImpl::CvtColor(const cv::Mat &src, const cv::Rect &roi) {
 
