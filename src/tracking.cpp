@@ -33,23 +33,7 @@ bool MedianFlowTracker::Init(const cv::Mat &frame, const cv::Rect &roi) {
   return false;
 }
 
-Rect MedianFlowTracker::Track(const cv::Mat &frame) {
-  Mat obj = frame_(position_);
-  vector<Point2f> corners;
-
-  goodFeaturesToTrack(obj, corners, 100, 0.01, 5);
-  if (corners.empty()) {
-    std::cout << "object lost" << std::endl;
-  }
-
-  Mat nextFrame;
-  cvtColor(frame, nextFrame, CV_BGR2GRAY);
-  vector<Point2f> nextCorners;
-  vector<uchar> status;
-  vector<float> err;
-
-  calcOpticalFlowPyrLK(frame_, nextFrame, corners, nextCorners, status, err);
-
+void MedianFlowTracker::eraseBad(vector<uchar> &status, vector<cv::Point2f> &corners, vector<cv::Point2f> &nextCorners, vector<float> &err) {
   for (int i = 0; i < status.size(); ++i) {
     if (status[i] == 0) {
       status.erase(status.begin() + i);
@@ -59,28 +43,78 @@ Rect MedianFlowTracker::Track(const cv::Mat &frame) {
     }
   }
 
+  if (corners.empty()) throw std::logic_error("Not enough points");
+}
+
+float MedianFlowTracker::Median(std::vector<float> &arr) {
+  std::sort(arr.begin(), arr.end());
+
+  if (arr.size() % 2 == 0) {
+    return (arr[(arr.size() / 2) - 1] + arr[arr.size() / 2])/2;
+  } else {
+    return arr[arr.size() / 2];
+  }
+}
+
+float MedianFlowTracker::getCoeff(std::vector<cv::Point2f> &corners, std::vector<cv::Point2f> &next_corners) {
+  vector<float> coeff;
+
+  for (int i = 0; i < corners.size(); ++i) {
+    for (int j = i + 1; j < corners.size() - 1; ++j) {
+      float d_new = sqrt(pow((next_corners[i].x - next_corners[j].x), 2) + pow((next_corners[i].y - next_corners[j].y), 2));
+      float d_old = sqrt(pow((corners[i].x - corners[j].x), 2) + pow((corners[i].y - corners[j].y), 2));
+      coeff.push_back(d_new/d_old);
+    }
+  }
+  return Median(coeff);
+}
+
+Rect MedianFlowTracker::Track(const cv::Mat &frame) {
+  Mat obj = frame_(position_);
+  vector<Point2f> corners;
+
+  goodFeaturesToTrack(obj, corners, 100, 0.01, 5);
+  if (corners.empty()) {
+    std::cout << "object lost" << std::endl;
+  }
+
+  Mat next_frame;
+  cvtColor(frame, next_frame, CV_BGR2GRAY);
+  vector<Point2f> next_corners;
+  vector<uchar> status;
+  vector<float> err;
+
+  calcOpticalFlowPyrLK(frame_, next_frame, corners, next_corners, status, err);
+  eraseBad(status, corners, next_corners, err);
+
+  calcOpticalFlowPyrLK(next_frame, frame_, next_corners, corners, status, err);
+  eraseBad(status, corners, next_corners, err);
+
+  float median_err = Median(err);
+  for (int i = 0; i < err.size(); ++i) {
+    if (err[i] > median_err) {
+      status.erase(status.begin() + i);
+      corners.erase(corners.begin() + i);
+      next_corners.erase(next_corners.begin() + i);
+      err.erase(err.begin() + i);
+    }
+  }
+  if (corners.empty()) throw std::logic_error("Not enough points");
+
   vector<float> shiftX, shiftY;
   for (int i = 0; i < corners.size(); ++i) {
-    shiftX.push_back(fabs(nextCorners[i].x - corners[i].x));
-    shiftY.push_back(fabs(nextCorners[i].y - corners[i].y));
+    shiftX.push_back(fabs(next_corners[i].x - corners[i].x));
+    shiftY.push_back(fabs(next_corners[i].y - corners[i].y));
   }
-  std::sort(shiftX.begin(), shiftX.end());
-  std::sort(shiftY.begin(), shiftY.end());
+  Point2f median_shift(Median(shiftX), Median(shiftY));
+  float coeff = getCoeff(next_corners, corners);
 
-  Point2f median(0, 0);
-  int m = corners.size() / 2;
-  if (m == 0) {
-    median.x = (shiftX[m - 1] + shiftX[m]) / 2;
-    median.y = (shiftY[m - 1] + shiftY[m]) / 2;
-  } else {
-    median.x = shiftX[m];
-    median.y = shiftY[m];
-  }
-
-  Rect nextPosition = position_ + Point(median);
+  Rect next_position = position_ + Point(median_shift);
+  next_position.width *= coeff;
+  next_position.height *= coeff;
   
-  position_ = nextPosition;
-  frame_ = nextFrame;
+  position_ = next_position;
+  frame_ = next_frame;
 
-  return nextPosition;
+  return next_position;
 }

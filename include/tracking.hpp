@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "opencv2/core/core.hpp"
 
@@ -20,4 +21,7 @@ public:
 protected:
   cv::Rect position_;
   cv::Mat frame_;
+  void eraseBad(std::vector<uchar> &status, std::vector<cv::Point2f> &corners, std::vector<cv::Point2f> &nextCorners, std::vector<float> &err);
+  float Median(std::vector<float> &arr);
+  float getCoeff(std::vector<cv::Point2f> &corners, std::vector<cv::Point2f> &next_corners);
 };
