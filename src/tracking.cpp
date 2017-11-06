@@ -19,9 +19,6 @@ shared_ptr<Tracker> Tracker::CreateTracker(const string &name) {
   } else {
     throw std::invalid_argument("Failed to create tracker");
   }
-  /*std::cerr << "Failed to create tracker with name '" << name << "'"
-            << std::endl;
-  return nullptr;*/
 }
 
 bool MedianFlowTracker::Init(const cv::Mat &frame, const cv::Rect &roi) {
@@ -43,7 +40,7 @@ void MedianFlowTracker::eraseBad(vector<uchar> &status, vector<cv::Point2f> &cor
     }
   }
 
-  if (corners.empty()) throw std::logic_error("Not enough points");
+  if (corners.size() <= 1) throw std::runtime_error("Not enough points");
 }
 
 float MedianFlowTracker::Median(std::vector<float> &arr) {
@@ -59,8 +56,8 @@ float MedianFlowTracker::Median(std::vector<float> &arr) {
 float MedianFlowTracker::getCoeff(std::vector<cv::Point2f> &corners, std::vector<cv::Point2f> &next_corners) {
   vector<float> coeff;
 
-  for (int i = 0; i < corners.size(); ++i) {
-    for (int j = i + 1; j < corners.size() - 1; ++j) {
+  for (int i = 0; i < corners.size(); i++) {
+    for (int j = i + 1; j < corners.size(); j++) {
       float d_new = sqrt(pow((next_corners[i].x - next_corners[j].x), 2) + pow((next_corners[i].y - next_corners[j].y), 2));
       float d_old = sqrt(pow((corners[i].x - corners[j].x), 2) + pow((corners[i].y - corners[j].y), 2));
       coeff.push_back(d_new/d_old);
@@ -77,6 +74,7 @@ void MedianFlowTracker::Offset(vector<uchar> &status, vector<cv::Point2f> &corne
       next_corners.erase(next_corners.begin() + i);
       prev_corners.erase(prev_corners.begin() + i);
     }
+    if(corners.size() <= 1) throw std::runtime_error("Not enough points");
 
     off.push_back(sqrt(pow((corners[i].x - prev_corners[i].x), 2) + pow((corners[i].y - prev_corners[i].y), 2)));
   }
@@ -118,7 +116,7 @@ Rect MedianFlowTracker::Track(const cv::Mat &frame) {
       off.erase(off.begin() + i);
     }
   }
-  if (corners.empty()) throw std::logic_error("Not enough points");
+  if (corners.size() <= 1) throw std::runtime_error("Not enough points");
 
   vector<float> shiftX, shiftY;
   for (int i = 0; i < corners.size(); ++i) {

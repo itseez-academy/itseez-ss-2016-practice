@@ -89,7 +89,6 @@ int main(int argc, const char** argv) {
   }
 
   imshow(SrcWinName, img);
-  //cv::waitKey(10);
 
   Rect selected;
   while (!mouse.is_selection_finished) {
@@ -110,10 +109,11 @@ int main(int argc, const char** argv) {
   cap >> img;
 
   for (;;) {
-    /*Mat copy;
-    img.copyTo(copy);*/
-
-    selected = track.Track(img);
+    try {
+      selected = track.Track(img);
+    } catch (std::runtime_error& err) {
+      std::cout << err.what() << std::endl;
+    }
     rectangle(img, selected, cv::Scalar(0, 0, 255), 1, cv::LINE_AA);
     imshow(SrcWinName, img);
 
