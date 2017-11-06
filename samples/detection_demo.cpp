@@ -21,89 +21,96 @@ const char* kOptions =
 "{ h ? help usage |        | print help message                       }";
 
 int main(int argc, const char** argv) {
-    // Parse command line arguments.
-    cv::CommandLineParser parser(argc, argv, kOptions);
+  // Parse command line arguments.
+  cv::CommandLineParser parser(argc, argv, kOptions);
 
-    // If help option is given, print help message and exit.
-    if (parser.get<bool>("help")) {
-        parser.printMessage();
+  // If help option is given, print help message and exit.
+  if (parser.get<bool>("help")) {
+    parser.printMessage();
+    return 0;
+  }
+
+  CascadeDetector det;
+
+  string det_path = parser.get<string>("model");
+  det.Init(det_path);
+
+  cv::Mat img;
+  std::vector<cv::Rect> obj;
+  std::vector<double> score;
+
+  string windName = "Source";
+  namedWindow(windName, cv::WINDOW_NORMAL);
+
+  if (parser.has("image")) {  //  IMAGE
+    img = imread(parser.get<string>("image"), cv::IMREAD_COLOR);
+    if (img.empty()) {
+        std::cout << "Failed to open image file" << std::endl;
         return 0;
     }
 
-    CascadeDetector det;
+    imshow(windName, img);
+    cv::waitKey(10);
 
-    string det_path = parser.get<string>("model");
-    det.Init(det_path);
+    try{
+      det.Detect(img, obj, score);
+    } catch (char* err) {
+      std::cout << err;
+      return 0;
+    }
 
-    cv::Mat img;
-    std::vector<cv::Rect> obj;
-    std::vector<double> score;
+    for (auto it = obj.begin(); it != obj.end(); ++it) {
+      cv::rectangle(img, *it, cv::Scalar(0, 0, 255), 2);
+    }
 
-    string windName = "Source";
-    namedWindow(windName, cv::WINDOW_NORMAL);
+    imshow(windName, img);
+    cv::waitKey();
+  } else {  //  VIDEO
+    cv::VideoCapture cap;
 
-    if (parser.has("image")) {  //  IMAGE
-        img = imread(parser.get<string>("image"), cv::IMREAD_COLOR);
-        if (img.empty()) {
-            std::cout << "Failed to open image file" << std::endl;
-            return 0;
+    if (parser.has("video")) {
+      string v_path = parser.get<string>("video");
+      cap.open(v_path);
+
+      if (!cap.isOpened()) {
+        std::cout << "Failed to get video." << std::endl;
+        return 0;
+      }
+    } else {
+      if (parser.has("camera")) {
+        int id = parser.get<int>("camera");
+        cap.open(id);
+
+        if (!cap.isOpened()) {
+          std::cout << "Failed to capture video from camera" << std::endl;
+          return 0;
         }
+      }
+    }
+    cap >> img;
+    if (img.empty()) {
+      cap >> img;
+    }
 
-        imshow(windName, img);
-        cv::waitKey(10);
-
+    for (;;) {
+      try {
         det.Detect(img, obj, score);
+      } catch (char* err) {
+        std::cout << err;
+        return 0;
+      }
+      for (auto it = obj.begin(); it != obj.end(); ++it) {
+        cv::rectangle(img, *it, cv::Scalar(0, 0, 255), 2);
+      }
 
-        for (auto it = obj.begin(); it != obj.end(); ++it) {
-            cv::rectangle(img, *it, cv::Scalar(0, 0, 255), 2);
-        }
+      imshow(windName, img);
 
-        imshow(windName, img);
-        cv::waitKey();
+      char c = cv::waitKey(20);
+      if (c == 27 || img.empty()) break;
+
+      cap >> img;
     }
-    else {  //  VIDEO
-        cv::VideoCapture cap;
+  }
 
-        if (parser.has("video")) {
-            string v_path = parser.get<string>("video");
-            cap.open(v_path);
-
-            if (!cap.isOpened()) {
-                std::cout << "Failed to get video." << std::endl;
-                return 0;
-            }
-        }
-        else {
-            if (parser.has("camera")) {
-                int id = parser.get<int>("camera");
-                cap.open(id);
-
-                if (!cap.isOpened()) {
-                    std::cout << "Failed to capture video from camera" << std::endl;
-                    return 0;
-                }
-            }
-        }
-        cap >> img;
-        if (img.empty()) {
-            cap >> img;
-        }
-
-        for (;;) {
-            det.Detect(img, obj, score);
-
-            for (auto it = obj.begin(); it != obj.end(); ++it) {
-                cv::rectangle(img, *it, cv::Scalar(0, 0, 255), 2);
-            }
-
-            imshow(windName, img);
-
-            char c = cv::waitKey(20);
-            if (c == 27 || img.empty()) break;
-
-            cap >> img;
-        }
-    }
-
-    return 0;
+  return 0;
 }
