@@ -40,7 +40,7 @@ int main(int argc, const char** argv) {
   std::vector<double> score;
 
   string windName = "Source";
-  namedWindow(windName, cv::WINDOW_NORMAL);
+  namedWindow(windName);
 
   if (parser.has("image")) {  //  IMAGE
     img = imread(parser.get<string>("image"), cv::IMREAD_COLOR);
@@ -54,8 +54,8 @@ int main(int argc, const char** argv) {
 
     try{
       det.Detect(img, obj, score);
-    } catch (char* err) {
-      std::cout << err;
+    } catch (std::runtime_error& err) {
+      std::cout << err.what();
       return 0;
     }
 
@@ -95,8 +95,8 @@ int main(int argc, const char** argv) {
     for (;;) {
       try {
         det.Detect(img, obj, score);
-      } catch (char* err) {
-        std::cout << err;
+      } catch (std::runtime_error& err) {
+        std::cout << err.what();
         return 0;
       }
       for (auto it = obj.begin(); it != obj.end(); ++it) {
