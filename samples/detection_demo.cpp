@@ -11,18 +11,23 @@ const char* kOptions =
                 "{ m model        | <none> | path to detector file                    }"
                 "{ h ? help usage |        | print help message                       }";
 
-void detectOnVideo( VideoCapture& capture, CascadeDetector& detector){
+void detectOnVideo( VideoCapture& capture, shared_ptr<Detector> detector){
     Mat frame;
     vector<Rect>   objects;
     vector<double> scores;
     while(true) {
         capture >> frame;
-        detector.Detect(frame, objects, scores);
+        try {
+            detector->Detect(frame, objects, scores);
+        }
+        catch (char* msg){
+            throw msg;
+        }
         for(const auto& rect : objects){
             rectangle(frame, rect, Scalar(250, 150, 10));
         }
         imshow("capture", frame);
-        char c = waitKey(33);
+        int c = waitKey(33);
         if (c == 27) {
             break;
         }
@@ -41,8 +46,13 @@ int main(int argc, const char** argv) {
     parser.printMessage();
     return 0;
   }
-
-    CascadeDetector detector;
+    std::shared_ptr<Detector> detector;
+    try {
+        detector = Detector::CreateDetector("cascade");
+    }
+    catch (const std::exception& e){
+        cout << e.what() << endl;
+    }
 
     std::vector<cv::Rect> objects;
     std::vector<double>  scores;
@@ -52,7 +62,7 @@ int main(int argc, const char** argv) {
    if(parser.has("m")){
         std::string filePathDetector;
         filePathDetector = parser.get<std::string>("m");
-        detector.Init(filePathDetector);
+        detector->Init(filePathDetector);
     }
    else{
        cerr << "Error load model";
@@ -60,15 +70,25 @@ int main(int argc, const char** argv) {
    }
 
    if(parser.has("i")){
-        std::string filePath;
-        filePath = parser.get<std::string>("i");
-        Mat input = imread(filePath);
-        detector.Detect(input, objects, scores);
+       std::string filePath = parser.get<std::string>("i");;
+       Mat input = imread(filePath);
+       try {
+           detector->Detect(input, objects, scores);
+       }
+       catch(char* msg){
+           throw msg;
+       }
     }
     else if(parser.has("v")){
         std::string filePath = parser.get<std::string>("v");;
         cv::VideoCapture video(filePath);
-        detectOnVideo(video, detector);
+       try {
+           detectOnVideo(video, detector);
+       }
+       catch (char* msg){
+           cout << msg;
+           video.release();
+       }
         video.release();
     }
      else if(parser.has("c")){
@@ -76,10 +96,14 @@ int main(int argc, const char** argv) {
        VideoCapture cap(0);
        if(!cap.isOpened())
            return -1;
-       detectOnVideo(cap, detector);
+       try {
+           detectOnVideo(cap, detector);
+       }
+       catch (char* msg){
+           cout << msg;
+       }
        cap.release();
      }
-
 
     else{
         cerr << "no flag" << endl;

@@ -30,8 +30,6 @@ void CascadeDetector::Detect(const cv::Mat &frame, std::vector<cv::Rect> &object
     scores.resize(sc.size());
     std::copy(sc.begin(), sc.end(), scores.begin());
   }
-  else {
-    std::cerr << "Error";
-    exit(-1);
-  }
+  else
+      throw "detector is empty";
 }
