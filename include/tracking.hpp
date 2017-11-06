@@ -24,4 +24,5 @@ protected:
   void eraseBad(std::vector<uchar> &status, std::vector<cv::Point2f> &corners, std::vector<cv::Point2f> &nextCorners, std::vector<float> &err);
   float Median(std::vector<float> &arr);
   float getCoeff(std::vector<cv::Point2f> &corners, std::vector<cv::Point2f> &next_corners);
+  void Offset(std::vector<uchar> &status, std::vector<cv::Point2f> &corners, std::vector<cv::Point2f> &next_corners, std::vector<cv::Point2f> &prev_corners, std::vector<float> &off);
 };

@@ -69,13 +69,26 @@ float MedianFlowTracker::getCoeff(std::vector<cv::Point2f> &corners, std::vector
   return Median(coeff);
 }
 
+void MedianFlowTracker::Offset(vector<uchar> &status, vector<cv::Point2f> &corners, vector<cv::Point2f> &next_corners, vector<cv::Point2f> &prev_corners, vector<float> &off) {
+  for (int i = 0; i < status.size(); ++i) {
+    if (status[i] == 0) {
+      status.erase(status.begin() + i);
+      corners.erase(corners.begin() + i);
+      next_corners.erase(next_corners.begin() + i);
+      prev_corners.erase(prev_corners.begin() + i);
+    }
+
+    off.push_back(sqrt(pow((corners[i].x - prev_corners[i].x), 2) + pow((corners[i].y - prev_corners[i].y), 2)));
+  }
+}
+
 Rect MedianFlowTracker::Track(const cv::Mat &frame) {
   Mat obj = frame_(position_);
   vector<Point2f> corners;
 
   goodFeaturesToTrack(obj, corners, 100, 0.01, 5);
   if (corners.empty()) {
-    std::cout << "object lost" << std::endl;
+    throw std::runtime_error("object lost");
   }
 
   Mat next_frame;
@@ -87,16 +100,22 @@ Rect MedianFlowTracker::Track(const cv::Mat &frame) {
   calcOpticalFlowPyrLK(frame_, next_frame, corners, next_corners, status, err);
   eraseBad(status, corners, next_corners, err);
 
-  calcOpticalFlowPyrLK(next_frame, frame_, next_corners, corners, status, err);
-  eraseBad(status, corners, next_corners, err);
+  vector<Point2f> prev_corners;
+  calcOpticalFlowPyrLK(next_frame, frame_, next_corners, prev_corners, status, err);
+  vector<float> off;
+  Offset(status, corners, next_corners, prev_corners, off);
 
-  float median_err = Median(err);
-  for (int i = 0; i < err.size(); ++i) {
-    if (err[i] > median_err) {
+  vector<float> tmp_err(off.size());
+  std::copy(off.begin(), off.end(), tmp_err.begin());
+  float median_err = Median(tmp_err);
+
+  for (int i = 0; i < off.size(); ++i) {
+    if (off[i] > median_err) {
       status.erase(status.begin() + i);
       corners.erase(corners.begin() + i);
       next_corners.erase(next_corners.begin() + i);
-      err.erase(err.begin() + i);
+      prev_corners.erase(prev_corners.begin() + i);
+      off.erase(off.begin() + i);
     }
   }
   if (corners.empty()) throw std::logic_error("Not enough points");
@@ -107,7 +126,7 @@ Rect MedianFlowTracker::Track(const cv::Mat &frame) {
     shiftY.push_back(fabs(next_corners[i].y - corners[i].y));
   }
   Point2f median_shift(Median(shiftX), Median(shiftY));
-  float coeff = getCoeff(next_corners, corners);
+  float coeff = getCoeff(corners, next_corners);
 
   Rect next_position = position_ + Point(median_shift);
   next_position.width *= coeff;
