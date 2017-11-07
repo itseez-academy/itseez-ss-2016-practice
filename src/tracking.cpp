@@ -31,7 +31,7 @@ bool MedianFlowTracker::Init(const cv::Mat &frame, const cv::Rect &roi) {
 }
 
 void MedianFlowTracker::eraseBad(vector<uchar> &status, vector<cv::Point2f> &corners, vector<cv::Point2f> &nextCorners, vector<float> &err) {
-  for (int i = 0; i < status.size(); ++i) {
+  for (int i = status.size() - 1; i >= 0; i--) {
     if (status[i] == 0) {
       status.erase(status.begin() + i);
       corners.erase(corners.begin() + i);
@@ -58,8 +58,8 @@ float MedianFlowTracker::getCoeff(std::vector<cv::Point2f> &corners, std::vector
 
   for (int i = 0; i < corners.size(); i++) {
     for (int j = i + 1; j < corners.size(); j++) {
-      float d_new = sqrt(pow((next_corners[i].x - next_corners[j].x), 2) + pow((next_corners[i].y - next_corners[j].y), 2));
-      float d_old = sqrt(pow((corners[i].x - corners[j].x), 2) + pow((corners[i].y - corners[j].y), 2));
+      float d_new = sqrt((next_corners[i].x - next_corners[j].x)*(next_corners[i].x - next_corners[j].x) + (next_corners[i].y - next_corners[j].y)*(next_corners[i].y - next_corners[j].y));
+      float d_old = sqrt((corners[i].x - corners[j].x)*(corners[i].x - corners[j].x) + (corners[i].y - corners[j].y)*(corners[i].y - corners[j].y));
       coeff.push_back(d_new/d_old);
     }
   }
@@ -67,7 +67,7 @@ float MedianFlowTracker::getCoeff(std::vector<cv::Point2f> &corners, std::vector
 }
 
 void MedianFlowTracker::Offset(vector<uchar> &status, vector<cv::Point2f> &corners, vector<cv::Point2f> &next_corners, vector<cv::Point2f> &prev_corners, vector<float> &off) {
-  for (int i = 0; i < status.size(); ++i) {
+  for (int i = status.size() - 1; i >= 0; i--) {
     if (status[i] == 0) {
       status.erase(status.begin() + i);
       corners.erase(corners.begin() + i);
@@ -76,7 +76,7 @@ void MedianFlowTracker::Offset(vector<uchar> &status, vector<cv::Point2f> &corne
     }
     if(corners.size() <= 1) throw std::runtime_error("Not enough points");
 
-    off.push_back(sqrt(pow((corners[i].x - prev_corners[i].x), 2) + pow((corners[i].y - prev_corners[i].y), 2)));
+    off.push_back(sqrt((corners[i].x - prev_corners[i].x)*(corners[i].x - prev_corners[i].x) + (corners[i].y - prev_corners[i].y)*(corners[i].y - prev_corners[i].y)));
   }
 }
 
@@ -99,6 +99,8 @@ Rect MedianFlowTracker::Track(const cv::Mat &frame) {
   eraseBad(status, corners, next_corners, err);
 
   vector<Point2f> prev_corners;
+  status.clear();
+  err.clear();
   calcOpticalFlowPyrLK(next_frame, frame_, next_corners, prev_corners, status, err);
   vector<float> off;
   Offset(status, corners, next_corners, prev_corners, off);
@@ -107,7 +109,7 @@ Rect MedianFlowTracker::Track(const cv::Mat &frame) {
   std::copy(off.begin(), off.end(), tmp_err.begin());
   float median_err = Median(tmp_err);
 
-  for (int i = 0; i < off.size(); ++i) {
+  for (int i = off.size() - 1; i >= 0; i--) {
     if (off[i] > median_err) {
       status.erase(status.begin() + i);
       corners.erase(corners.begin() + i);
