@@ -19,7 +19,7 @@ shared_ptr<Tracker> Tracker::CreateTracker(const string &name) {
 }
 
 bool MedianFlowTracker::Init(const cv::Mat &frame, const cv::Rect &roi) {
-    if(frame.empty()){
+    if(!frame.empty()){
         position_ = roi;
         cvtColor(frame, frame_, CV_BGR2GRAY);
         return true;
@@ -33,7 +33,7 @@ cv::Rect MedianFlowTracker::Track(const cv::Mat &frame) {
     goodFeaturesToTrack(object, corners, 100, 0.01, 5);
 
     if (corners.empty()) {
-        return Rect();
+        throw "corners is empty!!!";
     }
 
     Mat gray_frame;
@@ -96,8 +96,8 @@ cv::Rect MedianFlowTracker::Track(const cv::Mat &frame) {
 
     vector<float> shiftX, shiftY;
     for (int i = 0; i < corners.size(); ++i) {
-        shiftX.push_back(fabs(next_pts[i].x - corners[i].x));
-        shiftY.push_back(fabs(next_pts[i].y - corners[i].y));
+        shiftX.push_back((next_pts[i].x - corners[i].x));
+        shiftY.push_back((next_pts[i].y - corners[i].y));
     }
     std::nth_element(shiftX.begin(), shiftX.begin() + shiftX.size() / 2,
                                                             shiftX.end());
