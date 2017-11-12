@@ -2,7 +2,6 @@
 
 #include "opencv2/core/core.hpp"
 
-#include <iostream>
 
 using namespace cv;
 
@@ -12,3 +11,4 @@ TEST(dummy, dummy_test)
     Mat submat = mat(Rect(0, 0, 2, 3));
     EXPECT_FALSE(submat.isContinuous());
 }
+
