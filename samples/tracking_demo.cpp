@@ -56,8 +56,21 @@ int main(int argc, const char** argv) {
         parser.printMessage();
         return 0;
     }
+    string video_path;
 
-    cv::VideoCapture video("/home/tolik/myWorkSpace/itseez-ss-2016-practice/test/test_data/video/logo.mp4");
+    if(parser.has("video")){
+        video_path = parser.get<string>("video");
+    }
+    else{
+        cerr << "Enter video path";
+        exit(-1);
+    }
+
+    cv::VideoCapture video(video_path);
+    if(!video.isOpened()){
+        cerr << "Error get video" << endl;
+        exit(-1);
+    }
     cv::namedWindow("window");
     cv::setMouseCallback("window", onMouse);
     cv::Rect object;
@@ -85,8 +98,14 @@ int main(int argc, const char** argv) {
 
     while(true){
         video >> frame;
-        cv::Rect roi = tracker->Track(frame);
-        std::cout << roi << endl;
+        cv::Rect roi;
+        try {
+             roi = tracker->Track(frame);
+        }
+        catch(char const * msg){
+            cout << msg << endl;
+            return -1;
+        }
         cv::rectangle(frame, roi, cv::Scalar(0, 255, 0));
         cv::imshow("window", frame);
         int c = cv::waitKey(33);
