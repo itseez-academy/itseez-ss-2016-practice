@@ -23,6 +23,16 @@ TEST(MatProcess, test_averaging)
 	tmp[4] = 10;
 	pic.AvrgElems(tmp, 3, 3, 1);
 	EXPECT_EQ(3, tmp[0]);
+}
 
-	 
+TEST(MatProcess, test_median_filter)
+{
+	unsigned char tmp[] = { 1,2,3,4,5,6,7,8,9 };
+	MatrixProcessor pic;
+
+	pic.MedianFilter(tmp, 3,3,1);
+
+	EXPECT_EQ(4, tmp[0]);
+	
+
 }
