@@ -13,3 +13,15 @@ TEST(MatProcess, test_threshold)
 	EXPECT_EQ(0, tmp[4]);
 	
 }
+
+TEST(MatProcess, test_averaging)
+{
+	MatrixProcessor pic;
+	unsigned char tmp[3][3];
+	for (int i = 0; i < 3; i++)
+		for (int j = 0; j < 3; i++)
+			tmp[i][j] = 1;
+	tmp[1][1] = 10;
+
+	 
+}
