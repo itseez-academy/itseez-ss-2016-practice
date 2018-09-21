@@ -1,5 +1,4 @@
 #include "workaround.hpp"
-
 #include <cstddef>
 
 using namespace std;
