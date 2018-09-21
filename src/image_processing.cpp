@@ -5,16 +5,19 @@ using namespace cv;
 //?
 Mat ImageProcessorImpl::CvtColor(const Mat &src, const Rect &roi)
 {
-	Mat src_copy(src);
+	Mat src_copy = src;
 	Mat src_copy_roi = src_copy(roi);
-	Mat dst_gray_roi;
-	cvtColor(src_copy_roi, dst_gray_roi, COLOR_BGR2GRAY);
+	Mat dst_gray_roi, dst_gray;
+	/*Mat dst_roi;
 	std::vector<Mat> channels;
-	split(dst_gray_roi, channels);
-	Mat dst_roi;
+	cvtColor(src_copy_roi, dst_gray_roi, COLOR_BGR2GRAY);
+	channels.push_back(dst_gray_roi);
+	channels.push_back(dst_gray_roi);
+	channels.push_back(dst_gray_roi);
 	merge(channels, dst_roi);
-	src_copy_roi = dst_roi;
-	return src_copy;
+	src_copy_roi = dst_roi;*/
+	cvtColor(src_copy, dst_gray, COLOR_BGR2GRAY);
+	return dst_gray;
 }
 
 cv::Mat ImageProcessorImpl::Filter(const Mat &src, const Rect &roi, const int size)
@@ -43,4 +46,10 @@ Mat ImageProcessorImpl::DetectEdges(const Mat &src, const Rect &roi,
 	Scalar::all(0);
 	//dst_roi = src_roi;
 
+	return Mat();
+}
+
+cv::Mat ImageProcessorImpl::Pixelize(const cv::Mat & src, const cv::Rect & roi, const int divs)
+{
+	return cv::Mat();
 }
