@@ -29,7 +29,7 @@ struct MouseCallbackState
    Point point_first;
    Point point_second;
 };
-//MouseCallbackState mouse;
+
 void OnMouse(int event, int x, int y, int flags, void* param)
 {	
 	MouseCallbackState* mouse = (MouseCallbackState*)param;
@@ -67,13 +67,16 @@ void OnMouse(int event, int x, int y, int flags, void* param)
 int main(int argc, const char** argv) {
   // Parse command line arguments.
   CommandLineParser parser(argc, argv, kOptions);
+  
   parser.about(kAbout);
+  // If help option is given, print help message and exit.
+if (parser.get<bool>("help"))
+	{
+	  parser.printMessage();
+	  return 0;
+	}
   Mat img,src,dst;
-  string imageName("C:/MyProjects/itseez-ss-2016-practice/test/test_data/imgproc/lena.png"); //ralative path?
-  
-  if (argc > 1)
-	imageName = argv[1];
-  
+  string imageName(parser.get<string>(0)); 
   img = imread(imageName.c_str(), 1);
   
   if (img.empty())                      
@@ -81,43 +84,55 @@ int main(int argc, const char** argv) {
 		cout << "Could not open or find the image" << std::endl;
 		return -1;
 	}
-  namedWindow("Original", CV_WINDOW_AUTOSIZE);
-  MouseCallbackState p;
-  setMouseCallback("Original", OnMouse, &p);
-  //cvSetMouseCallback("Original", OnMouse, &img); // cv and not cv functions
-  p.point_first.x = 10;
-  p.point_first.y = 10;
-  p.point_second.x = 400;
-  p.point_second.y = 400;
 
+  namedWindow("Original", CV_WINDOW_NORMAL);
+  MouseCallbackState p;
+  ImageProcessorImpl obj;
+  setMouseCallback("Original", OnMouse, &p);
   while (1) 
   {
-	  char c = waitKey(33);//?
+	  char c = waitKey(100);//?
+	
 	  imshow("Original", img);
-	  if (p.point_first.x != 0 && p.point_second.x != 0 && p.point_first.y != 0 && p.point_second.y != 0)
+	  Rect imgSize(Point(), img.size());
+	  Rect roi(p.point_first, p.point_second);
+	  if (p.point_first.x != 0 && p.point_second.x != 0 && p.point_first.y != 0 
+		  && p.point_second.y != 0 && imgSize.contains(p.point_first) && imgSize.contains(p.point_second))
 	  {
-	      Rect roi(p.point_first, p.point_second);
-		  ImageProcessorImpl obj;
-			//dst = obj.DetectEdges(img, roi, 1, 1, 1, 1);
-		  dst = obj.Pixelize(img, roi, 10);
+		  if (parser.has("gray"))
+		  {
+			  dst = obj.CvtColor(img, roi);
+		  }
+		  else
+			  if (parser.has("median"))
+			  {
+				  int _size = 11;// size must be odd
+				  dst = obj.Filter(img, roi, 11);
+			  }
+			  else 
+				  if (parser.has("edges"))
+				  {	
+					  int _filter_size = 1,
+						  _low_threshold = 50,
+						  _ratio = 4,
+					      _ksize = 1;
+					  dst = obj.DetectEdges(img, roi, _filter_size,_low_threshold , _ratio, _ksize);
+				  }
+				  else
+					  if (parser.has("pix"))
+					  {		
+						  int _divs = 29;
+						  dst = obj.Pixelize(img, roi, _divs); // crashes periodically
+					  }
 		  imshow("Result", dst);
 	  }
-	  //dst = obj.CvtColor(img, roi);
-	 // dst = obj.Filter(img, roi, 11); // size must be odd
 	  if (c == 27) 
 	  { 
 		  break;
 	  }
   }
 
-  //// If help option is given, print help message and exit.
-  //if (parser.get<bool>("help")) {
-  //  parser.printMessage();
-  //  return 0;
-  //}
 
-  //// Do something cool.
-  //cout << "This is empty template sample." << endl;
   waitKey(0);
   return 0;
 }
