@@ -97,7 +97,7 @@ if (parser.get<bool>("help"))
 	  Rect imgSize(Point(), img.size());
 	  Rect roi(p.point_first, p.point_second);
 	  if (p.point_first.x != 0 && p.point_second.x != 0 && p.point_first.y != 0 
-		  && p.point_second.y != 0 && imgSize.contains(p.point_first) && imgSize.contains(p.point_second))
+		  && p.point_second.y != 0 && imgSize.contains(p.point_first) && imgSize.contains(p.point_second) && !roi.empty())
 	  {
 		  if (parser.has("gray"))
 		  {
@@ -121,7 +121,8 @@ if (parser.get<bool>("help"))
 				  else
 					  if (parser.has("pix"))
 					  {		
-						  int _divs = 29;
+						  int _divs = 53;
+						  roi = Rect(Point(0, 0), Point(500, 500));
 						  dst = obj.Pixelize(img, roi, _divs); // crashes periodically
 					  }
 		  imshow("Result", dst);

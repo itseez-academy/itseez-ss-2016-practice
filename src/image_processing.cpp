@@ -64,7 +64,7 @@ cv::Mat ImageProcessorImpl::Pixelize(const cv::Mat & src, const cv::Rect & roi, 
 		for (int y = 0; y < src_copy_roi.rows - block_size_y ; y += block_size_y) // 0 или roi.y
 		{	
 			//if (roi.contains(Point(x + 1, y + 1)) && roi.contains(Point(x , y + 1)) && roi.contains(Point(x + 1, y)) && roi.contains(Point(x , y)))
-				Mat src_roi_block = src_copy_roi(Rect(x,y,block_size_x,block_size_y));
+				Mat src_roi_block = src_copy_roi(Rect(x,y,block_size_x,block_size_y));//
 				blur(src_roi_block, src_roi_block, kernSize);
 			
 		}
