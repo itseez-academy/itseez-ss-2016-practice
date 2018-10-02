@@ -24,9 +24,7 @@ void DetectOnVideo(VideoCapture vid, CascadeDetector &detector) {
 		imshow("Result", frame);
 		if (waitKey(10) == 27) break;
 	}
-
 }
-
 
 
 int main(int argc, const char** argv) {
@@ -44,18 +42,14 @@ int main(int argc, const char** argv) {
 	std::vector<double>  scores;
 	if (parser.has("m")) detector.Init(parser.get<std::string>("m"));
 
-
-
-
 	if (parser.has("i")) {
 		Mat img = imread(parser.get<std::string>("i"));
 		detector.Detect(img, objects, scores);
-		if (scores.size() > 0) {
+		for (int i = 0; i < objects.size(); ++i){
 			namedWindow("Result");
-			rectangle(img, objects[0], Scalar(250, 150, 10));
+			rectangle(img, objects[i], Scalar(250, 150, 10));
 			imshow("Result", img);
 		}
-		else return 0;
 	}
 	else if (parser.has("v")) {
 		VideoCapture video(parser.get<std::string>("v"));

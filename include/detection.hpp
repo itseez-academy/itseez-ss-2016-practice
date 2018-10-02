@@ -24,6 +24,4 @@ public:
 	 bool Init(const std::string& model_file_path) override;
 	 void Detect(const cv::Mat& frame, std::vector<cv::Rect>& objects,
 		std::vector<double>& scores) override;
-
-
 };
