@@ -10,35 +10,26 @@ const char* kOptions =
 "{ c camera       | <none> | camera to get video from                 }"
 "{ h ? help usage |        | print help message                       }";
 
-
-
-Rect_<int> roi;
 void CallBackFunc(int event, int x, int y, int flags, void* userdata)
 {
-
 	if (event == EVENT_LBUTTONDOWN)
 	{
 		static vector<Point2d> points;
 		points.push_back(Point_<int>(x, y));
 		if (points.size() > 1) {
-			roi = Rect2i(points[0], points[1]);
+			*reinterpret_cast<Rect_<int> *>(userdata) = Rect2i(points[0], points[1]);
 			points.clear();
 		}
 	}
-
 }
 
 int main(int argc, const char** argv) {
-	// Parse command line arguments.
 	CommandLineParser parser(argc, argv, kOptions);
-
-	// If help option is given, print help message and exit.
 	if (parser.get<bool>("help")) {
 		parser.printMessage();
 		return 0;
 	}
-
-	std::string filePath;
+	Rect_<int> roi;
 	if (parser.has("v")) {
 		Mat frame;
 		VideoCapture video(parser.get<std::string>("v"));
@@ -46,8 +37,7 @@ int main(int argc, const char** argv) {
 		video.read(frame);
 		imshow("Result", frame);
 		cvtColor(frame, frame, CV_BGR2GRAY);
-		setMouseCallback("Result", CallBackFunc, NULL);
-
+		setMouseCallback("Result", CallBackFunc, &roi);
 		while (true) {
 			waitKey(1);
 			if (!roi.empty()) break;
@@ -60,18 +50,13 @@ int main(int argc, const char** argv) {
 			rectangle(tmp, tracker.getRect(), Scalar(250, 150, 10));
 			imshow("Result", tmp);
 			if (waitKey(1) == 27) break;
-
 		}
-
 		video.release();
 	}
-
 	else {
 		cerr << "Error load model";
 		return -1;
 	}
-
-
 	return 0;
 }
 
