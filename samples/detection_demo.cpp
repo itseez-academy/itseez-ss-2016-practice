@@ -1,17 +1,16 @@
 #include <iostream>
 #include <string>
 
-#include "opencv2/core.hpp"
-#include "opencv2/videoio.hpp"
-#include "opencv2/highgui.hpp"
+#include "opencv2/core/core.hpp"
+#include "opencv2/opencv.hpp"
+
 #include "detection.hpp"
 
 using namespace std;
 using namespace cv;
 
 const char* kAbout =
-    "This is an empty application that can be treated as a template for your "
-    "own doing-something-cool applications.";
+    "detection app";
 
 const char* kOptions =
 "{ i image        | <none> | image to process                         }"
@@ -31,40 +30,93 @@ int main(int argc, const char** argv) {
     return 0;
   }
 
-  // Do something cool.
-  String vidName = "C:\\video\\logo.mp4";
-  VideoCapture capture;
- bool f1 =  capture.open(vidName);
- if (!f1) cout << "no video" << endl;
+  // init
+  std::string vidName, imgName, detectName;
   Mat frame;
   CascadeDetector obj;
   std::vector<Rect> logos;
   std::vector<double> scores;
-//load
-  String fileName = "C:\MyProjects\itseez-ss-2016-practice\test\test_data\detection\cascades\unn_old_logo_cascade.xml";
-  obj.Init(fileName);
-   //read 
-//  capture.open(0);
-//  if (!capture.isOpened()) { cout<<"--(!)Error opening video capture" << endl; return -1; }
-  bool f = capture.read(frame);
-  if (!f) cout <<  "no video" << endl;
-  while (true)
+  VideoCapture capture;
+  //
+ 
+  if (parser.has("m"))
   {
-	  if (frame.empty())
-	  {
-		  printf(" --(!) No captured frame -- Break!");
-		  break;
-	  }
-
-	  //-- 3. Apply the classifier to the frame
-	  obj.Detect(frame,logos,scores);
-	 // rectangle(frame, obj, Scalar(250, 150, 10));
-	  imshow("logos", frame);
-	  capture >> frame;
-	  int c = cv::waitKey(100);
-	  if ((char)c == 27) { break; } // escape
+	  detectName = parser.get<string>("m");
+	  cout << detectName << endl;
+	  obj.Init(detectName);
   }
-  capture.release();
-  //cv::waitKey(0);
+  
+  if (parser.has("i"))
+  {
+	  imgName = parser.get<std::string>("i");
+	  frame = imread(imgName);
+	  imshow("Detection", frame);
+	  obj.Detect(frame, logos, scores);
+	  if (scores.size() > 0)
+		  for (int i = 0; i < logos.size(); i++)
+		  {
+			  rectangle(frame, logos[i], Scalar(250, 150, 10));
+			  imshow("Detection", frame);
+		  }
+	  else
+		  std::cout << "objects haven`t been detected";
+  }
+  else
+  {
+	  if (parser.has("v"))
+	  {		
+		  vidName = parser.get<std::string>("v");
+		  
+		  bool flag = capture.open(vidName);
+		  
+		  if (flag)
+		  {	
+			  flag = capture.read(frame);
+			  while (true)
+			  {
+				 if (frame.empty())
+					 {
+						 printf(" --(!) No captured frame -- Break!");
+						 break;
+					 }
+				 //Apply the classifier to the frame
+			     obj.Detect(frame, logos, scores);
+				 if (scores.size()> 0)
+		        	 for(int i = 0; i < logos.size(); i++)
+	   					rectangle(frame, logos[i], Scalar(250, 150, 10));
+                 imshow("Detection", frame);
+			     capture >> frame;
+				 int c = cv::waitKey(100);
+			     if ((char)c == 27) break;  // escape	
+			  }
+			  capture.release();
+		  }
+		  else
+			  cout << "--(!)Error opening video capture" << endl ;
+		  
+	  }
+	  else
+		  if (parser.has("c"))
+		  {
+			  capture.open(0);
+			  if (!capture.isOpened())
+				   return 0;
+			  capture.read(frame);
+			  for (;;)
+			  {	
+				  obj.Detect(frame, logos, scores);
+				  if (scores.size() > 0)
+					  for (int i = 0; i < logos.size(); i++)
+						  rectangle(frame, logos[i], Scalar(250, 150, 10));
+				  capture >> frame;
+				  if (frame.empty()) break; // end of video stream
+				  imshow("Web", frame);
+				  if (waitKey(10) == 27) break; // stop capturing by pressing ESC 
+			  }
+			  capture.release();
+		  }
+  }
+  cv::waitKey(0);
+
   return 0;
 }

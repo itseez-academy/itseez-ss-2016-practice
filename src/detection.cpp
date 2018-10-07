@@ -28,11 +28,10 @@ void CascadeDetector::Detect(const cv::Mat & frame, std::vector<cv::Rect>& ccdet
 {
 	std::vector<int> numDetections;
 
-	if (ccdetector.empty()) throw "Classifier is empty";
+	if (ccdetector.empty()) return ;
 	if (frame.empty()) throw "Matrix is empty";
-	if (ccdetector.empty()) throw "Vector of rect is empty";
 
-	ccdetectorects.clear();
+	//ccdetectorects.clear();
 
 	ccdetector.detectMultiScale(frame, ccdetectorects, numDetections);
 	
