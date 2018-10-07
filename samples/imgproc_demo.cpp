@@ -33,8 +33,7 @@ void OnMouse(int event, int x, int y, int flags, void* param)
 	switch (event)
 	{
 	case EVENT_LBUTTONDOWN:
-
-
+		
 		mouse->is_selection_started = true;
 		mouse->is_selection_finished = false;
 		mouse->point_first.x = x;
@@ -87,8 +86,8 @@ int main(int argc, const char** argv)
   img = imread(imageName.c_str(), 1);
   if (img.empty())                      
 	{
-		cout << "Could not open or find the image" << std::endl;
-		return -1;
+	   cout << "Could not open or find the image" << std::endl;
+	   return -1;
 	}
 
   imshow("Original", img);
@@ -97,42 +96,41 @@ int main(int argc, const char** argv)
   { 
 	  while (1)
 	  {   
-		  c = waitKey(100);
-		  roi = Rect(p.point_first, p.point_second);
-		  if ((p.point_first.x < p.point_second.x) && (p.point_first.y < p.point_second.y) && !roi.empty()) break;
+        c = waitKey(100);
+		roi = Rect(p.point_first, p.point_second);
+        if ((p.point_first.x < p.point_second.x) && (p.point_first.y < p.point_second.y) && !roi.empty()) break;
 	  }
 
 	 if (!roi.empty() && (( roi & Rect(0,0,img.cols,img.rows)) == roi))
 	  {
-		  if (parser.has("gray"))
-		  {
-			  dst = obj.CvtColor(img, roi);
-		  }
-		  else
-			  if (parser.has("median"))
-			  {
-				  int _size = 11;// size must be odd
-				  dst = obj.Filter(img, roi, 11);
-			  }
-			  else
-				  if (parser.has("edges"))
-				  {
-					  int _filter_size = 1,
-						  _low_threshold = 50,
-						  _ratio = 4,
-						  _ksize = 1;
-					  dst = obj.DetectEdges(img, roi, _filter_size, _low_threshold, _ratio, _ksize);
-				  }
-				  else
-					  if (parser.has("pix"))
-					  {
-						  int _divs = 11;
-
-						  dst = obj.Pixelize(img, roi, _divs);
-					  }
-	  imshow("Result", dst);
-      }  
-	  if (c == 27) break;
+	    if (parser.has("gray"))
+		{
+         dst = obj.CvtColor(img, roi);
+		}
+	    else
+		 if (parser.has("median"))
+		 {
+		   int _size = 11;// size must be odd
+		   dst = obj.Filter(img, roi, 11);
+		 }
+		 else
+		   if (parser.has("edges"))
+			{
+			  int _filter_size = 1,
+					_low_threshold = 50,
+					_ratio = 4,
+					_ksize = 1;
+			  dst = obj.DetectEdges(img, roi, _filter_size, _low_threshold, _ratio, _ksize);
+			}
+			else
+				if (parser.has("pix"))
+				{
+                  int _divs = 11;
+				  dst = obj.Pixelize(img, roi, _divs);
+				}
+          imshow("Result", dst);
+     }  
+   if (c == 27) break;
   }
 
  
