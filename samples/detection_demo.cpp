@@ -55,7 +55,7 @@ int main(int argc, const char** argv) {
 	  if (scores.size() > 0)
 		  for (int i = 0; i < logos.size(); i++)
 		  {
-			  rectangle(frame, logos[i], Scalar(250, 150, 10));
+			  rectangle(frame, logos[i], Scalar(255, 0, 0));
 			  imshow("Detection", frame);
 		  }
 	  else
@@ -83,7 +83,7 @@ int main(int argc, const char** argv) {
 			     obj.Detect(frame, logos, scores);
 				 if (scores.size()> 0)
 		        	 for(int i = 0; i < logos.size(); i++)
-	   					rectangle(frame, logos[i], Scalar(250, 150, 10));
+	   					rectangle(frame, logos[i], Scalar(255, 0, 0));
                  imshow("Detection", frame);
 			     capture >> frame;
 				 int c = cv::waitKey(100);
@@ -107,7 +107,7 @@ int main(int argc, const char** argv) {
 				  obj.Detect(frame, logos, scores);
 				  if (scores.size() > 0)
 					  for (int i = 0; i < logos.size(); i++)
-						  rectangle(frame, logos[i], Scalar(250, 150, 10));
+						  rectangle(frame, logos[i], Scalar(255, 0, 0));
 				  capture >> frame;
 				  if (frame.empty()) break; // end of video stream
 				  imshow("Web", frame);
