@@ -132,6 +132,6 @@ int main(int argc, const char** argv)
 		}
 		if (c == 27) break;
 	}
-	return 0;
+return 0;
 }
 
