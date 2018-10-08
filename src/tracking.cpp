@@ -40,11 +40,12 @@ cv::Rect MedianFlowTracker::Track(const cv::Mat & frame)
 	std::vector<Point2f> features_prev, features_next; // Mat?
 	std::vector<uchar> status;
 	std::vector<float> err;
-	frame_(position_).copyTo(tmp);
+	tmp = frame_(position_);
+	//frame_(position_).copyTo(tmp);
 
 	// find features
 	cvtColor(tmp, tmp_gray, COLOR_BGR2GRAY);
-	goodFeaturesToTrack(tmp_gray, features_prev, -1, 0.01, 10);
+	goodFeaturesToTrack(tmp_gray, features_prev, 100 , 0.01, 10);
 	assert(features_prev.size() > 0);
 
 	//calc optical flow
@@ -61,7 +62,7 @@ cv::Rect MedianFlowTracker::Track(const cv::Mat & frame)
 	{
 		if (!status[i])
 			continue;
-		features_prev[k++] = features_prev[i];
+		features_prev[k] = features_prev[i];
 		features_next[k++] = features_next[i];
 		
 	}
@@ -72,10 +73,11 @@ cv::Rect MedianFlowTracker::Track(const cv::Mat & frame)
 	std::vector<float> offsetX;
 	std::vector <float> offsetY;
 	Point2f newObjCenter;
+	
 	for (i = 0; i < features_next.size(); i++)
 	{
-		offsetX[i] = features_next[i].x - features_prev[i].x;
-		offsetY[i] = features_next[i].y - features_prev[i].y;
+		offsetX.push_back( features_next[i].x - features_prev[i].x);
+		offsetY.push_back( features_next[i].y - features_prev[i].y);
 	}
 	
 	float medianX , medianY;

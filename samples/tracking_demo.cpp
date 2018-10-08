@@ -81,24 +81,29 @@ int main(int argc, const char** argv)
 				roi = Rect(p.point_first, p.point_second);
 				if ((p.point_first.x < p.point_second.x) && (p.point_first.y < p.point_second.y) && !roi.empty()) break;
 			}
-			rectangle(frame, roi, Scalar(255, 0, 0));//draw rect
+			rectangle(frame, roi, Scalar(255, 0, 255));//draw rect
 			imshow("Track", frame);
-			
+
+			waitKey(1000);
+
 			if (!track.Init(frame, roi))
 			{
 				cout << "Init error";
 				return -1;
-			};
+			}
+
 			while (capture.read(frame))
 			{
-				track.Track(frame);
-				rectangle(frame, roi, Scalar(255, 0, 0));//draw rect
+				roi = track.Track(frame);
+				rectangle(frame, roi, Scalar(255, 0, 255));//draw rect
 				imshow("Track", frame);
+				c = waitKey(33);
+				if (c == 27) break;
 			}
 		capture.release();
 	}
 	else
 		cout << "--(!)Error opening video capture" << endl;
-	
+	waitKey(0);
 	return 0;
 }
