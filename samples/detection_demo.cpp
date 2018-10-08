@@ -76,7 +76,7 @@ int main(int argc, const char** argv) {
 			  {
 				 if (frame.empty())
 					 {
-						 printf(" --(!) No captured frame -- Break!");
+						 cout << " --(!) No captured frame -- Break!";
 						 break;
 					 }
 				 //Apply the classifier to the frame
