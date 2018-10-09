@@ -1,13 +1,40 @@
 #include "detection.hpp"
 
-#include <iostream>
-
 using std::string;
 using std::shared_ptr;
 using namespace cv;
 
-shared_ptr<Detector> Detector::CreateDetector(const string& name) {
-  std::cerr << "Failed to create detector with name '" << name << "'"
-            << std::endl;
-  return nullptr;
+shared_ptr<Detector> Detector::CreateDetector(const string& name) 
+{
+	if (name == "cascade")
+	{
+		return std::make_shared<CascadeDetector>();
+	}
+	else
+		return nullptr;
+
+}
+
+bool CascadeDetector::Init(const std::string & model_file_path)
+{
+	bool flag = false;
+	if (ccdetector.load(model_file_path))
+		flag = true;
+	return flag;
+}
+
+void CascadeDetector::Detect(const cv::Mat & frame, std::vector<cv::Rect>& ccdetectorects,
+	std::vector<double>& scores)
+{
+	std::vector<int> numDetections;
+
+	if (ccdetector.empty()) return ;
+	if (frame.empty()) throw "Matrix is empty";
+
+	//ccdetectorects.clear();
+
+	ccdetector.detectMultiScale(frame, ccdetectorects, numDetections);
+	
+	scores.assign(numDetections.begin(), numDetections.end());
+
 }
